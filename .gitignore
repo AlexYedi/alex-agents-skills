@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Editor
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Claude / runtime artifacts
+.claude/cache/
+*.log
+
+# Secrets — belt and suspenders, nothing here should have these but enforce it
+.env
+.env.*
+*.key
+*.pem
