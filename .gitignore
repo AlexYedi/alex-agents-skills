@@ -19,3 +19,9 @@
 .env.*
 *.key
 *.pem
+
+# Nested project repos — tracked separately, not part of this repo
+GTM/gtm-agents/
+Software Development/Agentic Development & Patterns/8-agentic-patterns/
+Software Development/ai-development-specifications/
+claude-skills-repo/
