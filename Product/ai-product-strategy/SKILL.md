@@ -78,7 +78,8 @@ For all 179 insights from 94 guests, see `references/guest-insights.md`
 
 ## Related Skills
 
-- Building with LLMs
-- AI Evals
-- Evaluating New Technology
+- Writing PRDs
+- Systems Thinking
+- Writing North Star Metrics
+- Shipping Products
 - Platform Strategy
