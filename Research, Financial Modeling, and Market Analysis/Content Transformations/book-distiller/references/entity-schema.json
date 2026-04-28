@@ -1,0 +1,36 @@
+{
+  "_comment": "ScaleDown /extract entity schema for book distillation. Used by scaledown_client.py at Stage 1 (INDEX). Threshold 0.4 at API; downstream filtering to >=0.6.",
+  "threshold": 0.4,
+  "entities": {
+    "framework": {
+      "description": "A named conceptual model, architectural pattern, or design framework, typically with named originators or citations (e.g., OODA loop, ReAct, planner-executor split, Working Backwards). Capitalized proper nouns are strong signals."
+    },
+    "principle": {
+      "description": "A stated rule or guideline for designing or building, often phrased as an imperative (e.g., 'decouple planning from execution', 'observability before autonomy', 'optimize for the median user')."
+    },
+    "anti_pattern": {
+      "description": "A named common mistake or failure mode, often capitalized as a proper noun (e.g., God Object, All-Knowing God Agent, Retry Cascade, Featuritis, Build Trap)."
+    },
+    "decision_rule": {
+      "description": "An explicit conditional rule, typically phrased as 'if X, do Y' or 'when X, prefer Y over Z'. The rule is actionable and prescriptive."
+    },
+    "mental_model": {
+      "description": "An analogy or way of conceptualizing a problem (e.g., 'agents are to tools what classes are to interfaces', 'a roadmap is a hypothesis, not a contract')."
+    },
+    "worked_example": {
+      "description": "A concrete walkthrough applying an abstract concept to a specific scenario, typically named (e.g., 'the sales-call research agent example')."
+    },
+    "gotcha": {
+      "description": "A non-obvious failure point or pitfall the author flags as easy to miss (e.g., 'retries hide signal the planner needed', 'caching at the wrong layer compounds bugs')."
+    },
+    "citation": {
+      "description": "A reference to a paper, author, year, book, or prior published work (e.g., 'Yao et al., 2022', 'the ReAct paper', 'Kahneman 2011')."
+    },
+    "definition": {
+      "description": "An explicit definition of a technical term, typically introduced by 'Definition:', 'is defined as', 'we use X to mean', or 'the term X refers to'."
+    },
+    "main_idea": {
+      "description": "A thesis-level claim the chapter argues for, often appearing in the introduction or conclusion (e.g., 'Most agent failures trace to one mistake: collapsing planning and execution')."
+    }
+  }
+}
