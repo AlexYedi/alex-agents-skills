@@ -97,14 +97,48 @@ experience itself — which means the rep's ability to reframe is the product.
 
 ## Full reference
 
+Body file (theory):
+
 - `Challenger-Sale` — complete methodology body file (4 Rules, full 6-step
   choreography with scripts, SAFE-BOLD, Tailoring layers, Influencer vs.
   Decision Maker loyalty, 3 misconceptions of Taking Control, Teaching
   Choreography, 7 customer types, gotchas, organizational layer).
+
+Reference docs (operating material):
+
 - `references/commercial-teaching-pitch-template.md` — fill-in-the-blank
   6-step pitch scaffold.
 - `references/mobilizer-diagnostic-worksheet.md` — per-stakeholder scoring.
 - `references/take-control-scripts.md` — full script library.
 - `references/tailoring-by-role.md` — economic drivers by stakeholder.
+- `references/sales-process-stage-playbook.md` — stage-by-stage prescriptive
+  playbook (Stages 0–9) with goal, prescriptive actions, artifacts, buyer
+  signals, Take Control moves, failure modes, and exit criteria per stage.
+- `references/challenger-skills-catalog.md` — 15 micro-skills (hypothesis-
+  based selling, reframe construction, rational drowning math, emotional
+  impact storytelling, constructive tension, Take Control of price/process/
+  thinking, foil identification, Mobilizer activation, tailoring, avoiding
+  premature closure, Champion Test, pre-call hypothesis, two-way dialogue)
+  with what good vs. bad looks like and a drill per skill.
+- `references/voice-and-style-guide.md` — content creation voice and style
+  for Challenger-aligned artifacts (cold emails, LinkedIn posts, Reframe
+  slides, Rational Drowning one-pagers, peer stories, Mobilizer enablement
+  pages, follow-ups, MAPs, internal decks, proposal cover letters), with
+  voice principles, tone matrix, forbidden language, required patterns,
+  format-specific specs, and review checklist.
+
+Specialized agents (`agents/`):
+
+- `agents/README.md` — agent index, stage-to-agent map, invocation guide.
+- `agents/challenger-orchestrator.md` — routing brain across stages; the
+  default entry when the next move isn't obvious.
+- `agents/commercial-insight-generator.md` — segment-level Reframe builder
+  (the marketing-side "insight generation machine").
+- `agents/reframe-architect.md` — account-level 6-step pitch builder.
+- `agents/safe-bold-auditor.md` — quality gate on every Reframe / pitch.
+- `agents/mobilizer-mapper.md` — stakeholder classification across the 7
+  customer types.
+- `agents/take-control-coach.md` — real-time Take Control scripts for
+  money / frame / decision-cycle moments.
 
 Invocation shorthand: `/skills-challenger`
