@@ -45,3 +45,14 @@ business-case artifact the champion can circulate internally.
 - SMB deals where MEDDPICC is overkill.
 - Pure discovery calls — qualification comes after discovery.
 - Post-close handoffs — different artifact.
+
+## Specialized agents
+
+- `agents/content-companion.md` — MEDDPICC-voiced drafter for
+  Champion Packs, Business Cases, MAPs, EB-meeting prep docs,
+  Pre-mortem briefs, Paper Process kickoff emails, Forecast-call
+  deal narratives, Champion Test asks, calibrated discovery
+  questions, and deal-review one-pagers. Pulls every output
+  through the gap-explicit review checklist and the score-
+  citation pattern. Refuses to ship optimism inflation, Champion
+  inflation, or unproven Metric claims.

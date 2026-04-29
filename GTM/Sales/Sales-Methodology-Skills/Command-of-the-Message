@@ -178,3 +178,17 @@ MongoDB, Splunk.
    to be rewritten in buyer-language.
 6. Flags for unprovable claims — anywhere a Required Capability lacks a
    Proof Point.
+
+## Specialized agents
+
+- `Command-of-the-Message-content-companion.md` (sibling file) —
+  CoM-voiced drafter for Value Hypothesis openers, Before/After/
+  Required-Capabilities whiteboard prep, Trap-Setting Question
+  sets, Mantra one-pagers, Required-Capability ↔ Proof-Point
+  maps, PBO-anchored sales decks and emails, buyer-language
+  discovery question sets, customer stories tagged to specific
+  Required Capabilities, and Mantra-calibration audit docs.
+  Refuses to ship feature-speak, generic-benefit PBOs, claims
+  without Proof Points, or trap-setting questions that read as
+  gotcha. Pulls every output through the Value Framework
+  fidelity check.

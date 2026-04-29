@@ -47,3 +47,15 @@ impact/effort — to GTM design problems: playbooks, customer journeys, and mess
 - Individual deal work — use `the-meddpicc-enterprise-deal-desk`.
 - Product roadmap design — wrong framework.
 - Marketing campaign execution — different artifact.
+
+## Specialized agents
+
+- `agents/content-companion.md` — Winning-by-Design-voiced drafter
+  for SPICED recap emails, Blueprints for Moments That Matter,
+  Handoff documents (SDR→AE→CSM), QBR / Impact Review templates,
+  customer journey maps, playbook sections, messaging houses,
+  Critical-Event reverse-timeline docs, onboarding kickoff
+  agendas, and expansion plays. Carries SPICED inline through
+  every artifact and refuses to ship vendor-side Impact claims,
+  deals without Critical Events, or post-sale stages designed as
+  afterthoughts.

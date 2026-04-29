@@ -140,5 +140,11 @@ Specialized agents (`agents/`):
   customer types.
 - `agents/take-control-coach.md` — real-time Take Control scripts for
   money / frame / decision-cycle moments.
+- `agents/content-companion.md` — Challenger-voiced drafting of cold
+  emails, LinkedIn posts, Reframe slides, Rational Drowning one-pagers,
+  peer stories, Mobilizer enablement pages, follow-ups, MAP openers,
+  pitch decks, and proposal cover letters. Pulls every output through
+  the voice review checklist + SAFE-BOLD audit before returning.
+  Refuses to ship Relationship Builder voice.
 
 Invocation shorthand: `/skills-challenger`
