@@ -519,4 +519,20 @@ dim_geography          (standard)
 - See `data-architecture-frameworks` for the higher-level frameworks (MDS, Lakehouse, Data Mesh)
 - See `dataops-and-modern-data-platforms` for operational practices around the model
 
-Source: *Fundamentals of Data Engineering* (Reis & Housley), Chapters 5-8 (Storage, Ingestion, Transformation).
+## Related Skills
+
+This skill is **analytics-side** modeling (Kimball / Inmon / Data Vault, SCDs,
+ingestion). For **OLTP-side** distributed databases — NoSQL data models,
+sharding, CAP, replication, consensus — see the Gorton-derived skills:
+
+- `scalable-database-design-and-sharding` — NoSQL data models, sharding,
+  replication, CAP
+- `eventual-consistency-mechanics` — RYOWs, quorums, version vectors, CRDTs
+- `consensus-and-strong-consistency` — 2PC, Paxos, Raft, linearizability
+- `event-streaming-with-kafka` — event log as system of record
+- `stream-processing-with-flink` — real-time stream analytics
+
+Source: *Fundamentals of Data Engineering* (Reis & Housley), Chapters 5-8
+(Storage, Ingestion, Transformation). For OLTP distribution and consistency,
+*Foundations of Scalable Systems* (Gorton) is distilled in
+`Software Development/references/foundations-of-scalable-systems/`.

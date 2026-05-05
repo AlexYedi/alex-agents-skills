@@ -13,10 +13,14 @@ relevance to Alex's stack.
 | [System Design Primer](https://github.com/donnemartin/system-design-primer) (109k+ stars) | Comprehensive reference for scalability patterns, caching, load balancing, and distributed system fundamentals — good baseline for any architecture discussion |
 | [System Design 101 by ByteByteGo](https://github.com/ByteByteGoHq/system-design-101) | Visual explanations of complex systems using diagrams — aligns with the skill's emphasis on Mermaid visualization |
 | [Awesome Design Patterns](https://github.com/DovAmir/awesome-design-patterns) | Curated list of architecture and design patterns across languages and paradigms |
+| **Distilled** — *Foundations of Scalable Systems* (Gorton, O'Reilly 2022) | Already distilled in `Software Development/references/foundations-of-scalable-systems/`. Comprehensive textbook on scalable distributed systems — load balancing, caching, messaging, microservices resilience, sharding, eventual vs strong consistency, Kafka, Flink. Use the derived skills (`scalability-foundations`, `distributed-systems-essentials`, etc.) for implementation-depth questions. |
+| **Distilled** — *Fundamentals of Software Architecture* (Richards/Ford, O'Reilly 2020) | Already distilled in `Software Development/references/fundamentals-of-software-architecture/`. Higher-level architectural style choice; complements Gorton (style) + Gorton (implementation). |
 
 **How to use**: Extract the patterns most relevant to Supabase + Vercel + Next.js
 architectures and add condensed versions to a `references/architecture-patterns.md`
-file over time.
+file over time. For scalability-specific questions, the Gorton-derived skills
+already cover the canonical content — invoke them directly rather than
+reinventing the patterns here.
 
 ---
 

@@ -295,4 +295,39 @@ ops simplicity score is decisive given the small ops team.
 - **Communication between services dominates costs in distributed.** Network calls = 100-1000x slower than in-process. Plan accordingly.
 - **Eventual consistency is harder than it looks.** Sounds simple in slides; produces production incidents in practice.
 
-Source: *Fundamentals of Software Architecture* by Mark Richards and Neal Ford, architecture styles chapters.
+---
+
+## Related Skills
+
+Once you've chosen a style, these skills cover the implementation depth for
+each major piece of a distributed system. Most are derived from
+*Foundations of Scalable Systems* (Gorton):
+
+- `scalability-foundations` — replication vs optimization, Amdahl's law, the
+  canonical multitier scaling sequence
+- `distributed-systems-essentials` — networking, RPC, partial failure,
+  idempotency
+- `concurrent-systems-foundations` — per-node concurrency under Amdahl
+- `load-balancing-and-app-services` — the request tier (LBs, app servers,
+  auto-scaling)
+- `distributed-caching-patterns` — cache-aside / read-through / write-through
+  / write-behind, CDN
+- `asynchronous-messaging-patterns` — RabbitMQ / SQS / JMS patterns
+- `serverless-processing-systems` — Lambda / GAE
+- `microservices-resilience-patterns` — circuit breakers, bulkheads,
+  fail-fast, exponential backoff
+- `scalable-database-design-and-sharding` — NoSQL data models, sharding,
+  CAP
+- `eventual-consistency-mechanics` — RYOWs, quorums, version vectors, CRDTs
+- `consensus-and-strong-consistency` — 2PC, Paxos, Raft, linearizability
+- `event-streaming-with-kafka` — event-driven architectures on Kafka
+- `stream-processing-with-flink` — real-time analytics
+- `distributed-system-patterns` — Saga, Sidecar, BFF, Service Mesh
+
+For higher-level concerns (architecture characteristics, ADRs, connascence),
+see `architecture-characteristics-and-tradeoffs` and `cto-architect`.
+
+Source: *Fundamentals of Software Architecture* by Mark Richards and Neal
+Ford, architecture styles chapters. *Foundations of Scalable Systems* by
+Ian Gorton (O'Reilly, 2022) for implementation depth on each distributed
+style.

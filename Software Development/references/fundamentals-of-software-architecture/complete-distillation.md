@@ -451,12 +451,15 @@ If you're new to this book's distilled content:
 
 ### Companion reading
 - For engineering discipline beneath architecture, see Modern Software Engineering distillation (Farley)
+- **For implementation depth on scalable distributed systems**, see *Foundations of Scalable Systems* (Gorton) distillation in `references/foundations-of-scalable-systems/` — Richards/Ford choose the *style*; Gorton tells you how to actually build, scale, and operate the components inside that style (load balancing, caching, messaging, sharding, consistency, streaming).
 - For specific architecture decisions in Alex's stack context, also see `cto-architect` (existing)
 - For ADR mechanics, see `engineering:architecture`
 - For domain modeling depth, consider augmenting with *Domain-Driven Design* (Evans) — not yet distilled
 
-The book pairs naturally with *Modern Software Engineering* — Richards/Ford
-for architectural decision-making, Farley for engineering discipline.
+The book pairs naturally with *Modern Software Engineering* (Farley) for
+engineering discipline and with *Foundations of Scalable Systems* (Gorton)
+for implementation depth — Richards/Ford for the architectural decision,
+Gorton for what happens once you commit to that decision at scale.
 
 ---
 
@@ -480,6 +483,10 @@ A routing guide for choosing the right skill from this book.
 | "Multiple client types — should we add BFF?" | `distributed-system-patterns` |
 | "How should microservices share data?" | `distributed-system-patterns` (DB-per-Service) |
 | "Choreography or orchestration?" | `distributed-system-patterns` |
+| "How do we actually scale this — load balancers, caching, sharding, consensus?" | Gorton skills (start with `scalability-foundations`) |
+| "Cascading failures / circuit breakers / bulkheads" | `microservices-resilience-patterns` (Gorton) |
+| "Eventual vs strong consistency mechanics, NoSQL data models" | `eventual-consistency-mechanics`, `consensus-and-strong-consistency`, `scalable-database-design-and-sharding` (Gorton) |
+| "Kafka, event streaming, real-time analytics" | `event-streaming-with-kafka`, `stream-processing-with-flink` (Gorton) |
 
 ---
 
@@ -497,7 +504,9 @@ A routing guide for choosing the right skill from this book.
 - **Cross-book synthesis:** Three of Alex's books — this one, Modern Software
   Engineering, and AI Engineering — together cover engineering excellence
   (practices + architecture + AI-specific). A combined synthesis on
-  "engineering-led product building" would tie them together.
+  "engineering-led product building" would tie them together. With
+  *Foundations of Scalable Systems* (Gorton) now distilled, the four-book
+  arc — practices + architecture + scalability + AI-specific — is in place.
 
 ---
 

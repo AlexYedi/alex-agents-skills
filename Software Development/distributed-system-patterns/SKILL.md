@@ -275,4 +275,21 @@ of them simultaneously. Each addresses a specific failure mode.
 - **BFF can become its own monolith.** Watch for one BFF doing too much. One BFF per *client class*, not one BFF for all clients.
 - **Choreography is trace-hostile.** Event-driven flows are hard to debug. Invest in distributed tracing (OpenTelemetry) before adopting.
 
-Source: *Fundamentals of Software Architecture* by Mark Richards and Neal Ford, distributed systems chapters.
+---
+
+## Related Skills
+
+- `microservices-resilience-patterns` — runtime fault-tolerance patterns
+  (circuit breaker, bulkhead, fail-fast) that this skill's architectural
+  patterns assume are already in place
+- `architecture-styles-monolithic-and-distributed` — top-level style choice
+- `consensus-and-strong-consistency` — Saga vs 2PC trade-off
+- `eventual-consistency-mechanics` — what choreography produces by default
+- `event-streaming-with-kafka` — choreography substrate
+- `asynchronous-messaging-patterns` — Saga step delivery via queues
+- `api-gateway-and-service-mesh` — Service Mesh deployment
+
+Source: *Fundamentals of Software Architecture* by Mark Richards and Neal
+Ford (distributed systems chapters), and *Foundations of Scalable Systems*
+by Ian Gorton (Ch 9 for the cascading-failure framing that motivates Saga
++ resilience patterns together).
