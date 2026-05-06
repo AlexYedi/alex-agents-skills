@@ -1,7 +1,7 @@
 ---
 name: normalize-signals
 description: Processes enriched datasets into unified schemas with identity resolution and tagging.
-usage: /data-signal-enrichment:normalize-signals --source warehouse --outputs crm,cdp --taxonomy intent_v2
+usage: /enrichment-pipeline:normalize-signals --source warehouse --outputs crm,cdp --taxonomy intent_v2
 ---
 
 # Command: normalize-signals

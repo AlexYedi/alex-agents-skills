@@ -1,4 +1,4 @@
-# database-schema-designer reference
+# database-designer reference: full schema examples
 
 ## Full Schema Example (Task Management SaaS)
 

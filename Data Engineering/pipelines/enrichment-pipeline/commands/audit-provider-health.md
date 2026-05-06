@@ -1,7 +1,7 @@
 ---
 name: audit-provider-health
 description: Evaluates enrichment provider performance, coverage, and compliance posture.
-usage: /data-signal-enrichment:audit-provider-health --providers apollo,hunter --window 30d --metrics success,latency,credits
+usage: /enrichment-pipeline:audit-provider-health --providers apollo,hunter --window 30d --metrics success,latency,credits
 ---
 
 # Command: audit-provider-health
