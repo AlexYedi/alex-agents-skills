@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -c 'if (.tool_input.file_path // \"\") | test(\"\\\\.sql$|\\\\.prisma$|/migrations/|schema\\\\.ts$\") then {hookSpecificOutput: {hookEventName: \"PreToolUse\", additionalContext: \"Schema design context: this file is a database schema or migration. Consult Data Engineering/playbooks/02-schema-design.md and use Data Engineering/databases/database-designer for implementation. Pair with Data Engineering/governance-and-quality/data-quality-auditor for a post-build profile. Bypass: say just write the migration or name a specific skill to skip the playbook.\"}} else empty end' 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -c 'if (.prompt // \"\") | test(\"\\\\b(audit\\\\s+(my\\\\s+|the\\\\s+)?data|data\\\\s+quality|anomalies\\\\s+in|profile\\\\s+(this\\\\s+|the\\\\s+)?dataset)\\\\b\"; \"i\") then {hookSpecificOutput: {hookEventName: \"UserPromptSubmit\", additionalContext: \"Data quality audit context: consult Data Engineering/playbooks/04-quality-audit.md. Start with governance-and-quality/data-quality-auditor (profile + DQS + remediation plan), then branch by root cause: schema -> databases/database-designer; policy -> governance-and-quality/mdm-and-federated-governance; forward prevention -> pipelines/analytics-pipeline-orchestration/skills/quality-gates. Bypass: just profile the data or skip the playbook.\"}} else empty end' 2>/dev/null || true"
+          },
+          {
+            "type": "command",
+            "command": "jq -c 'if (.prompt // \"\") | test(\"\\\\b(build|design|set\\\\s+up|architect)\\\\s+.{0,30}\\\\b(RAG|knowledge\\\\s+graph|semantic\\\\s+search|vector\\\\s+search)\\\\b\"; \"i\") then {hookSpecificOutput: {hookEventName: \"UserPromptSubmit\", additionalContext: \"Retrieval architecture context: ALWAYS read Data Engineering/references/structured-vs-unstructured-retrieval.md FIRST to choose between knowledge graph, RAG, and text-to-SQL - most production systems use a hybrid. Then proceed via Data Engineering/playbooks/06-retrieval-architecture.md. Bypass: already chose [KG/RAG/text-to-SQL] or just need [specific skill].\"}} else empty end' 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}

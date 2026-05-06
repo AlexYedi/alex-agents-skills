@@ -82,6 +82,24 @@ Skills inside this folder cross-reference each other in their respective SKILL.m
 - **mdm-and-federated-governance** ↔ **data-quality-auditor** (policy ↔ audit)
 - **knowledge-graph-modeling/applications/platform-integration** ↔ **rag-architect** (structured ↔ unstructured retrieval, both bridge through `references/structured-vs-unstructured-retrieval.md`)
 
-## Future Work (v2)
+## Playbooks (v2 — chains across skills)
 
-Cross-skill *chaining* — programmatic invocation between skills (one skill consumes another's output) — is deferred. Today, cross-skill composition is documented prose in SKILL.md cross-references and the `enrichment-expert` lead agent's delegation flow. Formalizing chained invocation contracts is the next iteration.
+Seven documented chains tie skills, agents, and references together for common workflows. See [`playbooks/`](playbooks/) for the full set.
+
+| # | Playbook | Slash command | Auto-suggested by hook |
+|---|---|---|---|
+| 1 | [Greenfield platform](playbooks/01-greenfield-platform.md) | `/data-engineering:design-platform` | — |
+| 2 | [Schema design](playbooks/02-schema-design.md) | — | yes (on `*.sql` / migration / schema file edits) |
+| 3 | [Pipeline build](playbooks/03-pipeline-build.md) | `/data-engineering:build-pipeline` | — |
+| 4 | [Quality audit](playbooks/04-quality-audit.md) | — | yes (on "audit data", "data quality", "anomalies in") |
+| 5 | [Governance setup](playbooks/05-governance-setup.md) | — | — |
+| 6 | [Retrieval architecture](playbooks/06-retrieval-architecture.md) | `/data-engineering:design-retrieval` | yes (on "build RAG", "knowledge graph", "semantic search", "vector search") |
+| 7 | [Data enrichment](playbooks/07-data-enrichment.md) | `/data-engineering:enrich` | — |
+
+Playbooks are *defaults to deviate from*, not workflows to march through. Each playbook has a "When to skip" section and bypass phrases.
+
+## Future Work (v3)
+
+Hooks and slash commands currently live at the project level (`<repo>/.claude/`). When this folder migrates to a standalone repo as a Claude Code plugin, both move into `Data Engineering/.claude-plugin/` to travel with the folder.
+
+Cross-skill *programmatic* chaining (one skill consumes another's output via a defined invocation contract) remains deferred — today's chains are documented prose plus playbook orchestration.
