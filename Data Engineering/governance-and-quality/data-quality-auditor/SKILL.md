@@ -214,6 +214,12 @@ Structure all audit reports as:
 
 ---
 
+## Cross-References
+
+- **`governance-and-quality/mdm-and-federated-governance`** — the policy and contract frame around the data this skill audits. Use that skill to define what "good" looks like (data contracts, ABAC, MDM style); use this skill to confirm the data actually meets it.
+- **`databases/database-designer`** — when an audit traces issues back to schema design, normalization, or missing constraints.
+- **`pipelines/analytics-pipeline-orchestration`** — pair with its `quality-gates` sub-skill when audit findings should become forward-looking gates instead of one-off remediation.
+
 ## References
 
 - `references/data-quality-concepts.md` — MCAR/MAR/MNAR theory, DQS methodology, outlier detection methods

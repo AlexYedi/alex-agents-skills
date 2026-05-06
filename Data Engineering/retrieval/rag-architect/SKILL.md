@@ -311,6 +311,13 @@ The RAG (Retrieval-Augmented Generation) Architect skill provides comprehensive 
 - **Problem**: System doesn't scale with increased load
 - **Solution**: Implement proper caching, database sharding, and auto-scaling
 
+## Cross-References
+
+- **`references/structured-vs-unstructured-retrieval.md`** — read this *before* choosing RAG vs knowledge-graph; most production systems eventually use both.
+- **`retrieval/knowledge-graph-modeling`** / **`knowledge-graph-applications`** / **`knowledge-graph-platform-integration`** — the structured-retrieval counterparts. Use a KG for graph-shaped queries (multi-hop, identity resolution, dependency analysis); use this skill (RAG) for semantic Q&A over documents. Hybrid: KG for metadata + ACL filtering, RAG for content.
+- **`retrieval/text-to-sql`** — when the underlying data is relational and the query intent is structured, text-to-SQL beats RAG for accuracy and cost.
+- **`retrieval/tutorials/retrieval_augmented_generation`** and **`retrieval/tutorials/contextual-embeddings`** — foundational notebooks; read these to learn techniques before applying this skill at production scale.
+
 ## Conclusion
 
 Building effective RAG systems requires careful consideration of each component in the pipeline. The key to success is understanding the tradeoffs between different approaches and choosing the right combination of techniques for your specific use case. Start with simple approaches and gradually add sophistication based on evaluation results and production requirements.

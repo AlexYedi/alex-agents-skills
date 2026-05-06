@@ -360,7 +360,8 @@ External data sources (CSV, SQL DBs, JSON APIs) presented as virtual nodes/relat
 - *Building Knowledge Graphs* by Hofer & Bonatti — semantic-web-leaning reference
 - Neo4j documentation — neo4j.com/docs
 - Schema.org — for common concept ontologies
-- See `knowledge-graph-applications` for fraud detection, RCA, semantic search use cases
-- See `knowledge-graph-platform-integration` for ETL, Spark, Kafka, GDS
+- See `retrieval/knowledge-graph-applications` for fraud detection, RCA, semantic search use cases
+- See `retrieval/knowledge-graph-platform-integration` for ETL, Spark, Kafka, GDS
+- See `retrieval/rag-architect` for the unstructured-retrieval counterpart, and `references/structured-vs-unstructured-retrieval.md` for choosing between (or combining) KG and RAG.
 
 Source: *Knowledge Graphs* (Barrasa & Webber, O'Reilly, 2023).

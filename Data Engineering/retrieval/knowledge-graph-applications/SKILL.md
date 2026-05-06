@@ -456,7 +456,8 @@ RETURN p, connections, shared_count, app
 
 - *Knowledge Graphs* (Barrasa & Webber), Chapters on use cases
 - Neo4j Graph Data Science library documentation
-- See `knowledge-graph-modeling` for data models and organizing principles
-- See `knowledge-graph-platform-integration` for ETL, GDS, ML pipelines
+- See `retrieval/knowledge-graph-modeling` for data models and organizing principles
+- See `retrieval/knowledge-graph-platform-integration` for ETL, GDS, ML pipelines
+- See `retrieval/rag-architect` and `references/structured-vs-unstructured-retrieval.md` when the use case might be better served by (or combined with) unstructured RAG.
 
 Source: *Knowledge Graphs* (Barrasa & Webber), use case chapters.

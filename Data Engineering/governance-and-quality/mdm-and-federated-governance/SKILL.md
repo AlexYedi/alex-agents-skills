@@ -425,7 +425,8 @@ Both are valid. The mistake is treating one as the other.
 - *Open Policy Agent (OPA)* documentation — Rego language and integration patterns
 - *Data Contracts* by Andrew Jones (O'Reilly, 2024) — the canonical contracts reference
 - *Building Knowledge Graphs* by Hofer & Bonatti — semantic web foundations
-- See `data-mesh-domain-topologies` for the topology context where this governance operates
-- See `enterprise-data-integration-and-distribution` for the integration patterns governance constrains
+- See `architecture/data-mesh-topologies` for the topology context where this governance operates
+- See `architecture/integration-patterns` for the integration patterns governance constrains
+- See `governance-and-quality/data-quality-auditor` for the audit-side companion — when policy is set here, that skill is what you run to confirm the data actually meets the contract.
 
 Source: *Data Management at Scale* (Strengholt), Chapters 5-7 (MDM, Governance, Metadata).

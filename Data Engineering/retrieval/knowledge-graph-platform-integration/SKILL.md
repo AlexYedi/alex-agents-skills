@@ -418,7 +418,8 @@ Knowledge graph as the **master source** for golden record creation, dedup, logi
 - Neo4j Graph Data Science documentation
 - Neo4j GraphQL Library
 - DataHub + Neo4j integration patterns
-- See `knowledge-graph-modeling` for data models
-- See `knowledge-graph-applications` for use case patterns
+- See `retrieval/knowledge-graph-modeling` for data models
+- See `retrieval/knowledge-graph-applications` for use case patterns
+- See `retrieval/rag-architect` for parallel RAG-pipeline integration patterns, and `references/structured-vs-unstructured-retrieval.md` for hybrid (KG + vector) architectures.
 
 Source: *Knowledge Graphs* (Barrasa & Webber), platform integration chapters.
