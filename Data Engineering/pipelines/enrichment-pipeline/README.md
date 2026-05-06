@@ -17,8 +17,8 @@ If your goal is broader integration architecture (event vs batch, CQRS, message 
 ```
 enrichment-pipeline/
 ├── README.md                 (you are here)
-├── config/
-│   └── providers.yaml        ← 150+ providers with costs, SLAs, coverage notes
+├── references/
+│   └── providers-catalog.md  ← 150+ providers with capabilities, costs, success rates (reference doc, not code-loaded)
 ├── agents/                   ← personas the lead orchestrator delegates to
 │   ├── enrichment-expert.md      (lead — scopes work, delegates, aggregates)
 │   ├── signal-integrator.md      (provider APIs, normalization, delivery)
@@ -62,7 +62,7 @@ All workflows assume GDPR / CCPA scope and require:
 - Lawful basis tracked per record
 - Opt-out / deletion respected
 - Audit logs retained per retention policy
-- Provider compliance verified before inclusion in `providers.yaml`
+- Provider compliance verified before inclusion in `references/providers-catalog.md`
 
 The `data-quality-steward` agent owns enforcement. If it flags a compliance issue, the run **halts** — do not silently bypass.
 
@@ -70,7 +70,7 @@ The `data-quality-steward` agent owns enforcement. If it flags a compliance issu
 
 - **Caching** — defaults: email 30d, phone 60d, company 90d, intent 7d (always refresh)
 - **Credit budgets** — set per command via `--max-credits`; exceeding triggers an alert via `provider-scorecard`
-- **Provider catalog** — `config/providers.yaml` is the source of truth for cost / SLA / coverage; update there, not in skill docs
+- **Provider catalog** — `references/providers-catalog.md` is the human-readable source of truth for per-provider capability / cost / success rate. Update there, not in skill docs. Selection rules and waterfall design live in `skills/waterfall-blueprint/SKILL.md`.
 
 ## Cross-references
 
@@ -81,5 +81,4 @@ The `data-quality-steward` agent owns enforcement. If it flags a compliance issu
 
 ## Open TODOs
 
-- `config/providers.yaml` schema is undocumented — add a header section describing the fields, expected types, and update process.
 - Cross-skill *chaining* (programmatic invocation between agents/skills) is deferred to a future iteration; today, chaining is documented in agent prompts and the lead orchestrator routes manually.

@@ -1,8 +1,13 @@
-# Provider Configuration - Complete Registry
+# Provider Catalog
 
-## Provider Capabilities Matrix
+> **What this is:** A human-readable reference catalog of 150+ B2B data enrichment providers with their capabilities, credit costs, and success-rate estimates. The YAML below is reference notation for scannability — **it is not loaded by code**. Update by hand when adding/removing providers or revising costs.
+>
+> **What this is *not*:** Selection rules, waterfall sequences, or budget profiles. Those live in [`../skills/waterfall-blueprint/SKILL.md`](../skills/waterfall-blueprint/SKILL.md) — that's the design playbook for *how to compose* providers from this catalog.
 
-This configuration maps all 150+ data providers with their specific enrichment capabilities, credit costs, and integration details.
+**Last reviewed:** 2026-05-06
+**Next review due:** 2026-08-06 (quarterly)
+
+## Provider Capabilities
 
 ```yaml
 providers:
@@ -40,6 +45,10 @@ providers:
         credits: 2
         success_rate: 70%
     best_for: ["US B2B", "Sales teams", "LinkedIn data"]
+    bulk_discounts:
+      1000: 10%
+      5000: 20%
+      10000: 30%
     
   hunter:
     name: "Hunter"
@@ -167,6 +176,8 @@ providers:
         credits: 1
         success_rate: 85%
     best_for: ["Company data", "Real-time enrichment", "API integration"]
+    bulk_discounts:
+      volume_tier: 25%
     
   zoominfo:
     name: "ZoomInfo"
@@ -197,6 +208,8 @@ providers:
         credits: [2, 3]
         success_rate: 85%
     best_for: ["Enterprise accounts", "Comprehensive data", "Intent signals"]
+    bulk_discounts:
+      enterprise_agreement: 40%
     
   crunchbase:
     name: "Crunchbase"
@@ -550,86 +563,17 @@ providers:
         credits: 0
         success_rate: 100%
     best_for: ["Data processing", "Cost optimization", "Speed"]
-
-# ============================================
-# PROVIDER SELECTION RULES
-# ============================================
-
-selection_rules:
-  email_discovery:
-    preferred_sequence:
-      - apollo_io  # Best overall coverage
-      - hunter     # Domain specialist
-      - rocketreach # Personal emails
-      - findymail  # AI-powered
-      - bettercontact # Waterfall fallback
-    
-  phone_discovery:
-    preferred_sequence:
-      - apollo_io  # Good phone data
-      - rocketreach # Mobile numbers
-      - leadmagic  # Direct dials
-      - bettercontact # Phone waterfall
-    
-  company_enrichment:
-    preferred_sequence:
-      - clearbit  # Fast and reliable
-      - ocean_io  # Comprehensive
-      - zoominfo  # Enterprise depth
-      - crunchbase # Funding data
-    
-  technographics:
-    preferred_sequence:
-      - builtwith # Website tech
-      - hg_insights # Enterprise tech
-      - clearbit  # Basic tech stack
-    
-  intent_signals:
-    preferred_sequence:
-      - b2d_ai    # AI-powered intent
-      - zoominfo  # Topic-based
-      - 6sense    # Account-based
-    
-  verification:
-    email:
-      - zerobounce # Most accurate
-      - neverbounce # Fast bulk
-    phone:
-      - clearoutphone # Phone validation
-
-# ============================================
-# CREDIT OPTIMIZATION MATRIX
-# ============================================
-
-credit_optimization:
-  strategies:
-    cost_conscious:
-      max_credits_per_record: 5
-      preferred_providers: ["apollo_io", "hunter", "clearbit"]
-      skip_premium: true
-    
-    balanced:
-      max_credits_per_record: 10
-      use_waterfalls: true
-      validate_critical: true
-    
-    quality_first:
-      max_credits_per_record: 20
-      use_best_providers: true
-      multi_source_validation: true
-      include_intent: true
-    
-  bulk_discounts:
-    apollo_io:
-      1000: 10%
-      5000: 20%
-      10000: 30%
-    zoominfo:
-      enterprise_agreement: 40%
-    clearbit:
-      volume_tier: 25%
 ```
 
----
+## See Also
 
-*This configuration ensures all 150+ providers and 800+ capabilities are properly mapped and available for the data enrichment system.*
+- [`../skills/waterfall-blueprint/SKILL.md`](../skills/waterfall-blueprint/SKILL.md) — provider selection rules per enrichment type, credit-budget profiles (Maximum Success / Balanced / Budget), and optimization tactics. *That* is where you go when designing a sequence; this catalog is where you go when looking up what a single provider does.
+- [`../skills/waterfall-blueprint/references/provider_cheat_sheet.md`](../skills/waterfall-blueprint/references/provider_cheat_sheet.md) — the at-a-glance shortlist for in-context decisions.
+- [`../skills/provider-scorecard/SKILL.md`](../skills/provider-scorecard/SKILL.md) — track observed performance against the success-rate estimates in this catalog and update them on the next quarterly review.
+
+## Update Process
+
+1. New provider, removed provider, or changed costs → edit this file directly.
+2. Update the **Last reviewed** date at the top.
+3. Note material changes in the bundle's git history (commit message is enough; no separate changelog needed at this scale).
+4. Quarterly: run `provider-scorecard` over the last 90 days of usage and reconcile observed success rates against the estimates here.
