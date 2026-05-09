@@ -1,0 +1,1387 @@
+/**
+ * AI STACK — DECISIONS PLAYBOOK (Addendum)
+ * Five-framework analysis with synthesis and 6/12/18-month action map.
+ * Companion to AI_STACK_REPORT.docx and AI_STACK_SUBSTRATE.pdf.
+ */
+const fs = require('fs');
+const {
+  Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+  Header, Footer, AlignmentType, PageOrientation, LevelFormat,
+  ExternalHyperlink, HeadingLevel, BorderStyle, WidthType, ShadingType,
+  TabStopType, TabStopPosition, PageNumber, PageBreak,
+} = require('docx');
+
+// ---------------- Style constants ----------------
+
+const FONT = 'Calibri';
+const FONT_DISP = 'Georgia';
+const FONT_MONO = 'Consolas';
+const COLOR_INK = '1A1410';
+const COLOR_ACCENT = 'A6371F';
+const COLOR_VERDIGRIS = '4A6B58';
+const COLOR_GRAY = '6E6356';
+
+// ---------------- Helpers ----------------
+
+const docChildren = [];
+
+function p(text, opts = {}) {
+  return new Paragraph({
+    children: [new TextRun({
+      text,
+      font: opts.font || FONT,
+      size: opts.size || 22,
+      bold: opts.bold,
+      italics: opts.italics,
+      color: opts.color || COLOR_INK,
+    })],
+    spacing: { before: opts.before ?? 80, after: opts.after ?? 100, line: 300 },
+    alignment: opts.align || AlignmentType.JUSTIFIED,
+    indent: opts.indent,
+  });
+}
+
+function rich(parts, opts = {}) {
+  return new Paragraph({
+    children: parts.map(part => {
+      if (part.link) {
+        return new ExternalHyperlink({
+          link: part.link,
+          children: [new TextRun({
+            text: part.text, font: part.font || FONT, size: part.size || 22,
+            bold: part.bold, italics: part.italics,
+            color: part.color || '0563C1', underline: {},
+          })],
+        });
+      }
+      return new TextRun({
+        text: part.text, font: part.font || FONT, size: part.size || 22,
+        bold: part.bold, italics: part.italics, color: part.color || COLOR_INK,
+      });
+    }),
+    spacing: { before: opts.before ?? 80, after: opts.after ?? 100, line: 300 },
+    alignment: opts.align || AlignmentType.JUSTIFIED,
+  });
+}
+
+function h1(text) {
+  return new Paragraph({
+    children: [new TextRun({ text, font: FONT_DISP, size: 40, bold: true, color: COLOR_INK })],
+    spacing: { before: 480, after: 240, line: 320 },
+    pageBreakBefore: true,
+    heading: HeadingLevel.HEADING_1,
+  });
+}
+
+function h2(text) {
+  return new Paragraph({
+    children: [new TextRun({ text, font: FONT_DISP, size: 30, bold: true, color: COLOR_INK })],
+    spacing: { before: 320, after: 160, line: 320 },
+    heading: HeadingLevel.HEADING_2,
+  });
+}
+
+function h3(text) {
+  return new Paragraph({
+    children: [new TextRun({ text, font: FONT_DISP, size: 24, bold: true, color: COLOR_ACCENT })],
+    spacing: { before: 240, after: 100, line: 300 },
+    heading: HeadingLevel.HEADING_3,
+  });
+}
+
+function h4(text) {
+  return new Paragraph({
+    children: [new TextRun({ text, font: FONT_DISP, size: 22, bold: true, color: COLOR_VERDIGRIS })],
+    spacing: { before: 200, after: 80, line: 300 },
+    heading: HeadingLevel.HEADING_4,
+  });
+}
+
+function eyebrow(text) {
+  return new Paragraph({
+    children: [new TextRun({
+      text: text.toUpperCase(), font: FONT_MONO, size: 16,
+      color: COLOR_ACCENT,
+    })],
+    spacing: { before: 200, after: 60 },
+  });
+}
+
+function bullet(text, opts = {}) {
+  return new Paragraph({
+    numbering: { reference: 'bullets', level: 0 },
+    children: [new TextRun({
+      text, font: FONT, size: 22,
+      bold: opts.bold, italics: opts.italics, color: COLOR_INK,
+    })],
+    spacing: { before: 40, after: 40, line: 280 },
+  });
+}
+
+function bulletRich(parts) {
+  return new Paragraph({
+    numbering: { reference: 'bullets', level: 0 },
+    children: parts.map(part => new TextRun({
+      text: part.text, font: FONT, size: 22,
+      bold: part.bold, italics: part.italics, color: part.color || COLOR_INK,
+    })),
+    spacing: { before: 40, after: 40, line: 280 },
+  });
+}
+
+function rule() {
+  return new Paragraph({
+    children: [new TextRun({ text: '' })],
+    border: {
+      bottom: { style: BorderStyle.SINGLE, size: 6, color: COLOR_ACCENT, space: 1 },
+    },
+    spacing: { before: 120, after: 240 },
+  });
+}
+
+function spacer(n = 120) {
+  return new Paragraph({ children: [new TextRun('')], spacing: { before: n, after: n } });
+}
+
+// Compose a "stratum card" — used heavily in Part VI
+function stratumCard(num, name, opportunities, challenges, openQs) {
+  const parts = [];
+  parts.push(h3(`Stratum ${num} · ${name}`));
+
+  parts.push(h4('Opportunities'));
+  opportunities.forEach((o, i) => {
+    parts.push(rich([
+      { text: `${i + 1}. `, bold: true, color: COLOR_ACCENT },
+      { text: o.headline, bold: true },
+      { text: ` ${o.evidence}` },
+      { text: ` Score: ${o.score}/15.`, color: COLOR_GRAY, italics: true },
+    ]));
+  });
+
+  parts.push(h4('Challenges'));
+  challenges.forEach((c, i) => {
+    parts.push(rich([
+      { text: `${i + 1}. `, bold: true, color: COLOR_ACCENT },
+      { text: c.headline, bold: true },
+      { text: ` ${c.evidence}` },
+      { text: ` Score: ${c.score}/15.`, color: COLOR_GRAY, italics: true },
+    ]));
+  });
+
+  parts.push(h4('Open Questions'));
+  openQs.forEach((q, i) => {
+    parts.push(rich([
+      { text: `${i + 1}. `, bold: true, color: COLOR_ACCENT },
+      { text: q.headline, bold: true },
+      { text: ` ${q.evidence}` },
+      { text: ` Score: ${q.score}/15.`, color: COLOR_GRAY, italics: true },
+    ]));
+  });
+
+  return parts;
+}
+
+function pushAll(arr, items) {
+  items.forEach(item => arr.push(item));
+}
+
+// ============================================================
+// COVER PAGE
+// ============================================================
+
+docChildren.push(
+  spacer(2400),
+  new Paragraph({
+    alignment: AlignmentType.CENTER,
+    children: [new TextRun({
+      text: 'THE AI STACK',
+      font: FONT_DISP, size: 72, bold: true, color: COLOR_INK,
+    })],
+    spacing: { before: 0, after: 60 },
+  }),
+  new Paragraph({
+    alignment: AlignmentType.CENTER,
+    children: [new TextRun({
+      text: 'DECISIONS PLAYBOOK',
+      font: FONT_DISP, size: 48, bold: true, color: COLOR_ACCENT,
+    })],
+    spacing: { before: 0, after: 240 },
+  }),
+  new Paragraph({
+    alignment: AlignmentType.CENTER,
+    children: [new TextRun({
+      text: 'A FIVE-FRAMEWORK ANALYSIS, SYNTHESIS, AND ACTION MAP',
+      font: FONT_MONO, size: 18, color: COLOR_GRAY,
+    })],
+    spacing: { before: 0, after: 480 },
+  }),
+  new Paragraph({
+    alignment: AlignmentType.CENTER,
+    children: [new TextRun({
+      text: 'Addendum to the SUBSTRATE atlas and foundation report',
+      font: FONT_DISP, size: 22, italics: true, color: COLOR_GRAY,
+    })],
+    spacing: { before: 0, after: 120 },
+  }),
+  new Paragraph({
+    alignment: AlignmentType.CENTER,
+    children: [new TextRun({
+      text: 'Compiled for A. Yedi · Cycle MMXXVI',
+      font: FONT_DISP, size: 20, italics: true, color: COLOR_GRAY,
+    })],
+    spacing: { before: 0, after: 0 },
+  }),
+);
+
+// ============================================================
+// PREAMBLE
+// ============================================================
+
+docChildren.push(
+  h1('Preamble'),
+  rule(),
+  p('The first two volumes of this project — the SUBSTRATE atlas and the foundation report — describe the AI stack as it stands. They are descriptive: they map every layer from the power grid to the end user, with current data and current names. This volume is different. It is decision-oriented.'),
+  p('The shift is from "what is happening" to "what should I do about it." Five frameworks are applied to the same field, deliberately. No single framework would surface the full picture. The OCQ matrix classifies. Wardley mapping positions. Helmer\'s 7 Powers filters for durability. Ecosystem-level JTBD reframes from the buyer\'s seat. The Talent and Capital Flow tracker (a separate living document) adds empirical signal-following. Where the frameworks converge, conviction is high. Where they diverge, the open questions are honest.'),
+  p('The output of this volume is not another summary. It is a working playbook: seven ranked bets, five structural risks, five unresolved cruxes that re-rank everything, a six / twelve / eighteen-month action map, and a set of best-use-case reflections for each framework so the same discipline can be re-applied to future questions.'),
+  p('A note on register. This document is written for someone with twelve years of enterprise B2B fluency and growing technical depth. It assumes you can read a benchmark without translation, but it does not assume you have time to re-derive a framework from first principles. Where a framework matters, the methodology is named and condensed. Where the conclusion matters more than the derivation, the conclusion leads.'),
+  p('The five frameworks are applied in sequence, then synthesized. The frameworks are not redundant; each one surfaces something the others miss.'),
+
+  h1('Contents'),
+  rule(),
+  p('Part VI — The OCQ × Layer Matrix', { indent: { left: 360 } }),
+  p('Part VII — Wardley Mapping the Stack', { indent: { left: 360 } }),
+  p('Part VIII — 7 Powers (Helmer) and Five Forces', { indent: { left: 360 } }),
+  p('Part IX — Ecosystem-Level JTBD', { indent: { left: 360 } }),
+  p('Part X — Cross-Framework Synthesis: 7 Bets, 5 Risks, 5 Cruxes', { indent: { left: 360 } }),
+  p('Part XI — Alex’s 6 / 12 / 18-Month Action Map', { indent: { left: 360 } }),
+  p('Part XII — Best-Use-Case Reflections per Framework', { indent: { left: 360 } }),
+);
+
+// ============================================================
+// PART VI — OCQ × LAYER MATRIX
+// ============================================================
+
+docChildren.push(
+  h1('Part VI · The OCQ × Layer Matrix'),
+  rule(),
+
+  h2('Methodology'),
+  p('Each of the eighteen strata in the SUBSTRATE atlas is evaluated through three lenses. The lenses are defined precisely; entries that fail the precise definition are excluded. This is not a buffet of observations.'),
+  p('OPPORTUNITY — Where is value being created faster than the field’s prevailing narrative reflects. Specifically: structural inefficiency, underserved jobs-to-be-done, mispriced talent, mispositioned distribution. Not "things that are good." Each opportunity is scored on three dimensions on a 1–5 scale: Confidence (how sure we are), Time-to-Monetize (5 = soon), and Claimability for Alex (whether someone with enterprise B2B GTM background plus growing AI-builder fluency can actually act on it). Total out of 15.'),
+  p('CHALLENGE — The binding constraint or latent feedback loop that, if it tightens or fires, materially reprices everything above it. Not "things that are hard"; things that bind. Scored on Severity (how much it reprices), Probability (likelihood it bites), and Alex Exposure (how much it affects his bets specifically). Total out of 15.'),
+  p('OPEN QUESTION — A crux the field is betting on without admitting it; an answer would change other answers. Phrased as actual questions. Scored on Decidability Horizon (5 = decidable soon), Answer-Asymmetry (how much bets diverge based on the answer), and Bet-Size Implication (how much the playbook would shift). Total out of 15.'),
+  p('Top 3 opportunities, top 2 challenges, top 2 open questions per stratum. Ruthless cuts beneath that.'),
+);
+
+// ---- Stratum I — Power ----
+pushAll(docChildren, stratumCard('I', 'Power',
+  [
+    { headline: 'Behind-the-meter (BTM) gas + storage GTM to hyperscaler site selection teams.', evidence: 'ERCOT and PJM interconnection queues are 4–7 year backlogs; Meta’s Richland Parish 2.2 GW gas plant with Entergy and Stargate Abilene’s on-site gas turbines show hyperscalers will pay premium for speed-to-power. Sales motion to Crusoe, Vantage, QTS, and Tier-2 developers chasing 50–500 MW deals is wide open.', score: 'Conf 4 / TTM 5 / Claimability 4 = 13' },
+    { headline: 'Brokerage and origination of stranded interconnect positions and PPA assignments.', evidence: 'PJM capacity auction cleared at $329.17/MW-day; Dominion load forecast +833% by 2039; queue positions filed pre-2023 are now worth $50–150M each. Packaging queue position + land + water rights + utility relationship into a sellable asset to a neocloud is doing 2024-era domain-name arbitrage.', score: 'Conf 4 / TTM 5 / Claimability 3 = 12' },
+    { headline: 'Demand-response and load-flexibility software sales to hyperscalers facing FERC Order 2023 cost-allocation fights.', evidence: 'Emerald AI, Voltus, and Enchanted Rock are selling "curtailable AI load" as a grid service. An enterprise GTM person who can speak to both utility regulatory affairs and hyperscaler capacity planners is rare.', score: 'Conf 3 / TTM 4 / Claimability 4 = 11' },
+  ],
+  [
+    { headline: 'Transformer and HVDC equipment lead times (130+ weeks for large power transformers) are the hard binding constraint, not generation.', evidence: 'Hitachi Energy, Siemens Energy, GE Vernova all booked through 2028; Prysmian/Nexans subsea cable booked through 2030. Every gigawatt of announced capacity is implicitly betting on supply that does not exist.', score: 'Severity 5 / Prob 5 / Alex exp 3 = 13' },
+    { headline: 'State-level political backlash to data center electricity ratepayer cost-shifting (Virginia HB 2027, Ohio AEP rate case) reprices siting economics.', evidence: 'Dominion residential rates rising 15% directly attributed to data centers; this becomes a ballot issue in 2026 midterms. Forces deals into red-state exurbs and offshore (UAE, KSA) faster than expected.', score: 'Severity 4 / Prob 4 / Alex exp 3 = 11' },
+  ],
+  [
+    { headline: 'Does the SMR timeline (Kairos, X-energy, Oklo, NuScale) actually deliver MWh before 2030, or does the entire "nuclear renaissance" narrative collapse into a 2032+ event?', evidence: 'Amazon’s Talen deal and Microsoft’s Three Mile Island are restarts, not new builds; Oklo’s NRC pathway is still pre-application. If SMRs slip, every 2027–2029 hyperscaler capacity plan is built on gas plus curtailment, not clean power.', score: 'Decid 3 / Asym 5 / Bet-size 3 = 11' },
+    { headline: 'Will FERC and PJM force hyperscalers to pay full cost-of-service for transmission upgrades, or will the "co-located load" loophole (Talen-Amazon ALJ ruling) hold?', evidence: 'The November 2024 FERC rejection of the Talen ISA and the ongoing rehearing is a $50B+ swing on who pays for new transmission.', score: 'Decid 4 / Asym 5 / Bet-size 3 = 12' },
+  ],
+));
+
+// ---- Stratum II — Facility ----
+pushAll(docChildren, stratumCard('II', 'Facility',
+  [
+    { headline: 'Direct-to-chip liquid cooling retrofit services for the 2021–2023 air-cooled fleet.', evidence: 'Blackwell B200 racks at 120 kW and GB200 NVL72 at 120–140 kW exceed air cooling. CoreWeave, Lambda, and second-tier colos (Cologix, Stack, Aligned) need retrofits. Vertiv, Motivair, JetCool, and CoolIT are scaling, with channel and sales roles selling into colo operators paying enterprise SaaS comps.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'Sales to "neocloud" Tier-2 operators (Crusoe, Nebius, Lambda, Together, Voltage Park) who have GPUs but lack enterprise-grade SOC2 / HIPAA / FedRAMP go-to-market motion.', evidence: 'They are $1–3B revenue but staffed for hyperscale-engineer customers, not Fortune 500 procurement. Compliance-as-a-service, MSA paper, enterprise CS function — all greenfield.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'OCP ORv3 / 48V rack standardization consulting and reseller motion into enterprise on-prem AI deployments.', evidence: 'JPMorgan, Goldman, Walmart all building internal H200/B200 clusters; they need someone to translate hyperscaler-grade rack standards into enterprise procurement.', score: 'Conf 3 / TTM 4 / Claimability 4 = 11' },
+  ],
+  [
+    { headline: 'Water rights and zoning approvals are the new binding constraint in Phoenix, Northern Virginia, and Dublin.', evidence: 'Loudoun County moratorium discussions, Chandler AZ Intel-Microsoft water disputes, Dublin’s 2028 grid moratorium. WUE specs are now contractual, not aspirational.', score: 'Severity 4 / Prob 5 / Alex exp 2 = 11' },
+    { headline: 'The colo overbuild risk in Tier-2 markets (Reno, Columbus, Atlanta) if the inference-economics question goes the wrong way.', evidence: 'Crusoe + Stargate + Meta + Hyperion total approximately 25 GW announced. If only 60% lands, secondary-market lease rates compress 30%+.', score: 'Severity 4 / Prob 3 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'Does immersion cooling (single-phase, two-phase) become standard by 2027, or does direct-to-chip liquid (cold plate) win for the next decade?', evidence: 'Submer, GRC, LiquidStack vs. CoolIT/Vertiv/Motivair is a $20B TAM split. NVIDIA’s reference designs lean cold-plate but Meta and Microsoft internal R&D leans immersion.', score: 'Decid 4 / Asym 4 / Bet-size 3 = 11' },
+    { headline: 'Does the "AI factory" become a regulated utility-like asset class (REIT-able, ratebase-able) or remain pure operating real estate?', evidence: 'Digital Realty plus Equinix REIT structure already exists, but Stargate’s SPV financing model suggests something new. Affects who can play and at what cost of capital.', score: 'Decid 3 / Asym 4 / Bet-size 2 = 9' },
+  ],
+));
+
+// ---- Stratum III — Compute ----
+pushAll(docChildren, stratumCard('III', 'Compute',
+  [
+    { headline: 'Enterprise GTM for inference-optimized silicon alternatives (Groq, Cerebras, SambaNova, Tenstorrent) targeting cost-conscious latency-sensitive workloads.', evidence: 'Groq closed $640M at $2.8B; Cerebras IPO’d 2024; their enterprise sales motions are nascent. Inference TCO is now a CFO conversation, not just an MLE one — perfect for someone who has sold to procurement at Fortune 500.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+    { headline: 'GPU brokerage and capacity arbitrage for the long tail of enterprises that cannot get NVIDIA allocation directly.', evidence: 'H200 spot pricing on SF Compute, Foundry, San Francisco Compute Co. is volatile; H100 8-hour pricing dropped from $8/hr to $1.99/hr in 18 months. Enterprise relationship sellers who can package committed-use to mid-market fill a real gap CDW and SHI have not figured out.', score: 'Conf 4 / TTM 5 / Claimability 4 = 13' },
+    { headline: 'AMD MI355X / MI400 channel sales — the underdog opportunity.', evidence: 'AMD ROCm 6.2+ has closed enough of the CUDA gap for inference; Microsoft, Meta, Oracle are buying MI300X at scale. AMD’s enterprise sales bench is thin relative to NVIDIA’s.', score: 'Conf 3 / TTM 4 / Claimability 4 = 11' },
+  ],
+  [
+    { headline: 'HBM3e / HBM4 supply (SK Hynix 50%+ share, Micron, Samsung) is the actual bottleneck for compute scaling, and it is tighter than fabrication.', evidence: 'SK Hynix sold out through 2026; HBM4 ramp is 2H 2025 with Rubin in 2026. Every GPU shipment forecast is downstream of three Korean fab decisions.', score: 'Severity 5 / Prob 5 / Alex exp 4 = 14' },
+    { headline: 'CoWoS-L advanced packaging at TSMC is the second binding constraint (capacity approximately 80k wafers/month end of 2025).', evidence: 'Even if HBM ships, packaging gates Blackwell, Rubin, MI400. Intel and Samsung packaging are 2–3 years behind.', score: 'Severity 5 / Prob 5 / Alex exp 3 = 13' },
+  ],
+  [
+    { headline: 'Does inference compute demand actually 10x from 2025–2027 as agentic workloads and reasoning models suggest, or do algorithmic efficiency gains (DeepSeek V3, distillation, MoE) flatten the curve?', evidence: 'This is the central crux. NVIDIA’s $4T market cap, Stargate’s $500B, and every neocloud’s unit economics depend on the answer.', score: 'Decid 4 / Asym 5 / Bet-size 5 = 14' },
+    { headline: 'Does custom silicon (TPU Ironwood, Trainium 3, MTIA, Maia 200) take 30%+ of training-plus-inference share by 2027, or does NVIDIA’s CUDA moat hold above 80%?', evidence: 'Google’s Gemini-on-TPU and Anthropic’s Trainium 2 commitment are early signals. If hyperscaler ASIC share crosses 30%, NVIDIA’s pricing power breaks.', score: 'Decid 4 / Asym 5 / Bet-size 4 = 13' },
+  ],
+));
+
+// ---- Stratum IV — Fabric ----
+pushAll(docChildren, stratumCard('IV', 'Fabric',
+  [
+    { headline: 'Enterprise sales for Ethernet-AI (Spectrum-X, Tomahawk 6, Cisco Silicon One P200) into customers who refuse InfiniBand lock-in.', evidence: 'UEC 1.0 spec ratified 2025; Meta, Oracle, xAI Colossus all built on Ethernet at 100k+ GPU scale. Cisco, Arista, and Broadcom channel partners are scrambling for AI-fluent reps.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+    { headline: 'Co-packaged optics (CPO) and silicon photonics startup commercial leadership (Ayar Labs $155M Series D, Lightmatter $400M at $4.4B).', evidence: 'These companies have product-market-fit signals and need first enterprise sellers and design-win program managers.', score: 'Conf 3 / TTM 3 / Claimability 4 = 10' },
+    { headline: 'DPU / SmartNIC sales motion (BlueField-4, AMD Pensando, Intel IPU) into financial services and telco for AI workload offload.', evidence: 'Sub-stratum with maturing buyer interest and thin enterprise sales coverage.', score: 'Conf 3 / TTM 3 / Claimability 4 = 10' },
+  ],
+  [
+    { headline: 'NVLink 5/6 + NVSwitch is a stickier moat than CUDA at the rack-scale; the GB200 NVL72 single-domain 72-GPU coherent memory is genuinely differentiated.', evidence: 'UALink 1.0 (May 2025 spec) is 18–24 months from competing silicon. This locks NVIDIA’s pricing for training clusters through 2027.', score: 'Severity 5 / Prob 4 / Alex exp 3 = 12' },
+    { headline: 'The optical transceiver supply chain (Coherent, Lumentum, Innolight, Eoptolink) at 800G/1.6T is concentrated and mostly Chinese-manufactured; export-control or tariff shocks reprice every fabric build.', evidence: 'Tariff or sanctions volatility could disrupt a $5B+ component category overnight.', score: 'Severity 4 / Prob 3 / Alex exp 2 = 9' },
+  ],
+  [
+    { headline: 'Does the "scale-up domain" (NVLink-style coherent memory) keep expanding from 72 to 576+ GPUs, making scale-out (Ethernet/IB) less critical, or do scale-out improvements (UEC, SHARPv4) catch up and commoditize fabric?', evidence: 'Rubin Ultra NVL576 is the test. If scale-up wins, NVIDIA owns the rack; if scale-out wins, Broadcom, Cisco, and Arista win the build.', score: 'Decid 3 / Asym 5 / Bet-size 4 = 12' },
+    { headline: 'Does CPO replace pluggable optics in the 2027–2029 window, or does it remain a hyperscale-only technology?', evidence: 'Affects whether Ayar Labs and Lightmatter become $20B companies or acqui-hires.', score: 'Decid 3 / Asym 4 / Bet-size 2 = 9' },
+  ],
+));
+
+// ---- Stratum V — Parallelism ----
+pushAll(docChildren, stratumCard('V', 'Parallelism',
+  [
+    { headline: 'GPU scheduling and orchestration sales (Run:ai now NVIDIA-owned, KAI Scheduler, SchedMD/Slurm commercial, Anyscale, Together).', evidence: 'NVIDIA’s $700M Run:ai acquisition consolidated the market and created channel chaos; enterprise customers want non-NVIDIA-controlled options. Anyscale (Ray) commercial team is hiring aggressively.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+    { headline: 'Inference platform GTM (vLLM commercial entities, TensorRT-LLM partners, Modal, Baseten, Replicate, Fireworks).', evidence: 'Inference is becoming a procurement category separate from training; enterprise selling motion is being invented in real-time. Fireworks, Baseten, and Modal all hiring enterprise AEs at $300–500K OTE.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'MLOps-for-agents tooling (LangSmith, LangGraph, Braintrust, Langfuse, Arize, Weights & Biases CoreWeave-owned).', evidence: 'Agent eval and observability is the 2026 Datadog opportunity.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+  ],
+  [
+    { headline: 'CUDA + cuDNN + NCCL + Megatron-Core + TensorRT-LLM is a vertically integrated stack that punishes anyone optimizing at the parallelism layer alone; even FlashAttention-3 ships first on Hopper/Blackwell.', evidence: 'Most parallelism-layer startups become NVIDIA features within 24 months.', score: 'Severity 4 / Prob 4 / Alex exp 3 = 11' },
+    { headline: 'Open-source frameworks (PyTorch FSDP2, vLLM) are increasingly Meta / UC-Berkeley / hyperscaler-controlled, hollowing out independent commercial layers.', evidence: 'Reduces VC-fundable surface area and therefore enterprise GTM job creation.', score: 'Severity 3 / Prob 4 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'Do agent runtimes (LangGraph, CrewAI, AutoGen, Letta, OpenAI Agents SDK, Anthropic Agent SDK) consolidate around a winner by 2027, or does the runtime collapse into the model provider?', evidence: 'If runtimes collapse into providers, every standalone agent-tooling company is a feature.', score: 'Decid 4 / Asym 5 / Bet-size 5 = 14' },
+    { headline: 'Does inference cost-per-token continue dropping 4–10x per year (the OpenAI / Anthropic / Google trend through 2024–25), or do reasoning models break the curve?', evidence: 'Determines whether AI-native enterprise software has a sustainable gross margin profile.', score: 'Decid 4 / Asym 5 / Bet-size 5 = 14' },
+  ],
+));
+
+// ---- Stratum VI — Data ----
+pushAll(docChildren, stratumCard('VI', 'Data',
+  [
+    { headline: 'Enterprise data-licensing brokerage — a commercial discipline, not a technical one — and the supply side is freezing fast.', evidence: 'Cloudflare’s July 2025 default-block flipped the open-web-scraping default. Reddit–Google $60M, Reddit–OpenAI $70M, HarperCollins / Wiley / Taylor & Francis prove publishers can negotiate eight-figure ARR from a standing start. The buyer set is approximately 15 frontier labs; the seller set is every enterprise sitting on proprietary corpora. The single most claimable opportunity in the entire stack for someone with enterprise GTM, contract structuring, and MSA fluency.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'Provenance and lineage tooling (C2PA, SynthID, dataset attestations) becomes a procurement checkbox in 2026 enterprise AI RFPs.', evidence: 'Bartz v. Anthropic’s $1.5B settlement priced unlicensed training data at approximately $3K per work; EU AI Act Article 53 training-data summary obligations bind August 2026. Enterprise legal teams will demand provenance attestations before signing.', score: 'Conf 4 / TTM 4 / Claimability 4 = 12' },
+    { headline: 'Synthetic data curation services for vertical models (legal, medical, financial).', evidence: 'Synthetic now constitutes 20–50% of frontier training mixes; mid-market enterprises want vertical fine-tunes but lack curation expertise. The "synthetic data ops" consultancy or product wedge is open and the buyer is the CDO, not the ML team.', score: 'Conf 3 / TTM 4 / Claimability 4 = 11' },
+  ],
+  [
+    { headline: 'Data supply is collapsing into a two-tier market — frontier labs with paid corpora vs. everyone else with degrading open data.', evidence: 'Common Crawl quality is falling as scrapers get blocked; FineWeb-Edu and Nemotron-CC v2 are heavily-curated subsets, not new tokens. Open-source labs without licensing budgets face a hard ceiling.', score: 'Severity 4 / Prob 4 / Alex exp 2 = 10' },
+    { headline: 'Copyright settlement precedent ($1.5B Bartz) is creating retroactive liability for any model trained pre-2024 on unlicensed corpora — including most fine-tunes enterprises have already deployed.', evidence: 'Legal exposure flows downstream to enterprise users via indemnification clauses. Procurement will demand training-data warranties most vendors cannot honor.', score: 'Severity 4 / Prob 3 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'Will the EU AI Act Article 53 "sufficiently detailed summary" requirement be enforced as a compliance checkbox or as a teeth-bearing audit regime?', evidence: 'Asymmetric: weak enforcement means provenance tooling is a nice-to-have; strong enforcement means it is a $10B+ compliance market by 2027. Decidability tied to first enforcement actions in late 2026.', score: 'Decid 4 / Asym 5 / Bet-size 4 = 13' },
+    { headline: 'Does synthetic data hit a quality ceiling (model collapse) at 50%+ mix, or does iterative refinement (RLAIF-curated synthetic) keep scaling?', evidence: 'If collapse is real, licensed human data becomes scarcer and more valuable; if not, data scarcity is a non-problem and licensing comps deflate.', score: 'Decid 3 / Asym 5 / Bet-size 5 = 13' },
+  ],
+));
+
+// ---- Stratum VII — Pre-Training ----
+pushAll(docChildren, stratumCard('VII', 'Pre-Training',
+  [
+    { headline: 'The "$5.6M frontier model" narrative (DeepSeek V3) is durably wrong, but the corollary — mid-tier capable models cost less than $50M — is durably right, and creates a wave of vertical / sovereign model builders who need GTM partners.', evidence: 'UAE (Falcon), India (BharatGPT), and approximately 20 Fortune 100s are exploring sovereign or proprietary models. Selling infra, eval, or deployment services to this cohort is wide open and commercial-relationship-driven.', score: 'Conf 4 / TTM 4 / Claimability 4 = 12' },
+    { headline: 'Inference-optimized architecture choices (MoE, MLA, hybrid Mamba/Jamba) are creating a 5–10x deployment cost gap between efficient and inefficient models — and most enterprises do not know which they are paying for.', evidence: 'Mixtral 8x22B and DeepSeek V3 demonstrated MoE economics; Llama 4 Maverick uses 17B active params from a 400B model. An advisory motion around "are you running the right architecture for your workload?" is sellable to CIOs.', score: 'Conf 4 / TTM 4 / Claimability 3 = 11' },
+    { headline: 'Apache-2.0 frontier-class open weights (Qwen 3.5, Mistral Large 3, Llama 4 Scout) eliminate the licensing tax for enterprise deployments and shift value to fine-tuning, hosting, and integration — all GTM-shaped problems.', evidence: 'The "we will just use OpenAI API" default is breaking; CFOs are running TCO comparisons.', score: 'Conf 4 / TTM 5 / Claimability 3 = 12' },
+  ],
+  [
+    { headline: 'Pre-training capex (approximately $500M–$1B per frontier run by 2026) creates an oligopoly of approximately six labs that captures 80% of the value above the model layer.', evidence: 'Llama 4 Behemoth’s training cost is rumored at $3B+. Independents and even most hyperscaler-adjacent labs cannot compete on raw capability.', score: 'Severity 5 / Prob 5 / Alex exp 2 = 12' },
+    { headline: 'Chinchilla optimality has been abandoned in favor of inference-optimal over-training (Llama 3 8B at 1875 tok/param vs. Chinchilla’s 20).', evidence: 'This compresses the value of "small efficient model" plays — the frontier labs are already producing them as byproducts of their flagship runs.', score: 'Severity 3 / Prob 4 / Alex exp 2 = 9' },
+  ],
+  [
+    { headline: 'Does diffusion-based language modeling (Mercury at 1100 tok/s) replace autoregressive transformers for latency-sensitive enterprise workloads by 2027?', evidence: 'Asymmetric: if yes, the entire inference-serving stack (vLLM, SGLang, TensorRT-LLM) gets re-architected and incumbents reset.', score: 'Decid 3 / Asym 4 / Bet-size 4 = 11' },
+    { headline: 'Does unified multimodal (Chameleon / Janus-style native token interleaving) collapse the separate vision / audio / text model market into one architecture by 2027?', evidence: 'Asymmetric: if yes, SigLIP-2 era specialized encoders become legacy and most enterprise AI integrations need re-platforming.', score: 'Decid 3 / Asym 4 / Bet-size 4 = 11' },
+  ],
+));
+
+// ---- Stratum VIII — Post-Training ----
+pushAll(docChildren, stratumCard('VIII', 'Post-Training',
+  [
+    { headline: 'Applied RLHF and domain-specific reward modeling for regulated enterprises (legal, medical, financial) — claimable because the bottleneck is domain expertise plus labeled-data ops, not algorithmic novelty.', evidence: 'RLVR and GRPO (DeepSeek-R1-Zero) democratized the technique stack; the frontier work is done. The applied wedge — building reward models from enterprise-specific signals (audit findings, compliance reviews, customer outcomes) — is a services-shaped business. Post-training’s GTM-friendly zone, distinct from frontier-lab work.', score: 'Conf 4 / TTM 4 / Claimability 4 = 12' },
+    { headline: 'Eval-as-a-product / eval-as-a-service for enterprise procurement.', evidence: 'SWE-bench Verified, ARC-AGI-2, and FrontierMath are public benchmarks but enterprises need their benchmarks. The "we will build you a custom eval harness" motion is sellable to any F500 evaluating model vendors and is high-margin advisory work.', score: 'Conf 4 / TTM 5 / Claimability 4 = 13' },
+    { headline: 'Test-time compute budget management is becoming a P&L line item — o1/o3, Claude extended thinking 64k budgets, Gemini Deep Think all expose explicit reasoning-cost knobs.', evidence: 'Enterprises burning $50K–$500K per month on Claude API have no idea how to tune thinking budgets per workload. Optimization advisory plus tooling here is wide open.', score: 'Conf 4 / TTM 5 / Claimability 4 = 13' },
+  ],
+  [
+    { headline: 'Speculative decoding (EAGLE-3 at 3–6.5x) and aggressive distillation are collapsing the price of "good enough" inference faster than enterprise procurement cycles can react.', evidence: 'Model-vendor lock-in is fragile and switching costs are an illusion. Challenging for any business model premised on stickiness; helpful for any premised on portability.', score: 'Severity 3 / Prob 4 / Alex exp 3 = 10' },
+    { headline: 'The shift from "model capability" to "test-time compute capability" means benchmarks reset annually and procurement teams have no stable ground truth.', evidence: 'SWE-bench Verified jumped from approximately 50% to 94% in 18 months. Enterprise buyers are buying capability that will be obsolete in 6 months at 1/10th the cost.', score: 'Severity 3 / Prob 5 / Alex exp 4 = 12' },
+  ],
+  [
+    { headline: 'Is pure-RL emergence (DeepSeek-R1-Zero — reasoning without SFT) the dominant post-training paradigm by 2027, or a one-off curiosity?', evidence: 'Asymmetric: if pure-RL generalizes, the SFT/RLHF labeling industry (Scale AI, Surge, Invisible) compresses dramatically. If not, human preference data remains a moat.', score: 'Decid 3 / Asym 5 / Bet-size 5 = 13' },
+    { headline: 'Does test-time compute scaling (o3-style) hit diminishing returns before pre-training compute does?', evidence: 'If yes, the "just think longer" lever caps out and pre-training capex re-asserts dominance. If no, smaller models with massive thinking budgets eat the frontier and compute economics invert.', score: 'Decid 3 / Asym 5 / Bet-size 5 = 13' },
+  ],
+));
+
+// ---- Stratum IX — Model Providers ----
+pushAll(docChildren, stratumCard('IX', 'Model Providers',
+  [
+    { headline: 'Multi-model procurement consultancy for the Fortune 1000.', evidence: 'With Anthropic ARR reported at $24–30B, OpenAI at approximately $24B, and Google Gemini 2.5 Pro/Flash now competitive on enterprise benchmarks, no enterprise CIO wants single-vendor lock-in. OpenRouter and Vercel AI Gateway went zero-markup in May 2025, making multi-model routing economically free — but enterprises lack the procurement playbooks to negotiate Anthropic EAs against Azure OpenAI commitments against Bedrock cross-region inference pricing. A consultancy that benchmarks per-workload economics is a $300–500K ACV play with no incumbent.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'Frontier-lab "second-source" advisory for regulated industries.', evidence: 'EU AI Act GPAI obligations plus CA SB 53 plus the December 2025 Trump preemption EO create regulatory whiplash. Banks, insurers, and healthcare buyers are mandated to maintain provider-failover for systemic risk reasons. Selling "model portability assurance" packages lands in compliance budgets, not IT budgets — higher willingness to pay, less competitive.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+    { headline: 'Inference-aggregator GTM partnerships.', evidence: 'Cerebras (3000 tok/s), Groq (750 tok/s), and SambaNova (580 tok/s) have shipped silicon but are weak on enterprise sales motion — they are hardware companies pretending to be SaaS companies. None have NYC-based enterprise AEs with 12+ years of B2B closing experience. A senior IC role at any of these (or a channel partner agency) is materially under-served.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+  ],
+  [
+    { headline: 'Frontier-lab direct sales motion is consolidating downstream.', evidence: 'Anthropic and OpenAI are both building enterprise sales orgs aggressively in 2025–26, with named-account coverage of the Global 2000. The window for an independent "Anthropic implementation partner" is narrowing.', score: 'Severity 4 / Prob 5 / Alex exp 4 = 13' },
+    { headline: 'Pricing compression as zero-markup aggregators commoditize routing.', evidence: 'Vercel AI Gateway and OpenRouter eliminating markup since May 2025 means the value-capture point moves away from the API layer toward (a) workload optimization and (b) integration. Pure "we resell tokens" plays are dead on arrival.', score: 'Severity 4 / Prob 5 / Alex exp 3 = 12' },
+  ],
+  [
+    { headline: 'Does Anthropic’s reported $30B ARR survive contact with 2026 audited revenue?', evidence: 'The $30B vs. $24B dispute matters because it sets the credible enterprise-spend ceiling for the whole layer. If the lower figure is correct, the entire ecosystem of "build on Claude" implementation shops is over-funded and consolidating. Decidable by Q2 2026 earnings or leaks.', score: 'Decid 4 / Asym 5 / Bet-size 5 = 14' },
+    { headline: 'Will Bedrock and Azure OpenAI cannibalize direct-lab enterprise revenue, or expand the pie?', evidence: 'If enterprises default to hyperscaler procurement (existing MSAs, BAA coverage, FedRAMP), the labs become commoditized model suppliers and the GTM action moves to AWS / Microsoft AEs.', score: 'Decid 4 / Asym 4 / Bet-size 5 = 13' },
+  ],
+));
+
+// ---- Stratum X — Inference ----
+pushAll(docChildren, stratumCard('X', 'Inference',
+  [
+    { headline: 'Inference-cost-optimization-as-a-service.', evidence: 'vLLM, SGLang (85–95% prefix cache hit via RadixAttention), and NVIDIA Dynamo (disaggregated prefill/decode) have made 3–10x cost reduction technically achievable — but the median enterprise is running un-tuned vLLM on over-provisioned H100s and burning cash. A FinOps-style practice ("FinOps for tokens") that audits inference spend, recommends quantization (FP8 / NVFP4 / MXFP4, AWQ / GPTQ), implements speculative decoding (EAGLE-3 at 3–6.5x), and re-architects routing is a clean enterprise sale. Procurement understands cost reduction; CFOs sign these.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'Inference observability and governance tooling GTM.', evidence: 'As inference moves from experimental to production-load-bearing in 2026, enterprises need per-request attribution, drift detection, and policy enforcement. Vendors like Helicone, Langfuse, Arize, and WhyLabs need enterprise AEs who can talk to CISOs and procurement, not just developer relations. A classic right-side-of-the-chasm handoff where commercial fluency outperforms technical pedigree.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+    { headline: 'Edge / on-device inference advisory for regulated workloads.', evidence: 'Apple MLX hitting 4x M4 TTFT on M5, ExecuTorch 1.0, and llama.cpp / GGUF maturity mean that healthcare, legal, and defense buyers can credibly run open-weight models on-device or air-gapped — eliminating data-exfiltration risk that blocks cloud-API adoption. Selling on-device inference architectures into HIPAA / CJIS / ITAR contexts is differentiated, high-ACV, and structurally protected from hyperscaler competition.', score: 'Conf 4 / TTM 3 / Claimability 4 = 11' },
+  ],
+  [
+    { headline: 'The "good enough" floor is rising fast.', evidence: 'Cerebras and Groq at 750–3000 tok/s plus FP8 / MXFP4 quantization plus prompt caching are collapsing the latency and cost surface. Within 12–18 months, "make inference fast and cheap" stops being a problem worth paying a consultant for, except at extreme scale. The window for this opportunity is roughly 2026–2027.', score: 'Severity 4 / Prob 4 / Alex exp 4 = 12' },
+    { headline: 'Hyperscaler bundling absorbs the optimization layer.', evidence: 'AWS Bedrock cross-region inference, Azure provisioned throughput, and GCP Vertex are building cost-optimization features natively. When AWS rolls out automatic FP8 + speculative decoding + cache routing as a Bedrock setting, third-party optimization shops compress to a thin sliver.', score: 'Severity 4 / Prob 4 / Alex exp 3 = 11' },
+  ],
+  [
+    { headline: 'Does disaggregated prefill/decode (NVIDIA Dynamo pattern) become the default, or remain a hyperscale-only optimization?', evidence: 'If it generalizes to mid-market, every workload above approximately 1000 QPS gets re-architected and there is a 12–24 month services boom.', score: 'Decid 4 / Asym 4 / Bet-size 4 = 12' },
+    { headline: 'Will enterprises tolerate open-weight quantized models for production, or insist on frontier-API quality?', evidence: 'The answer determines whether the optimization opportunity is "tune your Llama 3.3 / Qwen deployment" (large, technical) or "negotiate better Anthropic EA terms" (small, commercial). Probably bifurcates by vertical.', score: 'Decid 3 / Asym 5 / Bet-size 5 = 13' },
+  ],
+));
+
+// ---- Stratum XI — Retrieval & Memory ----
+pushAll(docChildren, stratumCard('XI', 'Retrieval & Memory',
+  [
+    { headline: 'Enterprise RAG architecture practice — Alex’s structural wheelhouse.', evidence: 'Vector DB market is fragmented (Pinecone / Qdrant / Weaviate / Chroma / Milvus / LanceDB / pgvector / Turbopuffer) and enterprises are paralyzed: pgvector "good enough" vs. Pinecone managed vs. Turbopuffer’s object-storage economics is a $50K–$500K decision per workload. Add reranker selection (Voyage 3-large now MongoDB-owned, Cohere Rerank 4, OpenAI v3-large), hybrid retrieval (ColBERT v2, SPLADE), and Matryoshka embedding migration paths, and you have a pure architecture-and-procurement sale.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'Long-term agent memory implementation.', evidence: 'Mem0, Letta, Zep, and Cognee have created a real category in 2025 — agentic memory — but none have enterprise sales orgs. Enterprises building copilots and agentic workflows (every Fortune 500 has 2–5 such pilots in 2026) need session memory, user memory, and org memory architectures that survive audit. Emerging sub-stratum with approximately 24 months before consolidation.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+    { headline: 'GraphRAG implementation for knowledge-intensive verticals.', evidence: 'Microsoft GraphRAG (Leiden clustering), HippoRAG, and PathRAG outperform vanilla vector RAG on multi-hop queries by 30–50%, but require entity extraction, ontology design, and graph maintenance. Pharma, legal, insurance underwriting, and intelligence are paying $1M–$5M for these implementations in 2026.', score: 'Conf 4 / TTM 3 / Claimability 4 = 11' },
+  ],
+  [
+    { headline: 'Long-context models are partially eating RAG.', evidence: 'Gemini 2.5 Pro at 1–2M tokens, Claude’s prompt caching, and GPT-5’s router are reducing the need for retrieval on small-to-medium corpora. The TAM for "build me a RAG pipeline" is shrinking at the low end even as it grows at the high end. Focus on enterprise-scale (>10M docs, multi-tenant, compliance-bound) to stay above the long-context substitution line.', score: 'Severity 3 / Prob 4 / Alex exp 4 = 11' },
+    { headline: 'Vector DB consolidation is coming.', evidence: 'Eight serious vendors plus pgvector cannot all survive 2027. MongoDB acquired Voyage. Expect 2–3 more rollups. Practitioners who built deep expertise in a specific stack get stranded. Mitigate by selling architecture-agnostic decisions, not stack loyalty.', score: 'Severity 3 / Prob 4 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'Is "memory" a permanent product category or a feature absorbed by frontier labs?', evidence: 'If Anthropic ships native long-term memory in 2026 (rumors persist), Mem0 / Letta / Zep compress significantly. If labs leave it to ecosystem, this is a $1B+ category. Decidable within 12–18 months.', score: 'Decid 5 / Asym 5 / Bet-size 5 = 15' },
+    { headline: 'Does GraphRAG’s accuracy advantage justify its implementation cost outside intelligence and pharma?', evidence: 'If yes, every enterprise knowledge base gets re-architected and there is a five-year integration boom. If no, GraphRAG stays a niche premium product.', score: 'Decid 3 / Asym 5 / Bet-size 4 = 12' },
+  ],
+));
+
+// ---- Stratum XII — Orchestration ----
+pushAll(docChildren, stratumCard('XII', 'Orchestration',
+  [
+    { headline: 'MCP server productization for vertical SaaS incumbents.', evidence: 'With 97M monthly SDK downloads, 10k+ active servers, and the protocol’s donation to the Linux Foundation Agentic AI Foundation in December 2025, MCP has crossed the chasm from spec to standard. Yet most SaaS incumbents in mid-market verticals (legal ops, clinical workflow, field service, supply-chain visibility) still ship zero or one MCP server. The opportunity is an "MCP-server-as-a-service" consultancy that productizes domain-aware servers for incumbents who want to be callable by Claude, ChatGPT, and Cursor before their challengers are.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'Eval / observability buying-committee guidance for the F1000.', evidence: 'Promptfoo was acquired by OpenAI; Braintrust, Langfuse, Arize, Helicone, and Honeycomb are competing for the same enterprise eval / obs budget line that did not exist 18 months ago. An advisory practice that sits between the buyer and the 6 vendors — running structured bake-offs, writing the RFP, negotiating the commit — captures meaningful retainer revenue with very low capital intensity.', score: 'Conf 4 / TTM 5 / Claimability 5 = 14' },
+    { headline: 'Framework-agnostic agent integration consulting.', evidence: 'LangGraph, OpenAI Agents SDK (handoffs, March 2025), Google ADK (April 2025), Claude Agent SDK, Mastra (YC W25, $13M), Pydantic AI, CrewAI / AutoGen / AG2 — the proliferation has produced a very real enterprise pain: which framework do we standardize on, and how do we wrap it so we are not locked in when the leader changes in 9 months? The answer most enterprises actually need is "a thin adapter layer plus opinionated MCP boundaries."', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+  ],
+  [
+    { headline: 'Framework half-life is now approximately 12 months and shrinking.', evidence: 'LangChain shipped 1.0; LangGraph is the new center of gravity; OpenAI Agents SDK undercut a chunk of LangChain’s positioning; Claude Agent SDK did it again. Anyone who has built a deep practice on a single framework is one OpenAI / Anthropic SDK release away from a rewrite. The mitigation is "build at the MCP / protocol layer, not the framework layer."', score: 'Severity 4 / Prob 5 / Alex exp 3 = 12' },
+    { headline: 'Hyperscaler-bundled gateways squeezing the standalone gateway tier.', evidence: 'Vercel AI Gateway, Cloudflare AI Gateway, AWS Bedrock’s routing, Azure AI Foundry, and Google Vertex’s model garden are all bundling what Portkey / Helicone / LiteLLM / Kong sell — at zero or near-zero marginal cost to customers already on the cloud.', score: 'Severity 3 / Prob 4 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'Will MCP remain a protocol commons, or will Anthropic / OpenAI fork it for proprietary advantage?', evidence: 'Donation to the Linux Foundation in December 2025 is a strong signal of commons-intent, but every successful protocol has had a fork moment. If MCP forks, the entire "build once, run on every agent" thesis gets repriced down.', score: 'Decid 4 / Asym 5 / Bet-size 5 = 14' },
+    { headline: 'Does prompt-optimization (DSPy MIPROv2, TextGrad) become a real engineering discipline or stay a research curiosity?', evidence: 'If yes, "prompt engineer" gets killed and replaced by "optimization engineer" running compile-time loops over labeled traces — a distinct skill stack and buying motion.', score: 'Decid 3 / Asym 4 / Bet-size 4 = 11' },
+  ],
+));
+
+// ---- Stratum XIII — Application / Agent ----
+pushAll(docChildren, stratumCard('XIII', 'Application / Agent',
+  [
+    { headline: 'AI-native enterprise CX implementation, sitting on top of Sierra, Decagon, and Glean.', evidence: 'Sierra is at $10B valuation, $100M+ ARR, 400% YoY; Decagon is at $4.5B; Glean at $7.2B. These are platform plays, but every F1000 deployment requires 3–9 months of integration work — connecting CRM, ticketing, knowledge bases, identity, and brand voice — that the platforms themselves do not want to do at scale. Sell the implementation, ride the platform’s growth, and develop opinionated reference architectures as IP.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'Vertical agent GTM lead role at a Series B/C agent company.', evidence: 'Harvey ($5B legal), Sierra, Decagon, Hippocratic, plus the next 30 vertical agent companies all need someone who can land $500K–$5M ACV deals at the F500 level and build the playbook. The market is in scarcity for this profile with AI fluency. TTM here means "next role," not "next year."', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'AI-native sales / RevOps tooling productized from his own use.', evidence: 'The most claimable wedge for someone with this exact background is a product that automates the 30–50% of an enterprise AE’s week that is research, account planning, sequencing, and CRM hygiene — agent-driven, not "Copilot for Salesforce." Buyer is enterprise CRO; buying motion is messy; credibility and network matter more than code.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+  ],
+  [
+    { headline: 'Foundation model providers are walking up-stack into vertical apps.', evidence: 'ChatGPT business at 64.5% consumer share is growing the enterprise tier with native Connectors, Agents, and Apps. Anthropic is doing the same with Claude for Work plus skills plus agent SDK plus computer use. Every vertical agent company is now competing not only with Glean / Sierra-class peers but with "ChatGPT can already do 70% of that, natively, for $30/seat."', score: 'Severity 4 / Prob 5 / Alex exp 2 = 11' },
+    { headline: 'Coding agent commoditization is dragging down adjacent markets’ price expectations.', evidence: 'Cursor at $500M+ ARR, Cognition acquired Windsurf for $250M, Copilot, Cline OSS, plus Lovable hitting $20M ARR in 2 months has trained both buyers and investors to expect "$20–$40/seat, viral adoption, infinite gross margin, year-one payback."', score: 'Severity 3 / Prob 4 / Alex exp 4 = 11' },
+  ],
+  [
+    { headline: 'Will the agent-application layer concentrate (1–3 winners per vertical) or fragment (long tail of 50 specialists per vertical)?', evidence: 'Sierra / Decagon in CX, Harvey in legal, Glean in enterprise search look like winner-take-most candidates. But the surface area of work in each vertical might mean Harvey wins horizontal legal and 20 specialist agents win the sub-verticals.', score: 'Decid 3 / Asym 5 / Bet-size 5 = 13' },
+    { headline: 'Does video generation collapse the enterprise content production stack within 24 months, the way Midjourney / Flux did for static images?', evidence: 'Suno’s $500M settlement with WMG suggests rights frameworks are forming. If yes, Cohley-class influencer / UGC marketplaces and Bazaarvoice-class brand content stacks reprice meaningfully.', score: 'Decid 4 / Asym 4 / Bet-size 4 = 12' },
+  ],
+));
+
+// ---- Stratum XIV — User ----
+pushAll(docChildren, stratumCard('XIV', 'User',
+  [
+    { headline: 'On-device agent enablement for regulated enterprises.', evidence: 'Apple Intelligence ships approximately 3B on-device plus Private Cloud Compute; Gemini Nano runs on Pixel 8/9/10 and Samsung S24/S25; Phi-Silica is on every Copilot+ PC; Snapdragon X2 Elite Extreme is at 80 TOPS. Healthcare, financial services, defense, and legal are sitting on the realization that "on-device or PCC-bounded" is the only path past their data-residency lawyers. Real consulting / integration money in helping these enterprises map workflows to on-device-eligible tasks vs. cloud-frontier-required tasks.', score: 'Conf 4 / TTM 4 / Claimability 4 = 12' },
+    { headline: 'The Apple-Gemini Siri partnership (January 2026) creates a discrete distribution event.', evidence: 'When Siri gets Gemini-grade reasoning, hundreds of millions of users will, for the first time, have a competent agent on their phone by default. Apps and SaaS that build proper App Intents / Siri integration in the next 6–9 months capture distribution before the field crowds the surface.', score: 'Conf 4 / TTM 5 / Claimability 4 = 13' },
+    { headline: 'SLM-fine-tuning practice for mid-market.', evidence: 'Gemma 3, Phi-4, Qwen 3 small, Mistral Small, Llama 3.2 1B/3B at INT4–FP4 means a competent fine-tune of a 1–7B model can match GPT-3.5 quality on narrow tasks for approximately $1k of compute and run on a $2k box. Productized fine-tune-and-deploy practice that owns the "your data, your model, your box" narrative.', score: 'Conf 3 / TTM 4 / Claimability 4 = 11' },
+  ],
+  [
+    { headline: 'Default-distribution risk to every standalone consumer AI app.', evidence: 'When Siri (Gemini-powered), Gemini on Pixel / Samsung, and Copilot on Windows all get genuinely useful, the case for installing standalone consumer AI apps weakens for the marginal user. Perplexity is large enough to weather this; everyone smaller is not.', score: 'Severity 4 / Prob 4 / Alex exp 2 = 10' },
+    { headline: 'On-device capability variance is a real go-to-market drag.', evidence: 'Snapdragon X2 Elite Extreme at 80 TOPS, M-series Apple at 30+ TOPS, and the long tail of devices at 5–15 TOPS means "this app uses on-device AI" has wildly different UX across SKUs.', score: 'Severity 3 / Prob 4 / Alex exp 2 = 9' },
+  ],
+  [
+    { headline: 'Where does the inference settle — cloud-frontier, edge-PCC, or on-device — and in what mix per workload class?', evidence: 'Apple’s PCC bet is "you do not have to choose, we will route." If routing converges to approximately 70% on-device for routine and 30% cloud for hard, the economics of hyperscaler capex get repriced.', score: 'Decid 3 / Asym 5 / Bet-size 5 = 13' },
+    { headline: 'Does Apple Intelligence stay Apple-controlled or evolve into a real third-party agent platform on iOS?', evidence: 'App Intents is the wedge. If Apple opens it meaningfully (a real "agents-on-iOS" SDK in 2026 or 2027), the consumer-AI app surface area explodes.', score: 'Decid 4 / Asym 4 / Bet-size 4 = 12' },
+  ],
+));
+
+// ---- Meta-A — Safety ----
+pushAll(docChildren, stratumCard('Meta-A', 'Safety & Alignment',
+  [
+    { headline: 'Enterprise AI governance / AI risk officer tooling.', evidence: 'RSPs (Anthropic v3.0/v3.1), Preparedness Framework v2, and Frontier Safety Framework are now de facto procurement reference docs that F500 risk committees are mapping their own controls onto. Selling governance tooling, policy templates, and audit services to F500 risk officers is GTM-shaped, well-paid, and Alex-claimable. EU AI Act enforcement (Aug 2026) is the forcing function.', score: 'Conf 4 / TTM 4 / Claimability 4 = 12' },
+    { headline: 'Mech interp / model-behavior auditing as a B2B service.', evidence: 'Anthropic’s "Biology of an LLM" and circuit-tracing CLT work created a vocabulary; Apollo’s scheming detection and METR’s autonomy evals created a methodology. Enterprises deploying agents in high-stakes workflows will pay for behavioral attestations.', score: 'Conf 3 / TTM 3 / Claimability 3 = 9' },
+    { headline: 'Constitutional AI / RLAIF as a services play for enterprises that need custom model behavior aligned to their brand or policy.', evidence: 'Same pattern as RLHF — the technique is public, the application is bespoke, and the buyer is the Chief Compliance / Chief Risk / GC, not the ML team.', score: 'Conf 3 / TTM 4 / Claimability 4 = 11' },
+  ],
+  [
+    { headline: 'OpenAI Preparedness Framework v2’s "adjustment clause" signals that voluntary RSPs are unstable in competitive pressure.', evidence: 'This re-prices any business built on the assumption that frontier labs will self-restrain — they will not, absent regulation.', score: 'Severity 4 / Prob 4 / Alex exp 3 = 11' },
+    { headline: 'ASL-4 partial deployment (Anthropic) and equivalent capability levels at OpenAI / DeepMind imply autonomy / CBRN / cyber risks materializing on a 12–24 month horizon — and enterprise deployment governance is multi-year behind.', evidence: 'F500 boards are unprepared; this is opportunity AND a liability spike.', score: 'Severity 4 / Prob 3 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'Is model welfare a marginal philosophical concern or a 2027–2028 ESG / regulatory category?', evidence: 'If it becomes a category, AI labor practices become a procurement-visible disclosure. If it stays marginal, it is a curiosity.', score: 'Decid 2 / Asym 5 / Bet-size 3 = 10' },
+    { headline: 'Will introspection capabilities (concept injection, circuit tracing) make models verifiably honest about their reasoning, or reveal that current alignment is shallower than claimed?', evidence: 'Verified-honest models are deployable in regulated workflows at 10x current TAM; verified-deceptive models trigger an enterprise deployment freeze.', score: 'Decid 3 / Asym 5 / Bet-size 5 = 13' },
+  ],
+));
+
+// ---- Meta-B — Regulation ----
+pushAll(docChildren, stratumCard('Meta-B', 'Regulation',
+  [
+    { headline: 'EU AI Act compliance practice for US enterprises with EU footprint.', evidence: 'GPAI obligations live August 2025; transparency requirements August 2026; legacy compliance August 2027. Every US company with EU customers needs a compliance program, documentation pipeline, and ongoing audit support — and the Big 4 are slow, expensive, and not technically deep. A boutique that sits between counsel and engineering is a $250K–$1M ACV practice with a multi-year tail.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'CA SB 53 readiness for the AI vendors themselves.', evidence: 'SB 53 captures models trained on >10^26 FLOPs at >$500M revenue, effective January 1, 2026. Selling SB 53 program management into the AI vendors — using B2B SaaS sales experience to navigate their compliance procurement — is a niche, high-trust, high-margin opportunity.', score: 'Conf 4 / TTM 5 / Claimability 4 = 13' },
+    { headline: 'C2PA provenance and TAKE IT DOWN compliance for media / marketing / insurance.', evidence: 'C2PA mandate baseline August 2026; TAKE IT DOWN Act effective May 2025. Marketing departments, insurance claims operations, and media companies need provenance pipelines for AI-generated content. The buyer Alex already knows being handed a regulatory mandate they do not understand.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+  ],
+  [
+    { headline: 'Federal preemption volatility.', evidence: 'The December 2025 Trump preemption EO is being litigated; California is fighting it; courts will sort it through 2026–2027. A compliance practice built on the assumption of stable state-level regimes can be repriced overnight. Mitigate by selling EU compliance plus contractual compliance.', score: 'Severity 4 / Prob 4 / Alex exp 4 = 12' },
+    { headline: 'Copyright litigation reshapes training-data economics.', evidence: 'Bartz v. Anthropic at $1.5B and the ongoing NYT v. OpenAI case will likely establish licensing precedents in 2026–2027, repricing model training and creating new data-licensing intermediation opportunities — but also potentially destabilizing customer confidence in foundation-model use for IP-sensitive workloads.', score: 'Severity 3 / Prob 4 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'Does the EU AI Act’s 2026 transparency obligation create real compliance work, or get watered down via implementing acts?', evidence: 'The Commission has discretion. If enforcement is meaningful, this is a multi-billion-dollar services category. If hollowed out, it is checkbox compliance handled by existing GRC tools. Decidable by mid-2026.', score: 'Decid 5 / Asym 5 / Bet-size 5 = 15' },
+    { headline: 'Will the US settle on a sectoral compliance regime (FDA for medical AI, NIST for federal, FINRA for finance) or a horizontal regime?', evidence: 'Sectoral creates many specialized practices; horizontal creates one large practice.', score: 'Decid 3 / Asym 4 / Bet-size 5 = 12' },
+  ],
+));
+
+// ---- Meta-C — Economics ----
+pushAll(docChildren, stratumCard('Meta-C', 'Economics',
+  [
+    { headline: 'Hyperscaler-procurement advisory for F500 buyers facing 2026 commit cycles.', evidence: 'Aggregate hyperscaler 2026 capex is $660–770B (Amazon approximately $200B, Alphabet $175–185B, Meta $115–135B, Microsoft $110–120B, Oracle approximately $50B), approximately 75% AI. Most buyers are negotiating these without proper benchmarks. An advisory practice running structured commit-negotiation, model-portfolio design, and exit-clause language can charge $100K–$500K per engagement.', score: 'Conf 5 / TTM 5 / Claimability 5 = 15' },
+    { headline: 'Model-cost arbitrage practice as token prices fall 4–10x.', evidence: 'Per-token frontier prices are down 4–10x vs. 2024; Mistral Large 3 went Apache 2.0; open weights at Gemma / Llama / Qwen are competitive with GPT-3.5–GPT-4-class for many enterprise tasks. Approximately 70% of an enterprise’s AI tokens are being spent on workflows that do not need frontier models. Productized "model-portfolio audit" engagements are an immediate-cash, immediate-credibility wedge.', score: 'Conf 5 / TTM 5 / Claimability 4 = 14' },
+    { headline: 'Talent-arbitrage placement for enterprise GTM-AI roles.', evidence: 'Meta Superintelligence Labs paid $200M for Pang and $1.5B for Tulloch; the parallel and quieter market is enterprise-GTM-with-AI-fluency leaders going to vertical agent companies for $300–600K base + 0.5–2% equity. Alex is exactly this profile.', score: 'Conf 4 / TTM 5 / Claimability 5 = 14' },
+  ],
+  [
+    { headline: 'Hyperscaler FCF stress + AI revenue pull-forward = capex air pocket risk in 2027.', evidence: 'Amazon FCF projected at -$17B in 2026. Anthropic at $30B ARR and OpenAI at approximately $24B ARR is impressive but represents a small fraction of the $660–770B capex. If 2027 enterprise AI revenue grows linearly rather than continuing to triple, capex flattens or compresses.', score: 'Severity 4 / Prob 3 / Alex exp 3 = 10' },
+    { headline: 'Open-weight model commoditization compresses the value of "model selection" advisory itself.', evidence: 'When Mistral Large 3, Llama, Gemma, Qwen are within 10–20% of frontier on most enterprise tasks, the "which model do we pick" question becomes "which deploy / eval stack do we pick" — moving budget away from model-portfolio advisory toward orchestration / eval advisory.', score: 'Severity 3 / Prob 4 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'What is the real run-rate ROI on $660–770B of 2026 hyperscaler AI capex, and when does the market force a measurement?', evidence: 'If, in any 2-quarter window, enterprise AI ARR growth decelerates and a hyperscaler reports a write-down on AI-specific assets, the entire stack reprices simultaneously.', score: 'Decid 4 / Asym 5 / Bet-size 5 = 14' },
+    { headline: 'Does GPU supply remain the binding constraint, or does the constraint shift to power / permitting / cooling?', evidence: 'If power becomes the binding constraint, the economics shift toward smaller-model + on-device + edge inference, repricing both the hyperscaler and standalone AI infra plays meaningfully.', score: 'Decid 3 / Asym 5 / Bet-size 5 = 13' },
+  ],
+));
+
+// ---- Meta-D — Geopolitics ----
+pushAll(docChildren, stratumCard('Meta-D', 'Geopolitics',
+  [
+    { headline: 'Sovereign-AI enterprise GTM in the Gulf (G42 / UAE Stargate 1 GW, Humain / KSA $10B AMD deal, Qatar Ooredoo).', evidence: 'These are net-new $50B+ markets being built 2025–2028 with explicit American partnership mandates. NYC-based enterprise sellers with travel tolerance and cultural fluency are scarce.', score: 'Conf 4 / TTM 4 / Claimability 4 = 12' },
+    { headline: 'Compliance / export-control advisory and embedded sales roles at NVIDIA, AMD, hyperscalers managing the H20 / B30A / sovereign-cloud labyrinth.', evidence: 'Post-October 2023, October 2024, and January 2025 BIS rule updates created a permanent compliance function inside every chip and cloud company.', score: 'Conf 4 / TTM 5 / Claimability 4 = 13' },
+    { headline: '"Made in America" AI infrastructure positioning for federal, defense, and regulated-industry buyers.', evidence: 'CHIPS Act $52B, Intel 18A Arizona ramp, TSMC Arizona Fab 21 — federal customers (DoD JWCC, IC ITE) have explicit domestic-content scoring. Anduril, Palantir, Scale AI Federal, Microsoft Azure Government all hiring.', score: 'Conf 4 / TTM 4 / Claimability 5 = 13' },
+  ],
+  [
+    { headline: 'TSMC’s 90%+ leading-edge concentration on Taiwan is a single-point-of-failure that reprices the entire stack on any Strait-of-Taiwan event.', evidence: 'Insurance markets price 5–15% probability over 5 years. Intel 18A and Samsung 2nm are 2026–2027 partial mitigants but not full substitutes for CoWoS.', score: 'Severity 5 / Prob 3 / Alex exp 4 = 12' },
+    { headline: 'Huawei Ascend 910C / 920 and the Chinese domestic-AI stack (DeepSeek, Qwen, Kimi) are real and improving fast; this fragments the global AI software market into two non-interoperable stacks by 2027.', evidence: 'Reduces TAM for any US-stack-only enterprise GTM motion.', score: 'Severity 3 / Prob 4 / Alex exp 3 = 10' },
+  ],
+  [
+    { headline: 'Does the Trump-era export control regime tighten further (full B200 ban to China, Tier-2 country restrictions on UAE / KSA / Malaysia) or loosen (H20 reinstated, NVIDIA 15% revenue-share deal becomes template)?', evidence: 'August 2025’s H20 reversal suggests transactional, not ideological, policy. Determines whether sovereign-AI deals close on schedule.', score: 'Decid 3 / Asym 5 / Bet-size 4 = 12' },
+    { headline: 'Does sovereign AI become a real procurement category (50+ countries with own stacks by 2028) or collapse back into 3–4 hyperscaler-as-vassal arrangements?', evidence: 'The Stargate UAE / Humain KSA model is the test case. If it works, India, Indonesia, Brazil, Vietnam follow within 24 months.', score: 'Decid 3 / Asym 5 / Bet-size 4 = 12' },
+  ],
+));
+
+// ============================================================
+// PART VII — WARDLEY MAP
+// ============================================================
+
+docChildren.push(
+  h1('Part VII · Wardley Mapping the Stack'),
+  rule(),
+
+  h2('Methodology'),
+  p('Simon Wardley’s value-chain mapping organizes a system on two axes: vertical visibility from the user, and horizontal evolution stage. User-anchored needs sit at the top; the components that satisfy those needs cascade downward to the foundations they depend on. Each component is placed at its current evolution stage — Genesis (novel, custom-built, uncertain), Custom-Built (one-off, hand-tuned), Product/Rental (commodifying, available off-the-shelf), or Commodity/Utility (fully commodified, undifferentiated).'),
+  p('The strategic implications come from position: where to PIONEER (Genesis), where to SETTLE (Product), where to CONSUME (Commodity). Punctuated equilibria — the moments components cross from one stage to the next — reprice everything dependent on them and create adjacent-possible opportunities.'),
+  p('Wardley mapping is the highest-leverage single artifact for someone deciding what to build vs. consume vs. wait.'),
+
+  h2('The four anchored user needs'),
+  bulletRich([{ text: 'Reliable AI assistance for enterprise knowledge work ', bold: true }, { text: '— analysts, lawyers, engineers, ops teams need an AI that can read, reason, and produce work-product against private corporate context without hallucinating away the trust margin.' }]),
+  bulletRich([{ text: 'AI agents that operate computers and browsers on your behalf ', bold: true }, { text: '— multi-step task completion (research, fill forms, navigate SaaS apps, complete back-office work) without a human babysitting each click.' }]),
+  bulletRich([{ text: 'Conversational and voice AI for customer-facing workflows ', bold: true }, { text: '— autonomous support, sales qualification, scheduling, and outbound that actually closes loops rather than escalating.' }]),
+  bulletRich([{ text: 'Vertical AI workers in regulated and high-stakes domains ', bold: true }, { text: '— legal (Harvey), customer support (Decagon, Sierra), revenue ops (Clay), healthcare scribing — where domain workflow knowledge is the moat.' }]),
+
+  h2('Strategic quadrants'),
+
+  h3('PIONEER (Genesis — build, write, observe, do not productize yet)'),
+  bullet('Computer-use agents — Operator, Mariner, Claude for Chrome are still error-prone and demo-grade for anything beyond well-bounded tasks. Reliability inflection approximately 12–18 months out.'),
+  bullet('Long-term agent memory — Mem0, Letta, Zep are racing to define episodic / semantic memory abstractions. No standard yet.'),
+  bullet('GraphRAG and agentic retrieval — Microsoft GraphRAG, LightRAG, agentic search loops. Pattern is novel; no clear winner.'),
+  bullet('Action grounding / VLM-for-UI — Set-of-Mark prompting, OmniParser, screen-element segmentation. Pre-product.'),
+  bullet('AI compliance and governance tooling — EU AI Act enforcement is reshaping this monthly. Frameworks not yet stable.'),
+  bullet('SMR-powered AI campuses — Oklo, X-energy, NuScale deals. First commercial AI-dedicated nuclear approximately 2028.'),
+  bullet('On-device frontier inference — Apple Foundation Models, Gemini Nano, Phi-5. Will reshape app architecture but not yet reliable.'),
+
+  h3('SETTLE (Custom-Built to Product — productize, this is where the build sweet spot is)'),
+  bullet('Vertical AI workers with deep workflow integration (legal, ops, support, healthcare, RevOps). Workflow + eval + change-management is the moat.'),
+  bullet('Agent orchestration with strong eval and observability — the LangGraph / Mastra layer is fragmented and the winner is not decided.'),
+  bullet('Voice agent platforms for specific verticals (debt collection, scheduling, dental, insurance) — horizontal voice is commoditizing but vertical packaging is wide open.'),
+  bullet('AI-native enterprise GTM tooling — anything that takes RFPs, security questionnaires, MSAs, deal desk, pricing approvals, ABM enrichment and turns them into agent-completed workflows.'),
+  bullet('MCP server ecosystem — building high-quality, secure MCP servers for specific SaaS systems (Salesforce, NetSuite, Workday, Epic) is a 2026 land-grab.'),
+  bullet('Eval and observability for agents — Braintrust, Langfuse, Patronus are productizing fast but the surface area is huge.'),
+  bullet('Domain-specific RAG-as-a-service — legal corpora, medical, financial filings, with retrieval tuned per domain.'),
+
+  h3('CONSUME (Product to Commodity — buy, integrate, do not waste time building)'),
+  bullet('AI gateways — Vercel AI Gateway, Cloudflare, OpenRouter. Do not build your own router.'),
+  bullet('Vector databases — Pinecone, Qdrant, Turbopuffer, pgvector. Pick one, move on.'),
+  bullet('Embeddings and rerankers — OpenAI, Voyage, Cohere. Pure API call.'),
+  bullet('Inference engines — vLLM is the default. Do not write a kernel.'),
+  bullet('Frontier LLMs — call them, do not train them.'),
+  bullet('Open-weight LLMs — fine-tune if needed; do not pretrain.'),
+  bullet('STT and TTS — Deepgram, ElevenLabs, Cartesia. Cheap and good enough.'),
+  bullet('Headless browser infra — Browserbase, Playwright Cloud.'),
+  bullet('Telephony — Twilio, LiveKit, Telnyx.'),
+  bullet('Sandboxes — E2B, Modal, Daytona.'),
+
+  h3('UTILITY (already commodity — invisible plumbing)'),
+  p('The electrical grid, fiber backbone, public cloud regions (AWS / Azure / GCP compute primitives like S3, EC2), Linux, Kubernetes, Postgres, the Chromium engine, WebRTC, HTTP, SIP, the public internet, Common Crawl as a raw substrate, PyTorch as a framework (not the training pipeline atop it).'),
+
+  h2('Punctuated equilibria — components crossing stages in 2026'),
+
+  h3('1. MCP: late-Custom to Product (H1 2026)'),
+  p('Linux Foundation governance landed December 2025; OpenAI, Anthropic, Google, Microsoft all shipping first-class support; enterprise MCP gateways (Cloudflare, Kong, Pomerium) shipping in H1.'),
+  bulletRich([{ text: 'Reprices: ', bold: true }, { text: 'every bespoke "tool integration" framework — LangChain tools, custom function-calling wrappers, vendor-specific connector SDKs.' }]),
+  bulletRich([{ text: 'Adjacent-possible: ', bold: true }, { text: 'an MCP server marketplace; MCP-native iPaaS replacing Zapier; security / governance products built around MCP audit logs; "MCP-first" SaaS where the server is a primary product, not an afterthought.' }]),
+
+  h3('2. Computer-use agents: Genesis to Custom-Built (mid to late 2026)'),
+  p('Operator, Mariner, Claude for Chrome cross 70%+ on real-world web benchmarks (WebArena, OSWorld). Still need handholding, but reach economic viability for narrow tasks.'),
+  bulletRich([{ text: 'Reprices: ', bold: true }, { text: 'RPA (UiPath, Automation Anywhere) — selectors and DOM scrapers become legacy.' }]),
+  bulletRich([{ text: 'Adjacent-possible: ', bold: true }, { text: 'agent-completed workflows for back-office (claims, AP, vendor onboarding); AI-augmented BPO at 1/5 cost; "browser-as-runtime" startups.' }]),
+
+  h3('3. HBM4 + CoWoS-L: Custom to Product (late 2026 to 2027)'),
+  p('SK Hynix and Micron HBM4 ramps; TSMC CoWoS-L capacity doubles. Eases the throttle on GB300 / Rubin.'),
+  bulletRich([{ text: 'Reprices: ', bold: true }, { text: 'GPU pricing (modest relief), training-cluster build timelines, the entire neocloud (CoreWeave, Crusoe, Nebius) economic model.' }]),
+  bulletRich([{ text: 'Adjacent-possible: ', bold: true }, { text: 'a second tier of frontier labs; cheaper inference per token unlocks agent loops that were uneconomical at $X/1M tokens.' }]),
+
+  h3('4. Open-weight models reaching frontier-minus-one parity (continuous through 2026)'),
+  p('Llama 4, Qwen 3.5, DeepSeek V4 close to within 5–10% of frontier on most enterprise tasks.'),
+  bulletRich([{ text: 'Reprices: ', bold: true }, { text: 'API margins for OpenAI / Anthropic on commodity tasks; private deployment becomes default for regulated industries.' }]),
+  bulletRich([{ text: 'Adjacent-possible: ', bold: true }, { text: 'sovereign-AI offerings; on-prem enterprise stacks; vertical fine-tunes of open models become the cheap default.' }]),
+
+  h3('5. Voice agent reliability: Custom to Product (mid-2026)'),
+  p('Realtime APIs (OpenAI, Gemini Live) plus latency optimizations (Cartesia Sonic-2, Deepgram Nova-3) push voice agents past the "uncanny" threshold for 80% of customer-service calls.'),
+  bulletRich([{ text: 'Reprices: ', bold: true }, { text: 'BPO contact-center seats, IVR vendors (Genesys, NICE, Five9 — already pivoting).' }]),
+  bulletRich([{ text: 'Adjacent-possible: ', bold: true }, { text: 'vertical voice (healthcare intake, debt collection, restaurant ordering, field-service dispatch) becoming defensible products.' }]),
+
+  h3('6. AI gateways: Product to late Product / Commodity (2026)'),
+  p('Vercel, Cloudflare, OpenRouter race-to-the-bottom on routing / caching / observability features.'),
+  bulletRich([{ text: 'Reprices: ', bold: true }, { text: 'every "build your own LLM router" startup pitch.' }]),
+  bulletRich([{ text: 'Adjacent-possible: ', bold: true }, { text: 'gateway as the policy / governance layer (PII redaction, prompt firewall, cost ceilings) — that is where margin moves up the stack.' }]),
+
+  h3('7. Power as the binding constraint: Product to constrained-Product (2026 onward)'),
+  p('Hyperscaler PPAs out to 2028 are signed; gas-turbine-on-site (xAI Colossus 2, Stargate) is the new normal. Transformers and switchgear lead times 2–3 years.'),
+  bulletRich([{ text: 'Reprices: ', bold: true }, { text: 'anyone whose AI roadmap assumes elastic compute at marginal cost.' }]),
+  bulletRich([{ text: 'Adjacent-possible: ', bold: true }, { text: 'power-aware scheduling / placement startups; geothermal / SMR project finance plays; "AI factory" siting consultancies; co-location deals next to retiring coal sites.' }]),
+
+  h2('Strategic implications for someone in Alex’s position'),
+  p('Alex cannot build silicon, train frontier models, or stand up a hyperscaler. His compounding advantage is enterprise GTM judgment — pricing, packaging, deal-desk, security review, procurement cycles, MSA negotiation, and the political work of landing AI inside a Fortune 1000. That maps cleanly onto the Custom-to-Product zone.'),
+
+  h3('Build (productize)'),
+  bullet('A vertical AI worker for a function he has sold into for 12 years — RFP / security-questionnaire automation, deal desk co-pilot, partner-enablement agent, or AI-native SDR tooling. Pick one Fortune-1000 buyer persona he can call cold and close.'),
+  bullet('An MCP server (or small constellation of them) for a system enterprise GTM teams live in — Salesforce, Outreach, Gong, Highspot, Zoominfo. The server is the product; distribution is via marketplace.'),
+  bullet('An "AI procurement / AI deal desk" SaaS — every enterprise is now buying AI, badly. Templates, vendor scoring, security-review automation, model-risk assessment workflows. Direct compounding with his commercial fluency.'),
+  bullet('A vertical voice agent for a specific GTM motion — outbound qualification, renewal-risk calls, NPS-detractor recovery — packaged with the eval / QA scaffolding that enterprises actually demand.'),
+  bullet('An eval / observability layer focused on enterprise-acceptance criteria (SOC2, model-risk, red-team artifacts) rather than developer ergonomics — the "Drata for AI agents" angle.'),
+
+  h3('Consume (do not reinvent)'),
+  bullet('Models — call Claude / GPT / Gemini via an AI gateway. Do not fine-tune until proof you need to.'),
+  bullet('Vector DB / embeddings / rerankers — Turbopuffer or pgvector + Voyage. Move on.'),
+  bullet('Inference / GPUs — never run your own. Use a frontier API or a serverless inference provider (Modal, Replicate, Together).'),
+  bullet('AI gateway — Vercel AI Gateway. He is already on Vercel; do not fight it.'),
+  bullet('Headless browser, voice telephony, STT / TTS, sandboxing — all rentable for cents.'),
+
+  h3('Pioneer (write / think / observe — but do not build yet)'),
+  bullet('Computer-use agents in enterprise contexts — write publicly about what breaks, what governance looks like, what the unit economics need to be.'),
+  bullet('Long-term memory for B2B agents — episodic memory of customer relationships, deal histories.'),
+  bullet('AI procurement and enterprise governance — EU AI Act, NIST AI RMF, model-card standards.'),
+  bullet('The "AI-native GTM stack" — what does the SDR / AE / CSM stack look like when 60% of plays are agent-executed?'),
+  bullet('On-device frontier inference and what it does to enterprise architecture.'),
+
+  h3('Watch the equilibria'),
+  bullet('MCP crossing into Product (H1 2026) — timing for any MCP-server-based business; the "early but not too early" window is roughly Q2–Q4 2026.'),
+  bullet('Computer-use agents crossing into Custom-Built (mid to late 2026) — when reliability hits the threshold, the "AI BPO" / back-office-automation pitch becomes credible to a CFO.'),
+  bullet('Voice agents crossing into Product (mid-2026) — the moment vertical voice platforms become enterprise-acceptable, every contact-center vendor renegotiation is in play.'),
+);
+
+// ============================================================
+// PART VIII — 7 POWERS (HELMER) + FIVE FORCES (PORTER)
+// ============================================================
+
+docChildren.push(
+  h1('Part VIII · 7 Powers and Five Forces'),
+  rule(),
+
+  h2('Methodology'),
+  p('Hamilton Helmer’s 7 Powers identify the seven sources of durable competitive advantage. Porter’s Five Forces measure margin sustainability. Together they answer a question OCQ cannot: which of the interesting positions in this stack will still be valuable in ten years, and which will erode within three?'),
+  p('The seven powers are: Scale Economies (declining unit costs with size); Network Economies (value increases with users / nodes); Counter-Positioning (incumbents cannot copy without destroying their existing business); Switching Costs (high cost for the customer to leave); Branding (durable affective association); Cornered Resource (privileged access to a critical input); and Process Power (embedded organizational know-how that is hard to replicate).'),
+  p('For each stratum: which powers are present, who holds them, whether they are strengthening or eroding, and what the dominant Porter forces imply for margin trajectory. Then a cross-layer synthesis identifying the five most durable positions, the five most over-rated positions, and where margin is structurally compressing vs. expanding.'),
+
+  h2('Per-stratum power assessment (compressed)'),
+
+  h3('Stratum I · Power'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Cornered Resource (Constellation, Vistra, Talen — interconnect queues and nuclear-adjacent land); Scale Economies (hyperscaler 10–20 GW PPAs); Process Power (Constellation / Vistra in nuclear restart). All strengthening.' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'expanding — supply-constrained, not demand-constrained.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE — physics, permitting, and grid topology do not change in a hype cycle.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'not in his career zone, but signals where AI capex is structurally bottlenecked.' }]),
+
+  h3('Stratum II · Facility'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Cornered Resource (NoVA, Phoenix, Columbus land + water + fiber + power triads); Scale Economies (Equinix, Digital Realty, QTS); Switching Costs (carrier-hotel co-location).' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'expanding — colocation rents up 30–50% YoY in Tier-1.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE — locational moat compounded by power scarcity.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'CoreWeave / Crusoe are near-AI infra plays with sales orgs to consider.' }]),
+
+  h3('Stratum III · Compute'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'NVIDIA holds Cornered Resource (TSMC CoWoS-L, SK Hynix HBM3e priority) + Scale Economies (75%+ gross margin amortizes more R&D than every competitor combined) + Process Power (CUDA, NVLink / NVSwitch fabric, Blackwell rack-scale engineering) + Switching Costs (CUDA kernels, customer-trained PyTorch graphs) + Branding ("the AI company"). Five powers stacked.' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'stable-to-compressing — peaking; AMD and custom silicon take inference share.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE for NVIDIA training; SEMI-DURABLE for inference.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'NVIDIA enterprise GTM (DGX Cloud, AI Enterprise) is one of the highest-leverage AI sales jobs that exists.' }]),
+
+  h3('Stratum IV · Fabric'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'NVIDIA Cornered Resource + Process Power (Mellanox / InfiniBand, NVLink). Counter-Positioning: Ultra Ethernet Consortium (Broadcom, AMD, Meta, Microsoft) — emerging.' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'stable — fabric content per cluster rising faster than price compression.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE for Broadcom; SEMI-DURABLE for NVIDIA networking.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'Arista has interesting AI-data-center sales motion.' }]),
+
+  h3('Stratum V · Parallelism'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Process Power (frontier labs’ internal training stacks); Cornered Resource (researchers who have shipped >100B model — extremely thin labor pool); Network Economies (PyTorch / JAX ecosystems).' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE for whoever has the team; the team itself is the asset.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'not a GTM job pool, but signals which labs can actually keep training frontier models — those are the ones whose API moats hold.' }]),
+
+  h3('Stratum VI · Data'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Cornered Resource (Reddit, X, YouTube transcripts, GitHub, LinkedIn, Bloomberg, Thomson Reuters, proprietary enterprise datasets). Counter-Positioning (incumbents grandfathered, newcomers must license). Switching Costs (Scale AI / Surge annotation infrastructure).' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'expanding for data owners, compressing for buyers.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE for unique-corpus owners; SEMI-DURABLE for annotation; ERODING for generic web crawl.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'companies selling proprietary-data-as-a-service to labs (Bloomberg, Thomson Reuters AI, ICE) are quietly excellent durable bets.' }]),
+
+  h3('Stratum VII · Pre-training (frontier labs)'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Process Power (OpenAI, Anthropic, Google DeepMind — increasingly THE moat); Cornered Resource (senior researchers); Branding (OpenAI consumer; Anthropic coding / safety; Google multimodal); Scale Economies (capex amortization for top 4); Counter-Positioning (DeepSeek, Qwen, Llama on open weights vs. closed labs).' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'compressing — token prices fell 10-100x in 24 months; only top-tier reasoning models hold price.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'SEMI-DURABLE — durable as oligopoly, but per-token economics keep collapsing.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'Anthropic and OpenAI enterprise GTM are the two strongest 10-year bets in AI sales.' }]),
+
+  h3('Stratum VIII · Post-training'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Process Power (Anthropic Constitutional AI / RLAIF; OpenAI RLHF productization; Scale AI alignment-as-a-service); Cornered Resource (alignment researchers — extremely thin); Switching Costs (customer fine-tuned weights inside provider walls).' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE inside top labs as process moat; SEMI-DURABLE as standalone business.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'fewer pure-play companies to sell for as labs internalize this layer.' }]),
+
+  h3('Stratum IX · Model Providers / API Layer'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Branding (OpenAI, Anthropic — stable); Switching Costs (prompt engineering, eval harnesses — lower than buyers think; OpenRouter has commoditized switching); Scale Economies (inference cost curves); Network Economies (Bedrock, Azure OpenAI as multi-model marketplaces).' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'compressing aggressively.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'SEMI-DURABLE — Bedrock / Azure inherit cloud moats; pure API plays compress.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'hyperscaler AI org sales jobs (Bedrock, Azure AI) are durable on the back of cloud lock-in, not model lock-in.' }]),
+
+  h3('Stratum X · Inference Engines'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Process Power (Groq LPU + compiler; Together kernel engineering; Fireworks FireAttention); Network Economies (vLLM open-source community); Cornered Resource (Groq SRAM-based hardware approach).' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'CYCLICAL for software-only; SEMI-DURABLE for vertically integrated (Groq, Cerebras).' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'be skeptical as 10-year plays unless they have unique silicon.' }]),
+
+  h3('Stratum XI · Retrieval / Memory'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Switching Costs (embedding lock-in — eroding with multi-vector and late-interaction); Branding (Pinecone, Weaviate — eroding as pgvector ate the bottom); Process Power (Turbopuffer, MongoDB Atlas Vector, Databricks vector — stable as features of larger platforms).' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'compressing hard.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'CYCLICAL for pure-play vector DBs; DURABLE only as features inside Snowflake / Databricks / MongoDB.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'avoid pure-play vector DBs as career bets.' }]),
+
+  h3('Stratum XII · Orchestration / MCP / Gateways'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Network Economies (MCP server ecosystem — strengthening rapidly); Branding (Vercel AI SDK strengthening; LangChain eroding); Switching Costs (30+ MCP servers wired in is real surface area to migrate); Counter-Positioning (MCP as open protocol).' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE for MCP-as-protocol (Anthropic capture); SEMI-DURABLE for AI gateways; CYCLICAL for orchestration frameworks.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'Vercel and Cloudflare have real GTM orgs and durable platform brands.' }]),
+
+  h3('Stratum XIII · Application / Agent Products'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Process Power + Switching Costs (Sierra, Decagon, Harvey, Abridge, Glean, Cursor — vertical workflow embedding); Branding (Cursor, Perplexity, ChatGPT consumer); Network Economies (Glean enterprise data graph, Notion AI).' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'compressing for horizontal, expanding for deeply-vertical agents.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE for vertical agents with data + workflow lock-in; SEMI-DURABLE for Cursor (model dependency); CYCLICAL for thin wrappers.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'BEST CAREER ZONE for an enterprise B2B GTM seller. Sierra, Decagon, Harvey, Abridge, Glean, Hebbia, EvenUp, Crosby (legal), Clay.' }]),
+
+  h3('Stratum XIV · User / On-Device'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Cornered Resource (Apple Neural Engine + iOS distribution; Google Pixel + Gemini Nano); Switching Costs (iOS / Android lock-in extreme); Branding.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE — duopoly entrenched.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'not addressable for B2B enterprise GTM unless going to Apple / Google directly.' }]),
+
+  h3('Meta-A · Safety / Alignment as a Power Source'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Branding (Anthropic — uniquely owns "safety" in enterprise mind); Process Power (Anthropic interpretability team, RSP framework); Cornered Resource (senior alignment researchers — approximately 200 globally).' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'DURABLE for Anthropic specifically. Hard to copy without 5+ years of brand investment.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'Anthropic enterprise sales is a top-3 durable AI GTM job today.' }]),
+
+  h3('Meta-B · Regulation / Compliance-as-Moat'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Cornered Resource (FedRAMP High, IL5 / IL6, HIPAA-attested deployments); Counter-Positioning (AWS GovCloud, Azure Government, Anthropic on AWS GovCloud, Palantir); Process Power (Palantir’s accreditation playbook — decades-deep).' }]),
+  bulletRich([{ text: 'Margin trajectory: ', bold: true }, { text: 'expanding.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'VERY DURABLE.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'excellent career zone — public sector AI GTM is 5–10 years of structural tailwind.' }]),
+
+  h3('Meta-C · Economics / Capital Access'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Cornered Resource (Microsoft, Google, Amazon, Meta, NVIDIA balance sheets — only approximately 10 entities on Earth can fund a $50B training run); Scale Economies.' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'VERY DURABLE.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'any AI company NOT on this list has counterparty risk to one of these.' }]),
+
+  h3('Meta-D · Geopolitics / Sovereign Capital / Export Controls'),
+  bulletRich([{ text: 'Powers: ', bold: true }, { text: 'Cornered Resource (compliant supply-chain access to TSMC + ASML + NVIDIA); Counter-Positioning (Huawei Ascend, SMIC inside China — strengthening within China, cannot compete globally).' }]),
+  bulletRich([{ text: 'Verdict: ', bold: true }, { text: 'VERY DURABLE — bifurcated stack is now a 10-year reality.' }]),
+  bulletRich([{ text: 'For Alex: ', bold: true }, { text: 'sovereign AI deals are a real and growing GTM motion (Anthropic-Saudi, OpenAI-UAE).' }]),
+
+  h2('Cross-layer power synthesis'),
+
+  h3('The 5 most durable power positions in the AI stack today'),
+  bullet('NVIDIA — Cornered Resource (CoWoS, HBM allocation) + Process Power (CUDA) + Scale Economies. Three powers stacked. Durable through at least 2030 at training; eroding faster at inference.'),
+  bullet('TSMC + SK Hynix + ASML — Cornered Resource at the most upstream point. Physically irreplaceable for a decade.'),
+  bullet('Anthropic — Branding (safety + coding) + Process Power (Constitutional AI, interpretability) + Cornered Resource (alignment talent). Contested by OpenAI but distinctively positioned for enterprise.'),
+  bullet('Microsoft + AWS + Google (hyperscaler AI clouds) — Scale Economies + Switching Costs (existing cloud lock-in) + Capital. Bedrock / Azure AI inherit decades of enterprise procurement entrenchment.'),
+  bullet('Palantir — Process Power (accreditation craft) + Cornered Resource (cleared personnel + government relationships) + Switching Costs (Foundry data ontologies). Boring, durable, underweighted.'),
+
+  h3('The 5 most over-rated power positions (priced as durable, actually cyclical)'),
+  bullet('Cursor — brand is hot, but switching cost is one prompt and a config file; underlying moat is Anthropic’s, not Cursor’s. Margin will compress as Anthropic ships its own IDE surface (Claude Code already does).'),
+  bullet('Pure-play vector DBs (Pinecone, Weaviate, Chroma) — switching costs evaporated; pgvector + Turbopuffer + every cloud killed this layer.'),
+  bullet('LangChain / LlamaIndex — early network effect but increasingly bypassed by direct SDKs (Anthropic, OpenAI Agents SDK, Vercel AI SDK).'),
+  bullet('Tier-2 frontier labs (Mistral, Cohere, AI21, Inflection-style) — branded as "frontier" but lack capital to stay there; counter-positioning play (open weights) is real but a different game.'),
+  bullet('Inference-as-a-service pure plays (Together, Fireworks, Anyscale) — engineering is real but margin-compressed commodity layer; will be acquired or marginalized by hyperscalers.'),
+
+  h3('Where margin is structurally compressing fastest'),
+  bullet('API token economics (Stratum IX) — 10–100x price decline in 24 months; only top reasoning tier holds.'),
+  bullet('Retrieval / vector DBs (Stratum XI) — feature-ization by platforms.'),
+  bullet('Inference engines (Stratum X) — software-only differentiation collapses against vertically-integrated incumbents.'),
+
+  h3('Where margin is most likely to expand'),
+  bullet('Vertical AI applications (Stratum XIII) — Sierra, Harvey, Abridge, Glean, Decagon. Workflow + data lock-in compounds.'),
+  bullet('Power and facility (Strata I–II) — physics-bound.'),
+  bullet('Regulated / defense AI (Meta-B) — Palantir, Anduril, Microsoft Federal, Anthropic-on-GovCloud. Procurement moats deepening.'),
+
+  h3('Implications for Alex’s career portfolio'),
+  p('Most durable AND in his addressable career zone (enterprise B2B AI GTM): Anthropic, Microsoft Azure AI / Federal, AWS Bedrock, Palantir, Sierra, Harvey, Glean, Abridge, Decagon, Vercel, Cloudflare (AI Gateway), Databricks, Snowflake AI, Scale AI (Defense). NVIDIA enterprise GTM (DGX Cloud, AI Enterprise) if accessible.'),
+  p('Power dubious or eroding (avoid for tenure bets): pure-play vector DBs, generic LLM API resellers, LangChain-style OSS-frameworks-as-companies, tier-2 frontier labs without sovereign backing, thin-wrapper horizontal agent products without proprietary data, inference-only providers without silicon.'),
+  p('Categories where switching-cost moats favor early specialists: vertical agents (legal, clinical, CX, sales) — being employee #20–50 in a workflow-deep vertical agent company is a 5–10 year switching-cost compounding bet. MCP-ecosystem-adjacent infrastructure has a 2–3 year window to pick a winner before the protocol consolidates. Sovereign AI GTM (UAE, Saudi, India, EU) is a contrarian niche with structural tailwind from Meta-D.'),
+  p('The pattern: durable power in AI is concentrating at the physical bottom (power, fab, HBM) and the vertical top (workflow-embedded agents with proprietary data and regulatory moats). The middle — generic models, generic inference, generic retrieval, generic orchestration — is where margin and durability both compress. Alex’s career bet should hug those two ends. His addressable zone is the vertical top.'),
+);
+
+// ============================================================
+// PART IX — ECOSYSTEM-LEVEL JTBD
+// ============================================================
+
+docChildren.push(
+  h1('Part IX · Ecosystem-Level Jobs to be Done'),
+  rule(),
+
+  h2('Methodology'),
+  p('Tony Ulwick’s Outcome-Driven Innovation maps a customer’s functional job into 8 phases (Define, Locate, Prepare, Confirm, Execute, Monitor, Modify, Conclude) and identifies desired outcomes per phase, scored on importance and current satisfaction. The gap is the opportunity.'),
+  p('Applied at the ecosystem level rather than per product, the unit shifts. Instead of "what is Cursor hired to do," we ask "what is the entire AI stack hired to do, and where does composition across strata fail?" The opportunities surface in the seams between layers — exactly where someone with cross-stack pattern recognition and commercial fluency has structural advantage over technical specialists.'),
+  p('Six ecosystem-level jobs are mapped here. For each: the job statement, an 8-phase map, the top 3 underserved outcomes (high importance, low satisfaction), the over-served outcomes (where the field is over-investing), and Alex’s actionable hook.'),
+
+  h2('Job 1 · Run a complete enterprise sales motion using AI as primary leverage'),
+  p('When a revenue leader needs to compress cost-per-meeting and shorten sales cycles in a 12-stage enterprise motion (ICP definition through outreach to discovery to demo to MEDDPICC to procurement to close to expansion), they want to substitute AI for the marginal SDR/AE hours on every stage that does not require relational judgment, so that headcount scales sub-linearly to pipeline.'),
+
+  h4('Top 3 underserved outcomes'),
+  bullet('Detecting AI-generated outreach (gap 7) — buyers’ AI-fatigue tolerance dropped sharply in 2025; the field optimizes for volume, not authenticity. No tool measures "would a senior buyer at this account flag this email as AI?"'),
+  bullet('Mapping the actual buying committee (gap 7) — the field sells contact data; nobody sells the graph of who-influences-whom in a deal.'),
+  bullet('Detecting and diagnosing a stalling deal (gap 6) — Gong / Clari surface activity, not causal diagnosis. "Why did this deal go silent?" requires multi-source synthesis (CRM + email + calendar + Slack + product usage) that no single vendor owns.'),
+
+  h4('Over-served'),
+  p('List-building / contact data (Apollo, Clay, ZoomInfo, Cognism), AI sequence writers (the 30+ Outreach / Salesloft AI features), and email warmup / deliverability — all over-funded relative to the actual gap.'),
+
+  h4('Alex’s actionable hook'),
+  bulletRich([{ text: 'Flag to plant: ', bold: true }, { text: 'A LinkedIn essay titled "The 7-gap audit: where your AI-SDR stack actually fails" mapping each gap to specific vendor categories. Position as ex-Meltwater / Bazaarvoice / Cohley AE who has bought and sold this stack.' }]),
+  bulletRich([{ text: 'Build option: ', bold: true }, { text: 'A "buying committee graph" tool — given a target account, ingest LinkedIn + 10-Ks + Gong calls + email threads, output the influence map. n8n + Claude + Supabase. Sell to mid-market RevOps as a Clay companion.' }]),
+  bulletRich([{ text: 'Position to target: ', bold: true }, { text: 'VP RevOps / VP Sales Ops at Series C–D AI-native companies (Decagon, Sierra, Hebbia, Glean, Writer, Cresta) and at incumbents shipping AI-SDRs (Outreach, Salesloft, 11x, AiSDR). Title: "Director / Head of AI Sales Strategy."' }]),
+
+  h2('Job 2 · Build, ship, instrument, and iterate an AI-native product as a small team'),
+  p('When a 1–10 person team is building an AI-native product, they want to compose models + retrieval + orchestration + UI + observability + evals into a deployable, measurable, iterable system, so that the team’s velocity is bound by product judgment, not by integration overhead.'),
+
+  h4('Top 3 underserved outcomes'),
+  bullet('Eval design that catches real production failures (gap 8) — Braintrust, Langsmith, Humanloop optimize for the eval-creation UI, not for "what should I actually evaluate." There is no "eval consultant in a box."'),
+  bullet('Causal attribution of bad outputs (gap 8) — when an agent fails, was it the prompt, the retrieval, the tool, the model, or the user input? PostHog LLM observability is closest but does not do causal trace decomposition.'),
+  bullet('Model migration without regression (gap 6) — every model release (Claude 4.7, GPT-5.x) creates a silent regression problem. No tool replays a corpus of past prompts and diffs the outputs structurally.'),
+
+  h4('Over-served'),
+  p('Code generation IDEs (Cursor, Windsurf, Bolt, Lovable, v0), prompt-engineering UIs, and "AI app starter template" categories. Mapping Alex’s stack: Claude / Cursor / Vercel are over-saturated for the build phase; Linear / n8n / Supabase are under-instrumented for the monitor / modify phases.'),
+
+  h4('Alex’s actionable hook'),
+  bulletRich([{ text: 'Flag to plant: ', bold: true }, { text: 'A weekly "build log" series shipping a public AI-native product (Claude + n8n + Supabase + Vercel + PostHog), explicitly documenting each Confirm / Monitor / Modify gap as he hits it.' }]),
+  bulletRich([{ text: 'Build option: ', bold: true }, { text: 'A drop-in eval-design service — given a product spec, output a starter eval set with adversarial cases, regression tests, and a CI integration. Sold as a service first (productize later).' }]),
+  bulletRich([{ text: 'Position to target: ', bold: true }, { text: 'Head of Applied AI / Head of AI Platform at Series A–B AI-native companies. Or DevRel / PMM at Anthropic / OpenAI / Vercel / PostHog focused on the application-layer developer.' }]),
+
+  h2('Job 3 · Stay current on the AI ecosystem and act on it'),
+  p('When an operator / investor / builder is allocating attention across an ecosystem releasing 50+ material news items per week, they want to filter signal from noise, contextualize new capabilities against their roadmap, and decide what to act on, so that they do not either fall behind or chase every shiny object.'),
+
+  h4('Top 3 underserved outcomes'),
+  bullet('Translating "X shipped" into "I should change Y" (gap 7) — the entire AI-newsletter category (Ben’s Bites, TLDR AI, Latent Space) stops at "X shipped." Nobody connects to your roadmap.'),
+  bullet('Acting on signal vs. hype (gap 6) — benchmarks lie, demos lie, founder threads lie. There is no "AI claims fact-checker" useful for operators.'),
+  bullet('Personal taxonomy that survives evolution (gap 6) — last year’s category labels (RAG, agents, CoT) are this year’s wrong abstractions.'),
+
+  h4('Over-served'),
+  p('The newsletter-and-Twitter-curator stack — there are 200+ AI newsletters, all aggregating, none translating.'),
+
+  h4('Alex’s actionable hook'),
+  bulletRich([{ text: 'Flag to plant: ', bold: true }, { text: 'A weekly "operator’s translation" newsletter that takes the 5 most-discussed AI news items and translates each into "if you are a Series B AE / RevOps lead / GTM head, here is what to do Monday."' }]),
+  bulletRich([{ text: 'Build option: ', bold: true }, { text: 'A personalized "AI-stack delta" tool — user defines their stack and roadmap; tool ingests the firehose and outputs only deltas relevant to them.' }]),
+  bulletRich([{ text: 'Position to target: ', bold: true }, { text: 'Operating Partner / Platform team at Tier 1–2 VC funds (Madrona, Bessemer, Forerunner, FirstMark, Costanoa). NYC-based: Lerer Hippeau, Box Group, Primary, Insight, Tiger.' }]),
+
+  h2('Job 4 · Pass enterprise procurement, security, and compliance review for an AI vendor [PRIORITY]'),
+  p('When an AI-native vendor enters a Fortune 1000 procurement cycle, they want to satisfy InfoSec, Legal, Privacy, AI Governance, Procurement, and the business sponsor — six counterparties with non-overlapping demands — so that the deal closes within the buyer’s planning cycle rather than slipping two quarters.'),
+  p('This is the priority job. It uniquely composes Alex’s three rarest assets: enterprise procurement scar tissue, AI-builder fluency, and a current incentive to publish.', { italics: true }),
+
+  h4('Top 3 underserved outcomes'),
+  bullet('The AI-specific contract addendum negotiation (gap 8) — there is no Ironclad-equivalent for AI-vendor terms; every deal re-negotiates training data rights, output ownership, model-update notice, and hallucination indemnity from scratch. A multi-billion-dollar friction tax.'),
+  bullet('Mapping the buyer’s AI governance org (gap 8) — most enterprises stood up an "AI council" in 2024–2025; org charts have not caught up. Sellers waste 4–8 weeks finding the right approver.'),
+  bullet('Capturing precedent across deals (gap 8) — every AE re-learns "how Walmart approves AI vendors" instead of inheriting institutional knowledge.'),
+
+  h4('Over-served'),
+  p('The Vanta / Drata / Secureframe trust-center category — necessary but not sufficient. They cover SOC 2 and GDPR; they do not cover AI-specific procurement.'),
+
+  h4('Alex’s actionable hook'),
+  bulletRich([{ text: 'Flag to plant: ', bold: true }, { text: 'A definitive open document — "The Enterprise AI Vendor Procurement Playbook — what InfoSec, Legal, AI Council, and Procurement actually each ask for, and how to answer it." Built from interviews with 30 enterprise AI buyers. Possible to ship in 90 days; would become the canonical reference.' }]),
+  bulletRich([{ text: 'Build option: ', bold: true }, { text: 'An "AI vendor procurement-readiness" SaaS — uploads a vendor’s stack, outputs the InfoSec packet, the AI addendum draft, the questionnaire pre-fills, and the gap list. Sold to AI-native vendors in $5M–$50M ARR range. Pricing $30–80K/year.' }]),
+  bulletRich([{ text: 'Position to target: ', bold: true }, { text: 'VP / Head of GTM Operations or Head of Enterprise Sales at Series B–D AI-native vendors (Glean, Writer, Hebbia, Decagon, Sierra, Cresta, Harvey, Eve, Luminance, Crogl, Nooks, Clay, Apollo enterprise tier). Also Chief Customer Officer at LLM gateway / governance vendors (Credal, Calypso AI, Lakera, Robust Intelligence). Title: "Head of Enterprise Procurement Strategy" / "Head of Trust & Security GTM" / "Head of AI Compliance Sales."' }]),
+  bulletRich([{ text: 'Why his commercial experience is leverage: ', bold: true }, { text: 'this is the most direct fit of any of the 6 jobs. He has personally been on the seller side of enterprise procurement at three companies; he knows where the AI overlay breaks because he can compare it to the pre-AI procurement motion he ran for a decade. Few competitors have both sold to enterprise procurement and built AI-native products.' }]),
+
+  h2('Job 5 · Recruit, evaluate, and ramp talent in AI-native roles'),
+  p('When a hiring manager needs to fill an AI-native role (Forward-Deployed Engineer, AI PM, Applied AI Scientist, AI-native AE), they want to define the role, screen for capability that did not exist 24 months ago, and ramp the hire against a moving target, so that the team’s average AI fluency rises with each hire instead of regressing to legacy norms.'),
+
+  h4('Top 3 underserved outcomes'),
+  bullet('Filtering for verifiable AI-native experience (gap 7) — LinkedIn is now 90% noise on AI titles. No tool verifies actual ship history.'),
+  bullet('Screening builders vs. prompters (gap 7) — interview loops have not caught up. Most companies use vibes.'),
+  bullet('Role re-specification cadence (gap 6) — most JDs are 12+ months stale.'),
+
+  h4('Alex’s actionable hook'),
+  bulletRich([{ text: 'Flag to plant: ', bold: true }, { text: 'A LinkedIn essay — "How to interview an AI-native AE without falling for prompt theatre" — give specific scenarios and rubrics.' }]),
+  bulletRich([{ text: 'Build option: ', bold: true }, { text: 'A practical screening rubric for AI-native commercial roles, sold as a half-day workshop to hiring VPs.' }]),
+  bulletRich([{ text: 'Position to target: ', bold: true }, { text: 'Head of Talent / VP People at Series B–C AI-native companies; or talent partner at VC funds.' }]),
+
+  h2('Job 6 · Govern AI usage across an enterprise'),
+  p('When a CIO / CISO / CDO is accountable to a board for "what AI is used here, by whom, on what data, with what risk profile," they want a defensible, auditable, low-friction governance regime, so that the enterprise neither blocks productive AI usage nor lands on the front page of the WSJ.'),
+
+  h4('Top 3 underserved outcomes'),
+  bullet('Shadow AI discovery (gap 7) — Netskope / Zscaler / Harmonic do partial discovery; nobody covers AI features embedded in Notion, Slack, Salesforce, etc.'),
+  bullet('Low-friction enforcement (gap 7) — most policies are PDFs. Enforcement is reactive.'),
+  bullet('Board-ready usage reporting (gap 6) — boards now ask quarterly; CIOs scramble.'),
+
+  h4('Alex’s actionable hook'),
+  bulletRich([{ text: 'Flag to plant: ', bold: true }, { text: 'A simple "Board-ready AI usage scorecard" template, published openly.' }]),
+  bulletRich([{ text: 'Build option: ', bold: true }, { text: 'A consulting offer — "90-day AI governance baseline" for Fortune 1000 CIOs.' }]),
+  bulletRich([{ text: 'Position to target: ', bold: true }, { text: 'Head of GTM at AI governance vendors (Credal, Lakera, Calypso AI, Harmonic Security, Robust Intelligence, Cranium, Holistic AI).' }]),
+
+  h2('Cross-job synthesis'),
+
+  h3('The three most underserved outcome patterns across all jobs'),
+  p('Causal attribution / diagnosis across multi-stratum systems. This appears in Job 1 (why is the deal stalling?), Job 2 (why is the LLM output wrong?), Job 4 (which counterparty is blocking?), and Job 6 (where is shadow AI?). The ecosystem is good at surfacing data, terrible at answering "why." Anyone who builds the diagnosis layer across any one of these jobs has a defensible position. The single highest-leverage gap.'),
+  p('Translation from capability to action. Job 3 ("X shipped → I should do Y"), Job 1 ("AI shipped this feature → my sequence should change"), Job 5 ("the model improved → my role spec should change"). The ecosystem rewards capability announcements; nobody owns the translation layer for a specific operator persona.'),
+  p('Cross-counterparty workflow orchestration in the enterprise. Jobs 4 and 6 both fail because the enterprise has 6+ approvers with non-overlapping interests, and no tool models the workflow as a multi-counterparty negotiation. Vanta-shaped, but for the AI-specific layer.'),
+
+  h3('The three over-served patterns'),
+  bullet('Code-generation surface area. Cursor, Windsurf, Bolt, Lovable, v0, Replit Agent, Devin. The build phase of the AI-native product lifecycle is dramatically over-funded relative to the eval / monitor / modify phases.'),
+  bullet('Contact data and AI-SDR sequence writers. The Apollo / Clay / ZoomInfo / 11x / AiSDR / Outreach AI category is over-funded relative to the actual gaps in the sales motion (committee mapping, deal diagnosis, CS handoff).'),
+  bullet('AI newsletters and curation. 200+ aggregators; near-zero translators. The category needs subtraction, not addition.'),
+
+  h3('Why Alex’s background gives him disproportionate insight here'),
+  p('Alex has spent 12 years selling enterprise B2B SaaS through procurement gauntlets at Meltwater, Bazaarvoice, and Cohley — meaning he has lived the buyer side of Job 4 (enterprise procurement) hundreds of times in the pre-AI motion. He can articulate where the AI overlay breaks because he has the pre-AI baseline encoded as tacit knowledge. Second, his current AI-builder practice (Claude, n8n, Supabase, Vercel, Cursor, Linear, PostHog) means he can speak credibly to Job 2’s gaps from inside the build loop. Third, his NYC location places him near the operator-investor network where Jobs 3 and 4 are most acutely felt — VC platform teams are explicitly hiring for the "translates AI capability into portfolio GTM action" job. Fourth, his job-search posture is the demo: every flag he plants on Jobs 1, 4, and 5 simultaneously builds the public artifact and surfaces the role.'),
+  p('The single highest-conviction recommendation is Job 4 (enterprise AI procurement), which uniquely composes his three rarest assets — enterprise procurement scar tissue, AI-builder fluency, and a current incentive to publish — into a position with almost no qualified competition.'),
+);
+
+// ============================================================
+// PART X — CROSS-FRAMEWORK SYNTHESIS
+// ============================================================
+
+docChildren.push(
+  h1('Part X · Synthesis — 7 Bets, 5 Risks, 5 Cruxes'),
+  rule(),
+
+  p('Five frameworks were applied to the same field. Where they converged, conviction is high. Where they diverged, the open questions are honest. This Part is the product of that triangulation.'),
+  p('Three artifacts: seven ranked bets that name what to do, five structural risks that name what to watch, five cruxes that name what to wait for. Each bet, risk, and crux is named precisely enough to be falsifiable.'),
+
+  h2('How the frameworks converged'),
+  p('The OCQ Matrix surfaced 18 strata of opportunities and challenges with rough scoring. Wardley mapping placed each in evolution-stage and identified the seven punctuated equilibria most likely to reprice the field in 2026–2027. The 7 Powers analysis filtered for durability — separating cyclical mindshare from structural moat. The Ecosystem JTBD reframed bottom-up classifications into top-down underserved jobs. The Talent + Capital Flow tracker (separate living document) added empirical signal-following.'),
+  p('Three signals converged unambiguously across all five frameworks. First: the highest-leverage opportunity for someone with Alex’s exact profile is the enterprise AI procurement / compliance / governance zone (Stratum IX, X, XI, XII, Meta-B, plus JTBD Job 4) — every framework independently ranked this top-tier. Second: vertical agent companies (Sierra, Decagon, Glean, Harvey, Hippocratic, Augment) are the most durable upper-stack power positions (7 Powers DURABLE) AND the largest active hiring market for Alex’s profile (Talent Flow) AND the Settle quadrant build-target (Wardley) AND the highest-claimability OCQ scores (15/15 across multiple strata). Third: MCP is a 2026 punctuated equilibrium (Wardley) AND a network-economy power forming (7 Powers) AND an underserved JTBD opportunity AND a 15/15 OCQ — but with one binding crux (commons vs. fork) that determines whether it pays off.'),
+  p('Three signals diverged meaningfully. First: token economics — OCQ + Wardley say compressing fast; 7 Powers says hyperscaler-bundled inference will sustain margins via lock-in; the truth is bifurcated by deployment context. Second: long-term memory as a category — JTBD says strongly underserved; 7 Powers says likely absorbed by frontier labs. Third: open-weight commoditization — Wardley says continuing toward Commodity; 7 Powers says counter-positioning is durable. Where divergence exists, the playbook below is structured to be path-robust rather than path-dependent.'),
+
+  h2('The 7 Big Bets — ranked, with hypothesis and falsifiability'),
+
+  h3('Bet 1 · The Enterprise AI Procurement Operating Standard'),
+  bulletRich([{ text: 'Hypothesis: ', bold: true }, { text: 'Every F1000 stood up an AI council in 2024–2025 and is procuring AI vendors with 6 non-overlapping approvers (InfoSec, Legal, Privacy, AI Governance, Procurement, business sponsor). No incumbent owns the cross-counterparty workflow. A commercial operator with 12 years of buyer-side procurement scar tissue plus AI-builder fluency can plant the canonical flag in 90 days.' }]),
+  bulletRich([{ text: 'Falsifiability: ', bold: true }, { text: 'If the open Playbook gets fewer than 500 downloads or fewer than 50 inbound conversations in 60 days, OR if Vanta / Drata / Secureframe ship a credible AI-procurement product in that window, the productized SaaS thesis is dead.' }]),
+  bulletRich([{ text: 'Conviction: ', bold: true }, { text: '★★★★★ — highest convergence across all 5 frameworks (OCQ Stratum IX/Meta-B/Meta-C all 15/15, JTBD Job 4 priority, Wardley Settle, 7 Powers compliance-as-moat, Talent Flow NYC procurement migration).' }]),
+
+  h3('Bet 2 · Vertical Agent GTM Leadership Role'),
+  bulletRich([{ text: 'Hypothesis: ', bold: true }, { text: 'Sierra ($10B / $100M+ ARR), Decagon ($4.5B / $80M+), Glean ($7.2B / $300M+), Harvey ($5B / $100M+), Hippocratic ($2B), Augment ($977M) are hiring exactly Alex’s profile (12+ years enterprise B2B + AI fluency + NYC) at $300–400K base + 0.1–0.5% equity. Talent-flow data shows the dominant migration is Stripe / Ramp / Datadog / Snowflake → Sierra / Decagon / Glean.' }]),
+  bulletRich([{ text: 'Falsifiability: ', bold: true }, { text: 'If 6 months of focused NYC search yields no offers in this band, either the bet on Alex’s profile is wrong, or the market is more SF-anchored than the talent flow suggests.' }]),
+  bulletRich([{ text: 'Conviction: ', bold: true }, { text: '★★★★★ — Talent Flow + 7 Powers (vertical agents = most durable upper-stack power) + JTBD (CX implementation underserved) + Wardley (Settle quadrant) all converge.' }]),
+
+  h3('Bet 3 · MCP-Native Enterprise Integration Practice'),
+  bulletRich([{ text: 'Hypothesis: ', bold: true }, { text: 'MCP crossed Genesis-to-late-Custom in December 2025 (Linux Foundation governance) and is crossing Custom-to-Product in H1 2026. Most SaaS incumbents ship zero or one MCP server. The window for "MCP server productization for enterprise SaaS" is roughly Q2–Q4 2026 — early enough to plant flags, late enough that the protocol is stable.' }]),
+  bulletRich([{ text: 'Falsifiability: ', bold: true }, { text: 'If MCP forks (Anthropic vs. OpenAI proprietary tool-use schemas diverge), the entire "build at MCP layer" thesis dies. Watch for any major vendor unilaterally extending MCP without spec coordination.' }]),
+  bulletRich([{ text: 'Conviction: ', bold: true }, { text: '★★★★ — Wardley flagged as 2026 punctuated equilibrium; 7 Powers says network economies forming; JTBD Job 1 (sales motion) underserved. Risk = MCP fork.' }]),
+
+  h3('Bet 4 · Inference Cost Optimization / FinOps for Tokens'),
+  bulletRich([{ text: 'Hypothesis: ', bold: true }, { text: 'The median enterprise is running un-tuned vLLM on over-provisioned H100s. EAGLE-3 at 3–6.5x, FP4 quantization, prompt caching, and aggregator routing can deliver 3–10x cost reduction. The procurement-side audit is sellable today; the technical work is straightforward enough for a 2-person services team.' }]),
+  bulletRich([{ text: 'Falsifiability: ', bold: true }, { text: 'AWS Bedrock auto-optimization features ship in 2026, slamming the 12-month window. OR token prices fall fast enough that "optimization" is below the line of caring.' }]),
+  bulletRich([{ text: 'Conviction: ', bold: true }, { text: '★★★★ — OCQ Stratum X 15/15. Highest-velocity-to-cash play but explicit decay: 12–18 month window before hyperscaler bundling absorbs the layer.' }]),
+
+  h3('Bet 5 · Enterprise RAG Architecture Practice'),
+  bulletRich([{ text: 'Hypothesis: ', bold: true }, { text: 'F500 enterprises are paralyzed by 8+ vector DB options + 5 embedding choices + 3 reranker options + 4 retrieval-pattern paradigms. The decision is $50K–$500K per workload and they have no vendor-neutral guidance. Pure architecture sale; commercial fluency is the asset.' }]),
+  bulletRich([{ text: 'Falsifiability: ', bold: true }, { text: 'Long-context (Gemini 1–2M tokens, Claude prompt caching) eats RAG at the low end faster than enterprise-scale grows at the high end. Or vector DB consolidation (1–2 winners) makes the choice trivial.' }]),
+  bulletRich([{ text: 'Conviction: ', bold: true }, { text: '★★★★ — OCQ Stratum XI 15/15; clean compounding play with #1 and #4.' }]),
+
+  h3('Bet 6 · Operator’s Translation Newsletter / Public Voice'),
+  bulletRich([{ text: 'Hypothesis: ', bold: true }, { text: 'Weekly translation of frontier capabilities into specific operator implications. JTBD Job 3 gap of 7 on "translating X shipped to I should change Y." A commercial operator with first-hand AI-builder practice is the rare profile that can translate authentically.' }]),
+  bulletRich([{ text: 'Falsifiability: ', bold: true }, { text: 'If subscriber growth is fewer than 2K in 6 months and no inbound role / advisory comes from it, this is positioning theater. Kill at month 6 or commit harder.' }]),
+  bulletRich([{ text: 'Conviction: ', bold: true }, { text: '★★★ — JTBD highest-leverage cross-job pattern, but execution-dependent.' }]),
+
+  h3('Bet 7 · VC Operating Partner / Platform Path'),
+  bulletRich([{ text: 'Hypothesis: ', bold: true }, { text: 'VC platform teams need someone who can read technical updates and translate to portfolio-company GTM teams. NYC funds (Lerer Hippeau, FirstMark, Box Group, Primary, Insight, Tiger, Forerunner, Lux, Costanoa) are visibly hiring for this profile.' }]),
+  bulletRich([{ text: 'Falsifiability: ', bold: true }, { text: 'If Bets 1, 2, 3 land, this is downstream and lower-priority. If none of them do by month 12, this becomes the primary path.' }]),
+  bulletRich([{ text: 'Conviction: ', bold: true }, { text: '★★★ — real but secondary; ★★★★ if becomes primary.' }]),
+
+  h2('The 5 Structural Risks — re-check quarterly'),
+
+  h3('Risk 1 · HBM4 / CoWoS-L slip'),
+  p('Threatens every 2026 capacity plan and GPU pricing. Watch SK Hynix / Micron HBM4 ramp telemetry and TSMC capex commentary. If HBM4 ramp slips past Q4 2026 OR CoWoS-L stays under 100 KWPM through 2027, every GPU roadmap above slips by 6–12 months and inference economics tighten.'),
+
+  h3('Risk 2 · Hyperscaler FCF reckoning'),
+  p('Threatens AI infra trade — sales cycles harden 2–4 quarters. Watch Amazon / Alphabet / Meta / Microsoft FCF in Q3–Q4 2026. Amazon FCF projected at -$17B in 2026; if AI ARR growth decelerates AND a hyperscaler reports a write-down on AI assets in the same window, the entire stack reprices simultaneously.'),
+
+  h3('Risk 3 · OpenAI Preparedness adjustment-clause activation'),
+  p('Threatens voluntary safety regimes — destabilizes the Anthropic safety-as-moat thesis (Bet 1 partially depends on this). Watch for any public adjustment notice; watch Anthropic counter-statement. The clause that allows OpenAI to relax safeguards if competitors deploy lower-threshold models was written for a reason; it will eventually be invoked.'),
+
+  h3('Risk 4 · Federal preemption volatility on AI rules'),
+  p('Threatens compliance practices (Bet 1 directly) — the Trump December 2025 EO court fights resolve through 2026–2027. Mitigate by selling EU compliance (stable) plus contractual compliance (always required) rather than CA-specific programs.'),
+
+  h3('Risk 5 · Foundation labs walking up-stack into vertical apps'),
+  p('Threatens vertical agent companies (Bet 2 targets) — ChatGPT Business connectors, Claude for Work, Gemini Workspace agents are all moving into territory Sierra / Decagon / Glean / Harvey occupy. Watch the Connectors / Skills / Apps store on each platform. Mitigate by targeting verticals with regulatory or workflow moats (legal, healthcare, financial services) where horizontal foundations cannot easily land.'),
+
+  h2('The 5 Cruxes — open questions that re-rank every bet'),
+
+  h3('Crux 1 · Anthropic ARR — $24B or $30B?'),
+  p('Decidability: Q2–Q3 2026 (audited reports / leaks). Sets the credible enterprise-AI ceiling for the whole layer. Lower bound = vertical-agent valuations compress 20–30%; upper bound = Bet 2 timing accelerates. Watch The Information (Stephanie Palazzolo), Anthropic disclosure cadence, Stripe data leaks.'),
+
+  h3('Crux 2 · Inference compute — 10x growth or flat?'),
+  p('Decidability: Q4 2026 hyperscaler earnings + Stargate deploy data. NVIDIA $4T market cap, Stargate $500B, every neocloud unit economics depend on this. Flat = NVDA reprices, GPU brokerage opportunity opens. 10x = neocloud GTM (Stratum II) goes hot. Watch SemiAnalysis (Dylan Patel), Crusoe / CoreWeave disclosures, hyperscaler capex commentary.'),
+
+  h3('Crux 3 · MCP — commons or fork?'),
+  p('Decidability: H2 2026. Every "build at MCP layer" thesis depends on this. Fork = Bet 3 dies; commons = Bet 3 accelerates. Watch major-vendor proprietary tool-use schema announcements; watch Linux Foundation governance turbulence. Decide by Q3 2026.'),
+
+  h3('Crux 4 · EU AI Act — teeth or paper tiger?'),
+  p('Decidability: late 2026 (first enforcement actions). Determines whether Bet 1 advisory becomes a $10B+ category or stays niche. Watch Commission guidance and first GPAI fines.'),
+
+  h3('Crux 5 · Long-term memory — standalone category or absorbed?'),
+  p('Decidability: 12–18 months. Absorbed (frontier labs ship native memory) = Mem0 / Letta / Zep compress; Bet 5 RAG architecture practice gains share. Standalone = $1B+ category; consider including in Bet 5 service stack. Watch Anthropic / OpenAI / Google native memory feature launches.'),
+);
+
+// ============================================================
+// PART XI — ACTION MAP
+// ============================================================
+
+docChildren.push(
+  h1('Part XI · 6 / 12 / 18-Month Action Map'),
+  rule(),
+
+  p('Translation of the 7 Big Bets into a sequenced playbook. The structure is intentional: months 0–6 plant flags and run cheap experiments; months 6–12 commit capital (time, money, role) to whatever survived the experiments; months 12–18 compound around the surviving bets and decide the longer arc.'),
+  p('Three operating principles. First, Bets 1 and 2 are run in parallel from Day 1 — the Playbook is the inbound flywheel for the role, and the role surfaces signal that improves the Playbook. Second, Bets 4 (FinOps) and 5 (RAG) are run as advisory sub-products of Bet 1, sharing the same buyer. Third, Bet 3 (MCP) is gated on the Crux 3 resolution — do not invest until the commons-vs-fork question clarifies.'),
+
+  h2('Months 0–6 — Plant flags, run cheap experiments'),
+
+  h3('Bet 1 · Procurement Playbook'),
+  bullet('Week 1–2: Outline the Playbook. 8 sections (the 8-phase JTBD), 200–300 words per section.'),
+  bullet('Weeks 2–6: 30 expert interviews — 10 buyer-side (CIO / CISO / Procurement / AI Council), 10 seller-side (VP Sales at AI-native vendors), 10 advisor-side (Big 4, AI consultants, AI-focused law firms).'),
+  bullet('Weeks 7–10: Draft, test, refine.'),
+  bullet('Week 12: Publish. Open document, free download, gated only by email. Cross-post on LinkedIn essay, Substack, Hacker News, AI Tinkerers NYC, RAAIS NYC.'),
+  bullet('Weeks 13–24: Inbound triage. Track downloads, conversations, advisory requests. Decision point at Week 24: scale to productized SaaS or stay as advisory practice.'),
+
+  h3('Bet 2 · NYC Vertical Agent Job Search'),
+  bullet('Week 1: Target list — Sierra, Decagon, Glean, Harvey, Hippocratic, Augment, Lovable, Writer, Hebbia, Cresta. NYC and NYC-friendly roles only.'),
+  bullet('Week 2–4: Second-degree intros via Stripe / Ramp / Datadog / Snowflake alumni networks. Use the Talent + Capital Flow tracker to identify who already made the move.'),
+  bullet('Weeks 4–24: 10 hours per week on outreach, conversations, interviews. Track each company through the funnel. Use the Playbook (Bet 1) as the differentiator in every conversation.'),
+  bullet('Decision triggers: any offer in the $300–400K base + 0.1–0.5% equity band at one of the named companies → take it. Below that band, hold.'),
+
+  h3('Bet 4 · FinOps for Tokens — paid pilots'),
+  bullet('Months 2–4: Identify 5 mid-market companies running >$50K/month on Claude / GPT. NYC network surface. Free first audit in exchange for case study.'),
+  bullet('Months 4–6: Convert at least 2 to paid retainers ($25–50K per audit). Build standard methodology + tooling.'),
+  bullet('Decision trigger at month 6: if 2+ paid retainers and 5+ inbound, productize. If not, fold into Bet 1 advisory.'),
+
+  h3('Bet 6 · Translation newsletter'),
+  bullet('Week 2: First issue published. Same operator-translation framing every week.'),
+  bullet('Week 4: Decide cadence (weekly vs. biweekly).'),
+  bullet('Week 12: 1K subscriber checkpoint.'),
+  bullet('Week 24: 5K subscriber checkpoint or kill / commit harder.'),
+
+  h3('Networking ramp'),
+  bullet('Month 1–6: Attend RAAIS NYC, AI Tinkerers NYC, Cornell Tech AI demos, Betaworks AI Camps, FirstMark MAD events.'),
+  bullet('Identify and meet: Bret Taylor (Sierra), Munjal Shah (Hippocratic), Aman Sanger (Cursor — when in NYC), Eric Glyman (Ramp), Nathan Benaich (Air Street), Nabeel Hyatt (Spark), Lee Edwards (Root), Matt Turck (FirstMark).'),
+  bullet('Goal: 2 high-signal conversations per week, logged.'),
+
+  h2('Months 6–12 — Commit'),
+
+  h3('Path A — If Bet 2 lands (a vertical agent role)'),
+  bullet('Take the role. Default to Sierra / Decagon / Glean / Harvey / Hippocratic at Director / Head of GTM Strategy / Field CTO level.'),
+  bullet('Continue Playbook (Bet 1) and newsletter (Bet 6) on personal time. The role makes the platform; the platform makes the role.'),
+  bullet('Sunset Bets 4 and 5 unless they fit inside the role’s scope.'),
+  bullet('Re-rank quarterly based on the Cruxes tracker.'),
+
+  h3('Path B — If Bet 2 does not land but Bet 1 has traction'),
+  bullet('Productize the procurement-readiness SaaS. Pricing $30–80K per year. Sell to AI-native vendors in $5M–$50M ARR range.'),
+  bullet('Continue advisory practice as bridge revenue ($100–500K per F500 engagement).'),
+  bullet('Hire one engineer (Codex / Devin / Factory-augmented; effective output of two) to build the SaaS.'),
+  bullet('Continue newsletter as positioning flywheel.'),
+
+  h3('Path C — If neither Bet 1 nor Bet 2 lands by month 12'),
+  bullet('Activate Bet 7 — VC Operating Partner / Platform path. Outreach to 3 NYC funds where the newsletter has produced inbound.'),
+  bullet('Reduce build / advisory burn; preserve runway.'),
+  bullet('Reassess all 7 bets against the Cruxes — at least 2 should have resolved by month 12 and the playbook should be re-scoped.'),
+
+  h3('Bet 3 (MCP) gating'),
+  bullet('Month 6: check Crux 3 (commons vs. fork). If commons holds and registry > 8K servers, begin building the SaaS-system MCP server constellation.'),
+  bullet('Month 9: ship 3 production-quality MCP servers (Salesforce, HubSpot, Outreach OR Gong) to marketplaces.'),
+  bullet('Month 12: decide whether to spin into separate productized practice or fold under whatever role from Path A / B / C is active.'),
+
+  h2('Months 12–18 — Compound'),
+
+  h3('Compound the platform'),
+  bullet('Public voice (Playbook + newsletter + LinkedIn essays + 1–2 podcast appearances per quarter) reaches the threshold where inbound exceeds outbound.'),
+  bullet('At least one canonical phrase / framework attributable to Alex (e.g., "the 7-gap audit" for AI sales motions; "the AI procurement decagon" for the 6-counterparty buying motion). Aim for one piece of memetic IP.'),
+
+  h3('Decision: the longer arc'),
+  bullet('At month 18, the data is sufficient to decide between three longer arcs:'),
+  bullet('Path A continued: full-time GTM exec at vertical agent company. Compounding equity in a real platform.'),
+  bullet('Path B continued: independent advisory practice + SaaS. Owner-operator. Higher option value, lower base.'),
+  bullet('Path D (new at month 18): C-level role at an AI-native company (CRO, CCO, Head of Customer / Head of Compliance Sales). The Playbook + role experience + network compound to make this credible.'),
+
+  h3('Optional cross-cut — Sovereign AI niche'),
+  bullet('If Meta-D opportunities (Stargate UAE, Humain KSA) are showing meaningful US-anchored GTM motion through 2026–27, position one quarterly trip + one essay per quarter to the Gulf market. Niche but high-margin.'),
+
+  h2('Per-quarter check-in template'),
+  p('Run this every 90 days. Tracker (OCQ_TRACKER.md) is the working surface; this template is the structure.'),
+  bullet('1. Bet status — for each of 7 bets: Active / Paused / Killed. Cite leading-indicator data.'),
+  bullet('2. Crux movement — for each of 5 cruxes: any datapoint that shifted the answer probability? Re-rank bets if so.'),
+  bullet('3. Risk surface — any of the 5 risks materially closer? Adjust mitigations.'),
+  bullet('4. Talent + capital flow update — bi-weekly cadence; review the rolling table.'),
+  bullet('5. Personal P&L — hours allocated by bet; revenue / equity / role progress; what should change.'),
+  bullet('6. One thing to kill — the discipline of subtraction.'),
+);
+
+// ============================================================
+// PART XII — BEST-USE-CASE REFLECTIONS PER FRAMEWORK
+// ============================================================
+
+docChildren.push(
+  h1('Part XII · Best-Use-Case Reflections per Framework'),
+  rule(),
+
+  p('Each framework has a specific epistemic mode it serves well and a set of failure modes when over-applied. The following reflections are intended for re-use: when a similar question arises, this section is the decision guide for which framework to deploy.'),
+  p('A note on composition: no single framework was designed to answer the question "what should Alex do?" The OCQ matrix classifies the field; Wardley positions it; 7 Powers filters for durability; Ecosystem JTBD reframes from the buyer’s seat; Talent + Capital Flow follows the empirical signal. They compound. The discipline is in choosing which subset of frameworks to deploy for a given question — not in always running all five.'),
+
+  h2('1 · The OCQ Matrix (Opportunity / Challenge / Open Question by layer)'),
+
+  h3('When to deploy'),
+  bullet('Comprehensive strategic mapping when missing something is more costly than over-investing in research.'),
+  bullet('Fields with clear stratification (here: 18 strata) where layer-by-layer rigor surfaces things a top-down pass would miss.'),
+  bullet('Decisions where you need to distinguish "interesting now" (opportunity) from "binding" (challenge) from "unresolved" (open question) — three different action types.'),
+  bullet('Stakes high enough to justify 2–4 hours of disciplined application.'),
+
+  h3('When NOT to deploy'),
+  bullet('Time-pressured decisions. The framework does not collapse cleanly under time constraints; you will make a list that violates the precise definitions and end up with vibes-based output.'),
+  bullet('Highly relational or organizational questions where the structure of the answer does not match opportunity / challenge / question (e.g., "should I trust this partner?" — wrong tool).'),
+  bullet('Questions where the ranking ALREADY exists and you just need to act. OCQ produces ranking; if the ranking is given, skip it.'),
+
+  h3('What it reveals best'),
+  p('Hidden cells of the matrix — the opportunities that no individual layer-specialist would surface because they sit at the seam between layers, or the challenges that bind because they cascade through several layers. The discipline of writing each entry against the precise definitions filters out 80% of the impressive-sounding but actually-not-actionable observations.'),
+
+  h3('What it misses'),
+  p('Sequencing. OCQ produces a static snapshot; it does not tell you what becomes possible after a current constraint dissolves (Theory of Constraints does that). Durability — OCQ may rate a current opportunity 15/15 even if its power source is cyclical (7 Powers catches that). Empirical signal — OCQ is analytical; if the field is moving in ways that diverge from analytical models, only Talent + Capital Flow surfaces it.'),
+
+  h3('Time and effort'),
+  p('Do well in 3–4 hours for a 14–18 layer field. Do badly in less. Per-stratum scoring should be calibrated — if every stratum has 15/15 opportunities, the precise definitions are not being enforced.'),
+
+  h3('Composability'),
+  p('Highest with Wardley (positions the OCQ entries) and Ecosystem JTBD (reframes them from the buyer’s seat). Lower with 7 Powers (which is more time-horizon-flipping than cell-filling). Use OCQ first as the substrate; layer the others on top.'),
+
+  h2('2 · Wardley Mapping'),
+
+  h3('When to deploy'),
+  bullet('Build-vs-buy decisions, especially across multiple components.'),
+  bullet('Questions that depend on understanding evolution stage — what is genesis, what is becoming a product, what is already commodity.'),
+  bullet('Investment timing — when does a component cross from Custom to Product (the productization window)?'),
+  bullet('Strategy questions where dependency mapping matters more than per-actor analysis.'),
+
+  h3('When NOT to deploy'),
+  bullet('Per-actor or per-company specificity (Wardley is positional; it does not name names).'),
+  bullet('Questions about durable competitive advantage (7 Powers does that better).'),
+  bullet('Tactical execution questions ("how do I close this deal?" — wrong tool).'),
+
+  h3('What it reveals best'),
+  p('Punctuated equilibria — the moments components cross stages and reprice everything dependent on them. This is the rarest insight any framework produces and it is uniquely Wardley’s territory. Adjacent-possible — what becomes feasible after a component commoditizes — is also surfaced cleanly.'),
+
+  h3('What it misses'),
+  p('Buyer-side jobs (JTBD does that). Durability of the players holding the position (7 Powers). Empirical signal (Talent + Capital Flow).'),
+
+  h3('Time and effort'),
+  p('Done well in 2–3 hours for a single user-need anchored map. Multiple anchored needs scale linearly.'),
+
+  h3('Composability'),
+  p('Pairs strongly with OCQ (which surfaces opportunities; Wardley positions them). Pairs strongly with Theory of Constraints (which sequences punctuated equilibria into adjacent-possible cascades). Less powerful when paired only with 7 Powers (different time horizons).'),
+
+  h2('3 · 7 Powers (Helmer) + Five Forces (Porter)'),
+
+  h3('When to deploy'),
+  bullet('Career bets where 5–10 year timeframes matter — separating cyclical mindshare from durable moat.'),
+  bullet('M&A or investment decisions.'),
+  bullet('Filtering opportunities through a durability lens — "is this opportunity also a defensible position, or just a temporary inefficiency?"'),
+  bullet('Strategic decisions about where to concentrate capital, time, or commitment.'),
+
+  h3('When NOT to deploy'),
+  bullet('Short-term decisions where current momentum matters more than long-term moats.'),
+  bullet('Tactical execution.'),
+  bullet('Field-mapping (use OCQ + Wardley for that).'),
+
+  h3('What it reveals best'),
+  p('The "durable vs. cyclical" distinction. Without 7 Powers, OCQ-style matrices over-weight current heat; 7 Powers explicitly flags positions that are cyclical despite being interesting.'),
+
+  h3('What it misses'),
+  p('Sequencing and timing (7 Powers is time-horizon-flipping but doesn’t tell you when a power crystallizes). Specific opportunities (it filters; it doesn’t generate). Empirical surprises (it’s analytical, not signal-following).'),
+
+  h3('Time and effort'),
+  p('Done well in 2–3 hours for the durable-power synthesis, after OCQ + Wardley have surfaced the field. Should not be the first framework deployed.'),
+
+  h3('Composability'),
+  p('Best as a filter on OCQ + Wardley outputs. Pairs well with Talent + Capital Flow (the empirical confirmation of analytical durability calls).'),
+
+  h2('4 · Ecosystem-Level JTBD (Outcome-Driven Innovation, top-down)'),
+
+  h3('When to deploy'),
+  bullet('Surfacing cross-layer integration opportunities that single-stratum analysis misses.'),
+  bullet('Translating commercial / buyer experience into a structured asset (uniquely valuable for someone with deep commercial fluency, like Alex).'),
+  bullet('Identifying where the seams between layers are causing user-visible failure.'),
+  bullet('Reframing a saturated field into a different unit of analysis.'),
+
+  h3('When NOT to deploy'),
+  bullet('Internal / technical questions where the "job" is not user-facing.'),
+  bullet('Architecture decisions (use cto-architect skill instead).'),
+  bullet('Fields where the buyer is poorly understood — JTBD requires real commercial knowledge to apply rigorously.'),
+
+  h3('What it reveals best'),
+  p('Underserved outcomes that no single vendor will surface because no single vendor owns the cross-stratum workflow. The strongest single framework for someone with a buyer-side commercial background.'),
+
+  h3('What it misses'),
+  p('Power dynamics (7 Powers). Evolution stage (Wardley). Field-mapping (OCQ).'),
+
+  h3('Time and effort'),
+  p('Done well in 3–4 hours for 5–7 ecosystem jobs. Each job map (8 phases) should be specific enough to score outcomes; if the outcomes feel generic, the discipline is not being enforced.'),
+
+  h3('Composability'),
+  p('Highest leverage when paired with Wardley (which positions the underserved outcomes in evolution-stage terms). Pairs well with OCQ (which surfaces the per-layer opportunities; JTBD reframes them top-down).'),
+
+  h2('5 · Talent + Capital Flow Anthropology'),
+
+  h3('When to deploy'),
+  bullet('Empirical reality-check against analytical frameworks — when consensus narratives feel suspicious.'),
+  bullet('Job search prioritization (where is talent moving?).'),
+  bullet('Investment timing (where is capital actually deploying, not just committed?).'),
+  bullet('Identifying mispriced positions in the field.'),
+
+  h3('When NOT to deploy'),
+  bullet('Long-term pattern recognition — short-term signals are noisy. Use this for direction, not exact magnitude.'),
+  bullet('First-principles strategic decisions where you should be doing the analysis yourself, not following others.'),
+  bullet('When you cannot maintain it. Living trackers that die after one update are worse than no tracker.'),
+
+  h3('What it reveals best'),
+  p('Where the smartest operators are betting their feet and money — often diverges from the consensus narrative. The Pang-to-Meta and Tulloch-to-Meta moves were the strongest 2025 signal that Meta thought superintelligence-tier capability was acquirable; the Stripe / Ramp / Datadog → Sierra / Decagon / Glean migration was the strongest 2026 signal for Alex’s exact profile, and almost no one in the AI press was covering it.'),
+
+  h3('What it misses'),
+  p('First-principles analysis (it follows; it does not derive). Long-term durability (current moves can be wrong). What is happening below the talent-flow surface — academia, open-source, sovereign labs that do not show up in TechCrunch.'),
+
+  h3('Time and effort'),
+  p('Initial build: 4–6 hours. Maintenance: 30–60 minutes bi-weekly. The maintenance discipline IS the value; without it, the tracker is a one-shot snapshot.'),
+
+  h3('Composability'),
+  p('Pairs with everything. Specifically: confirms or refutes 7 Powers durability calls; confirms or refutes OCQ opportunity rankings; confirms or refutes Wardley evolution-stage placements. Treat divergences between empirical signal and analytical conclusions as the most interesting datapoints — they point at cruxes.'),
+
+  h2('Composition heuristic — which to deploy when'),
+
+  p('Five canonical patterns:'),
+  bullet('1. New field, no prior structure → OCQ + Wardley. Map the field, then position it.'),
+  bullet('2. Field is mapped, need to filter for durability → 7 Powers as filter on OCQ + Wardley outputs.'),
+  bullet('3. Field is mapped, but you are missing the buyer’s seat → Ecosystem JTBD.'),
+  bullet('4. Suspect consensus is wrong → Talent + Capital Flow as reality-check.'),
+  bullet('5. Need an action map for a specific person → all five, then synthesize. This was the case here.'),
+
+  p('The frameworks are not a buffet. They are a sequence: classification → positioning → filtering → reframing → empirical confirmation → action. Skipping a step produces an action map that is missing one of those properties — and the missing property is the one you will regret most.'),
+
+  h1('Closing'),
+  rule(),
+  p('Three companion artifacts complete this volume.'),
+  p('SUBSTRATE atlas (PDF, plates I–VI) — the visual map of the field. Plates VII–XI extend the atlas with this addendum’s frameworks: OCQ heat map, Wardley map, 7 Powers grid, Ecosystem JTBD canvas, and Alex’s action portfolio.'),
+  p('AI Stack foundation report (DOCX) — the descriptive prose. This addendum is its decision-oriented companion.'),
+  p('OCQ_TRACKER.md — the living document. The 7 Bets, the talent and capital flow, the ARR watchlist, the cruxes, the risks. This is the working surface for the next 18 months. The PDFs and DOCXes are reference; the tracker is where decisions get made.'),
+  p('The thesis of this volume in one sentence: the highest-leverage opportunity for someone with twelve years of enterprise B2B fluency, growing AI-builder skill, NYC location, and an active job search is to plant a flag at the intersection of enterprise AI procurement, vertical agent GTM, and operator translation — three positions that compound, that the frameworks all converge on, and that a senior practitioner with this exact profile is one of fewer than fifty people on Earth structurally able to occupy.'),
+  p('That position is yours to claim.'),
+);
+
+// ============================================================
+// Document assembly is at the end of the file
+// ============================================================
+
+module.exports = { docChildren };
+
+// Build only when invoked directly
+if (require.main === module) {
+  const doc = new Document({
+    creator: 'Compiled for A. Yedi',
+    title: 'AI Stack Decisions Playbook',
+    subject: 'Five-framework analysis and action map',
+    styles: {
+      default: { document: { run: { font: FONT, size: 22 } } },
+      paragraphStyles: [
+        { id: 'Heading1', name: 'Heading 1', basedOn: 'Normal', next: 'Normal', quickFormat: true,
+          run: { size: 40, bold: true, font: FONT_DISP, color: COLOR_INK },
+          paragraph: { spacing: { before: 480, after: 240 }, outlineLevel: 0 } },
+        { id: 'Heading2', name: 'Heading 2', basedOn: 'Normal', next: 'Normal', quickFormat: true,
+          run: { size: 30, bold: true, font: FONT_DISP, color: COLOR_INK },
+          paragraph: { spacing: { before: 320, after: 160 }, outlineLevel: 1 } },
+        { id: 'Heading3', name: 'Heading 3', basedOn: 'Normal', next: 'Normal', quickFormat: true,
+          run: { size: 24, bold: true, font: FONT_DISP, color: COLOR_ACCENT },
+          paragraph: { spacing: { before: 240, after: 100 }, outlineLevel: 2 } },
+        { id: 'Heading4', name: 'Heading 4', basedOn: 'Normal', next: 'Normal', quickFormat: true,
+          run: { size: 22, bold: true, font: FONT_DISP, color: COLOR_VERDIGRIS },
+          paragraph: { spacing: { before: 200, after: 80 }, outlineLevel: 3 } },
+      ],
+    },
+    numbering: {
+      config: [{
+        reference: 'bullets',
+        levels: [{
+          level: 0, format: LevelFormat.BULLET, text: '•', alignment: AlignmentType.LEFT,
+          style: { paragraph: { indent: { left: 720, hanging: 360 } } },
+        }],
+      }],
+    },
+    sections: [{
+      properties: {
+        page: {
+          size: { width: 12240, height: 15840 },
+          margin: { top: 1440, right: 1440, bottom: 1440, left: 1440 },
+        },
+      },
+      headers: {
+        default: new Header({
+          children: [new Paragraph({
+            alignment: AlignmentType.RIGHT,
+            children: [new TextRun({
+              text: 'THE AI STACK · DECISIONS PLAYBOOK',
+              font: FONT_MONO, size: 14, color: COLOR_GRAY,
+            })],
+          })],
+        }),
+      },
+      footers: {
+        default: new Footer({
+          children: [new Paragraph({
+            children: [
+              new TextRun({ text: 'Compiled for A. Yedi · Cycle MMXXVI', font: FONT_DISP, size: 16, italics: true, color: COLOR_GRAY }),
+              new TextRun({ children: ['\t'], font: FONT_DISP }),
+              new TextRun({ children: ['Page '], font: FONT_DISP, size: 16, color: COLOR_GRAY }),
+              new TextRun({ children: [PageNumber.CURRENT], font: FONT_DISP, size: 16, color: COLOR_GRAY }),
+            ],
+            tabStops: [{ type: TabStopType.RIGHT, position: TabStopPosition.MAX }],
+          })],
+        }),
+      },
+      children: docChildren,
+    }],
+  });
+
+  const out = '/Users/sameoldexpressions/Documents/GitHub/alex-agents-skills/output/ai-stack/AI_STACK_ADDENDUM.docx';
+  Packer.toBuffer(doc).then(buf => {
+    fs.writeFileSync(out, buf);
+    console.log('Wrote', out, '(', buf.length, 'bytes,', docChildren.length, 'paragraphs )');
+  });
+}
