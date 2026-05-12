@@ -77,11 +77,11 @@ Anthropic API, OpenAI API, Gemini API, Vercel AI Gateway, AWS Bedrock, Cohere, A
 
 ## What the form-factor lens forces you to admit
 
-1. **Form factor accelerates or kills adoption regardless of model quality.** ChatGPT mobile and Claude Code each created an inflection independent of any model release; computer use has the loudest capability headline and the smallest enterprise footprint. Surface is binding.
-2. **Buyer persona shifts per surface.** Same agentic capability lands with CIO (Copilot), developer (Cursor), CRO (Agentforce), CISO blocker (Slack/Comet), consumer (ChatGPT mobile). GTM teams that don't segment by **surface-buyer pair** mis-price ACVs by 3–5x.
-3. **Threat model is form factor.** Prompt injection in Slack ≠ in a browser extension ≠ in cron ≠ in computer use. The "agent security" category will fracture along surface lines, not threat-class lines (Lakera, Lasso, Prompt Security all moving this way Q1 2026).
-4. **Binding-constraint claim, qualified.** Form factor is binding for **enterprise** today. For **consumer**, multimodal capability (voice latency, vision quality) is still binding. They converge ~2028.
-5. **Counter-case.** If unattended-agent reliability crosses ~99% per step within 18 months, the binding constraint flips back to capability — the form-factor problem partially dissolves when the agent is right enough not to need a careful approval UX. Watch OSWorld and TAU-bench through 2027.
+1. **Form factor accelerates or kills adoption regardless of model quality.** ChatGPT mobile and Claude Code each made an inflection independent of model release; computer use has the loudest headline and the smallest enterprise footprint.
+2. **Buyer shifts per surface.** Same capability lands with CIO (Copilot), developer (Cursor), CRO (Agentforce), CISO blocker (Slack/Comet), consumer (ChatGPT mobile). Teams that don't segment by **surface-buyer pair** mis-price ACVs by 3–5x.
+3. **Threat model is form factor.** Prompt injection in Slack ≠ in an extension ≠ in cron ≠ in computer use. "Agent security" will fracture along surface lines (Lakera, Lasso, Prompt Security all moving this way Q1 2026).
+4. **Binding-constraint, qualified.** Form factor binds **enterprise** today; multimodal capability (voice latency, vision) still binds **consumer**. They converge ~2028.
+5. **Counter-case.** If unattended-agent reliability crosses ~99%/step in 18 months, the constraint flips back to capability — the agent is right enough not to need careful approval UX. Watch OSWorld and TAU-bench through 2027.
 
 ---
 
