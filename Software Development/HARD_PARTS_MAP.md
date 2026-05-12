@@ -37,6 +37,8 @@ For agent-facing routing, skill `description:` triggers handle it automatically.
 | "Show me a worked example" | `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` | Reference |
 | "What else should I read?" | `references/software-architecture-the-hard-parts/additional-experts.md` | Reference |
 | "Re-extract the source text" | `references/software-architecture-the-hard-parts/scripts/ocr_pipeline.sh` | Script |
+| "Quick saga lookup from the terminal" | `references/software-architecture-the-hard-parts/scripts/saga_picker.py` | Script |
+| "Data Mesh + Data Product Quantum architecture" | `Data Engineering/architecture/data-mesh-topologies` SKILL (with Hard Parts Deepening) | Workflow |
 
 ---
 
@@ -107,7 +109,7 @@ Software Development/references/software-architecture-the-hard-parts/
 - **Runtime resilience** (circuit breakers, bulkheads, timeouts) — use `microservices-resilience-patterns` skill
 - **Storage-level eventual consistency** (N/W/R quorums, CRDTs) — use `eventual-consistency-mechanics` skill (separate problem from saga-level EC)
 - **General distributed systems theory** (CAP, consensus, gossip) — use `distributed-systems-essentials` and `consensus-and-strong-consistency` skills
-- **Analytical data / Data Mesh** — partially covered in references but skill TBD (Ch 14; possibly lands in `Data Engineering/`)
+- **Analytical data / Data Mesh** — landed as a Hard Parts Deepening section on `Data Engineering/architecture/data-mesh-topologies` SKILL (Strengholt's taxonomy + the Hard Parts Data Product Quantum vocabulary together)
 
 ---
 

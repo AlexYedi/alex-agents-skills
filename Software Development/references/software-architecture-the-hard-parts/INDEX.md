@@ -17,6 +17,7 @@
 | `sysops-squad-worked-example.md` | The book's running case study: characters, decisions, ADRs ratified per chapter | You need a worked example to ground a method in practice |
 | `additional-experts.md` | Adjacent reading, related thinkers, links to other distilled books in this repo | You finished the book and want to broaden |
 | `scripts/ocr_pipeline.sh` | Reproducible OCR pipeline (the source PDF was image-only) | You want to re-extract the text yourself |
+| `scripts/saga_picker.py` | Fast non-conversational saga lookup (3 prompts → saga name + ADR scaffold) | You know your axis answers and want a quick lookup; use SKILL `distributed-workflows-and-sagas` for real decisions |
 
 ---
 

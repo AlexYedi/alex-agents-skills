@@ -416,3 +416,75 @@ The "driveway" is the **catalog + standardized contract format**. Domains implem
 - See `data-engineering-lifecycle-and-principles` for the Reis & Housley lifecycle context
 
 Source: *Data Management at Scale* (Strengholt), Chapters 1-3.
+
+---
+
+## Hard Parts Deepening (Data Product Quantum)
+
+Strengholt's taxonomy describes Data Mesh from a *governance and topology* lens.
+*Software Architecture: The Hard Parts* (Ford/Richards/Sadalage/Dehghani 2021,
+Ch 14) adds an **architectural** lens — Data Mesh from the service-architecture
+perspective — and contributes one specific concept: the **Data Product Quantum
+(DPQ)**.
+
+### Data Product Quantum (DPQ)
+
+The analytical-data analog of the **architectural quantum** (see
+`architectural-quanta-and-modularity` SKILL). A DPQ:
+
+- Owns its analytical data
+- Exposes the data via well-defined contracts (often async, often event-streamed)
+- Is independently deployable
+- Has product-level SLAs
+- **Lives next to the service quantum** and is owned by the same team
+
+The framing: where Strengholt asks *"how are domains organized?"*, Hard Parts
+asks *"what is the architectural unit that delivers analytical data?"* The
+answer is the DPQ — a sibling quantum to the operational service.
+
+### Three DPQ types (Ch 14)
+
+| DPQ Type | Role | Example |
+|---|---|---|
+| **Source-Aligned (native) DPQ** | Provides analytical data on behalf of a collaborating service quantum | Per-domain analytics: TicketDPQ alongside TicketService |
+| **Aggregate DPQ** | Aggregates from multiple source DPQs, sync or async | Customer 360 view aggregating Ticket / Billing / Survey DPQs |
+| **Fit-for-Purpose DPQ** | Custom-made for a particular use case (BI, ML, reporting) | Forecast DPQ for ML pricing model |
+
+The taxonomy is orthogonal to Strengholt's. Both apply: Strengholt names the
+*organizational topology* (Fully Federated / Governed / etc.); Hard Parts names
+the *architectural unit* (Source-Aligned / Aggregate / Fit-for-Purpose DPQ).
+
+### Sidecar pattern for analytical data
+
+Hard Parts explicitly applies the **Sidecar pattern** (Ch 8) to analytical data.
+The DPQ is a sidecar-style adjunct to the operational service quantum:
+
+- Same team owns operational service + its DPQ
+- DPQ is a separate deployable (independently scaled, independently failed)
+- Operational service emits domain events; DPQ subscribes and projects
+- Analytical consumers query the DPQ, not the operational service
+
+This is the architectural recipe for *avoiding* the classic data-warehouse trap
+where the central data team owns everything and the operational teams own
+nothing about analytical data.
+
+### When to invoke this deepening
+
+- Designing a Data Mesh and need the architectural unit, not just the
+  governance topology
+- Considering how the service quantum and its analytical complement should
+  relate (sidecar? separate service? embedded?)
+- Translating Strengholt's topology choice into a concrete per-domain
+  deployment shape
+
+### References
+
+- `Software Development/references/software-architecture-the-hard-parts/frameworks.md#analytical-data`
+- `Software Development/references/software-architecture-the-hard-parts/complete-distillation.md` (Ch 14 section)
+- *Data Mesh: Delivering Data-Driven Value at Scale* (Dehghani, O'Reilly 2022) — full Data Mesh treatment that this chapter is a primer for
+
+### Related skills (in `Software Development/`)
+
+- `architectural-quanta-and-modularity` — the operational-quantum vocabulary that DPQ extends
+- `code-reuse-in-distributed-systems` — Sidecar pattern; same mechanism applied to analytical data here
+- `data-ownership-and-distributed-data` — the operational-data sibling of this analytical-data conversation
