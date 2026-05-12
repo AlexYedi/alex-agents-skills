@@ -293,3 +293,37 @@ Alex's core stack (full details in `references/stack-context.md`):
 
 **The rule**: n8n is the automation hub. Supabase is the data layer. Claude is the
 reasoning layer. Everything else feeds into or out of those three.
+
+---
+
+## Hard Parts Decision Discipline
+
+For non-trivial architecture decisions — distributed transactions, data ownership,
+service contracts, decomposition, granularity — Alex's repo has a full toolkit
+derived from *Software Architecture: The Hard Parts* (Ford/Richards/Sadalage/
+Dehghani, 2021). Use it.
+
+**Top-level routing table:** `Software Development/HARD_PARTS_MAP.md` lists every
+symptom and the canonical skill or reference.
+
+**The meta-skill:** load `trade-off-analysis-method` SKILL when a decision will
+be second-guessed later. It walks the 3-step method (find entangled dimensions,
+analyze coupling, assess change impact) and produces an ADR with a scored
+trade-off table.
+
+**Eight workflow-structured decision skills** under `Software Development/`:
+- `distributed-workflows-and-sagas` — saga selection over the 8-pattern taxonomy
+- `data-ownership-and-distributed-data` — ownership + cross-service data access
+- `service-contracts-and-coupling` — strict vs loose, stamp/semantic coupling
+- `architectural-quanta-and-modularity` — distributed monolith test + modularity drivers
+- `service-and-data-decomposition` — Component-Based vs Tactical Forking
+- `code-reuse-in-distributed-systems` — Replicated Code / Shared Library / Shared Service / Sidecar
+- `service-granularity-forces` — disintegrators vs integrators
+
+**Reference:** `Software Development/references/software-architecture-the-hard-parts/`
+contains the full distillation, the frameworks catalog with stable anchors, and
+the Sysops Squad worked example (every ADR the case-study team ratifies).
+
+**The discipline that matters:** every architecture decision Alex makes should
+produce an ADR with a trade-off table. Without it, future-Alex (or future-CTO) can't
+tell intentional from incidental. The Hard Parts skills enforce this discipline.
