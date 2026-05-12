@@ -331,3 +331,60 @@ Source: *Fundamentals of Software Architecture* by Mark Richards and Neal
 Ford, architecture styles chapters. *Foundations of Scalable Systems* by
 Ian Gorton (O'Reilly, 2022) for implementation depth on each distributed
 style.
+
+---
+
+## Hard Parts Deepening (Quanta and the Distributed Monolith Trap)
+
+*Software Architecture: The Hard Parts* (Ford/Richards/Sadalage/Dehghani 2021)
+introduces the vocabulary that lets you tell *real* microservices from a
+distributed monolith: the **architectural quantum**.
+
+### Architectural quantum
+
+An independently deployable artifact with:
+1. **High functional cohesion** — internal elements serve a single domain purpose
+2. **High static coupling internally** — share OS, framework, DB, integration points
+3. **Synchronous dynamic coupling at runtime** forming a quantum boundary
+
+Consequence: **ten microservices sharing one database are one quantum, not
+ten.** The "microservices" architecture is then a distributed monolith — all
+the operational cost of distribution, none of the independence benefits.
+
+### Distributed monolith — the trap
+
+If you adopt microservices but services share a database, share synchronous
+critical-path calls, or must deploy together, the architecture is a single
+quantum split across multiple processes. The book's framing is unambiguous:
+this is **worse than a real monolith** because you pay the ops cost without
+the independence benefit.
+
+**Symptoms:**
+- Deploys are coordinated across services
+- One service's outage breaks others on the critical path
+- Schema changes require multi-service migrations
+- Failure modes are correlated
+
+**Test:** Can you deploy service A without coordinating with service B?
+If no, A and B are in the same quantum.
+
+### Elephant Migration Anti-Pattern
+
+Extracting services from a tangled monolith one at a time *without* structure
+produces a distributed monolith. Use Component-Based Decomposition or
+Tactical Forking (`service-and-data-decomposition` SKILL) — never ad-hoc
+extraction.
+
+### When to load this deepening
+
+- Considering microservices: check whether the proposed system would be a
+  real quantum or a distributed monolith. If the latter, stay monolithic
+  with good modularity.
+- Diagnosing why microservices "aren't paying off": apply the quantum test.
+- Planning a decomposition: choose Component-Based or Tactical Forking
+  before extracting the first service.
+
+References:
+- `references/software-architecture-the-hard-parts/frameworks.md#architectural-quantum`
+- `references/software-architecture-the-hard-parts/frameworks.md#decomposition-patterns`
+- `references/software-architecture-the-hard-parts/complete-distillation.md` (Big Takeaway #3)

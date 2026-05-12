@@ -539,3 +539,36 @@ Source: *Foundations of Scalable Systems* by Ian Gorton, Chapter 11. The
 Dynamo paper (SOSP 2007) is the foundational reference for this style of
 system. Marc Shapiro's CRDT papers and Y.js / Automerge are good entry
 points to the CRDT literature.
+
+---
+
+## Hard Parts Deepening (Two Different Eventual Consistencies)
+
+This skill is about **storage-level eventual consistency** — the N/W/R
+quorum, hinted handoff, anti-entropy, version vector world. Eventually
+consistent reads of a *single logical record* across replicas.
+
+*Software Architecture: The Hard Parts* (Ch 11–12) uses the same words for a
+**different problem**: business-level eventual consistency across
+*multiple services* in a distributed workflow. These are **not** the same:
+
+| Property | Storage-level EC (this skill) | Business-level EC (sagas) |
+|---|---|---|
+| Scope | One logical record, N replicas | Multiple records, multiple services |
+| Mechanism | Quorums, version vectors, CRDTs | Compensating transactions, sagas |
+| Inconsistency window | Milliseconds to seconds | Seconds to minutes |
+| Resolution | Anti-entropy, hinted handoff | Saga orchestrator, choreography |
+| Skill to load | This one | `distributed-workflows-and-sagas` |
+
+When the question is *"how do we make multiple services agree on the outcome
+of a workflow?"* — load `distributed-workflows-and-sagas`. The 8-saga
+taxonomy includes four "eventual" patterns (Fairy Tale, Time Travel, Parallel,
+Anthology) that are business-level eventual consistency.
+
+A real system often has **both**: services use storage-level EC inside (this
+skill) and saga-level EC across (the sagas skill). They compose; they don't
+conflict.
+
+References:
+- `references/software-architecture-the-hard-parts/frameworks.md#the-8-transactional-sagas`
+- `references/software-architecture-the-hard-parts/frameworks.md#workflow-coordination`

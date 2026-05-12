@@ -243,3 +243,39 @@ microservices.
 - **Refactoring tests is part of refactoring.** Tests that depend on internals create as much coupling as production code. Refactor both.
 
 Source: *Modern Software Engineering* by Dave Farley, Chapters 7-9.
+
+---
+
+## Hard Parts Deepening (Modularity Drivers)
+
+Farley's treatment is about *how* to modularize (cohesion, separation of
+concerns, hexagonal architecture). *Software Architecture: The Hard Parts*
+(Ch 3) asks the prior question: **why modularize at all?**
+
+The book names **six modularity drivers**. If none apply, the cost of
+modularity isn't justified — stay simple.
+
+| Driver | What's broken if absent | Modularization justifies cost when… |
+|---|---|---|
+| **Maintainability** | Changes ripple unpredictably | Domains change at very different rates |
+| **Testability** | Test suite is slow or flaky | Test isolation impossible at current scope |
+| **Deployability** | Releases are infrequent / risky | Teams need independent release cadences |
+| **Scalability / Elasticity** | One bottleneck drags everything | Components have different load profiles |
+| **Availability** | One failure stops everything | Components have different SLOs |
+| **Fault Tolerance** | Errors propagate freely | Components have different blast-radius tolerance |
+
+### When to load this deepening
+
+- Considering whether to break apart a system (monolith, service, module)
+- Building a business case for modularization to non-technical stakeholders
+- Diagnosing why a decomposition didn't pay off (likely none of these drivers
+  were broken, or were broken but the modularization didn't address the
+  specific broken driver)
+
+The book is explicit: *"we want microservices"* is **not** a driver. *"Our
+deployment cadence is blocked by a 2-hour test suite that flakes once a
+week"* is. Name the broken driver before modularizing.
+
+References:
+- `references/software-architecture-the-hard-parts/frameworks.md#modularity-drivers`
+- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-3-sysops-squad-saga-creating-a-business-case` (the case study makes the modularity-driver business case)

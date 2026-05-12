@@ -442,3 +442,42 @@ Datastore API
 - See `api-security-and-lifecycle` for security, OAuth, observability
 
 Source: *Mastering API Architecture* (Bernardez & Olejár, O'Reilly).
+
+---
+
+## Hard Parts Deepening (Contracts as Coupling)
+
+Bernardez & Olejár treat API design holistically (lifecycle, security,
+versioning, governance). *Software Architecture: The Hard Parts* (Ch 13)
+treats contracts as **the deepest coupling decision** between services and
+provides explicit decision criteria for one specific question: **strict vs
+loose**, plus auditing for **stamp coupling** and **semantic coupling**.
+
+When the question is *"what kind of contract should this boundary have?"* —
+load **`service-contracts-and-coupling` SKILL**. It walks a 6-step procedure
+per contract boundary:
+
+1. Identify the boundary class (intra-team / cross-team / mobile / partner / public)
+2. Score strict-vs-loose
+3. Audit for stamp coupling (passing more data than needed)
+4. Audit for semantic coupling (coupling on field meaning)
+5. Decide on Consumer-Driven Contracts
+6. Write the ADR
+
+Key concepts that augment this skill:
+
+- **Stamp coupling** — passing more data than the consumer needs. The most
+  common contract anti-pattern. Common in API responses returning full
+  entities when consumers needed two fields.
+- **Semantic coupling** — coupling on the *meaning* of fields, not their
+  names. Renaming preserves syntactic compatibility but can break semantic
+  contracts (unit changes, ID-space changes, status-meaning changes).
+- **Boundary class determines style** — the book's strongest point is that
+  *internal* contracts can be strict (Protobuf, OpenAPI-validated) while
+  contracts at boundaries you can't redeploy on demand (mobile apps,
+  partners, public APIs) should lean loose. Don't pick one style globally.
+
+References:
+- `references/software-architecture-the-hard-parts/frameworks.md#contracts`
+- `references/software-architecture-the-hard-parts/frameworks.md#coupling-vocabulary` (stamp + semantic)
+- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-13-sysops-squad-saga-expert-mobile-app-contract` (worked example: strict internally, **loose** at the mobile boundary)

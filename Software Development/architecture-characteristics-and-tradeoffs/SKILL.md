@@ -247,3 +247,30 @@ For each connascence:
 - **ADRs are write-once but read-many.** Spend time on the rationale section. Future-you will thank you.
 
 Source: *Fundamentals of Software Architecture* by Mark Richards and Neal Ford, Chapters 1-4.
+
+---
+
+## Hard Parts Deepening (Build Your Own Trade-Off Analysis)
+
+This skill defines the *characteristics* (the "ilities") and the connascence
+vocabulary for analyzing coupling. *Software Architecture: The Hard Parts*
+(Ch 15) operationalizes the use of those characteristics into a **replicable
+3-step method** for any architectural decision:
+
+1. **Find what parts are entangled together** (build a static-coupling diagram)
+2. **Analyze how they are coupled** (name the type, score the strength)
+3. **Assess trade-offs by determining the impact of change**
+
+Output: a scored trade-off table + ADR.
+
+When the question shifts from *"which characteristics matter?"* to *"how do
+I make a defensible architecture decision using these characteristics?"* —
+**load `trade-off-analysis-method` SKILL**. It walks the 5-step procedure
+end-to-end and produces an ADR.
+
+The two skills compose: this skill establishes the characteristics; the
+trade-off-analysis-method skill applies them to a specific decision.
+
+References:
+- `references/software-architecture-the-hard-parts/frameworks.md#trade-off-analysis-3-step`
+- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` (every ADR in the case study uses this method)

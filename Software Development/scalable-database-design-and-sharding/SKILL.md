@@ -561,3 +561,42 @@ AZs).
 Source: *Foundations of Scalable Systems* by Ian Gorton, Chapters 10 and 13.
 Martin Kleppmann's *Designing Data-Intensive Applications* is the canonical
 deeper reference.
+
+---
+
+## Hard Parts Deepening (Cross-Service Data Decomposition)
+
+This skill is about scaling **inside** a service's database. *Software
+Architecture: The Hard Parts* (Ford/Richards/Sadalage/Dehghani 2021)
+addresses the orthogonal problem: scaling **across** services after a
+monolith is decomposed. Different problem, different vocabulary.
+
+When the question is *"how do we split this database into per-service
+databases?"* — load these instead:
+
+- **`data-ownership-and-distributed-data` SKILL** — assigns ownership
+  per table (Single / Joint / Common), picks Joint-ownership resolution
+  patterns (Table Split, Data Domain, Delegate, Service Consolidation),
+  and picks data access patterns for cross-service reads (Inter-Service
+  Communication, Column Schema Replication, Replicated Cache, Data
+  Domain).
+- **`service-and-data-decomposition` SKILL** — the upstream decomposition
+  itself (Component-Based or Tactical Forking).
+
+Key concepts from Hard Parts Ch 6 (Pulling Apart Operational Data):
+
+- **Data Disintegrators / Data Integrators** — named forces for and
+  against splitting tables (change control, scalability differential,
+  fault tolerance vs referential integrity, ACID, joined queries).
+- **Data Domain** — coupled set of tables/views/FKs/stored procs that
+  move together; the unit of data decomposition.
+- **5-Step Database Decomposition Process** — analyze → create data
+  domains → separate connections → separate schemas → separate database
+  servers. Each step produces an ADR; the DBA team must be in the room
+  from step 1.
+
+References:
+- `references/software-architecture-the-hard-parts/frameworks.md#data-decomposition`
+- `references/software-architecture-the-hard-parts/frameworks.md#data-ownership-patterns`
+- `references/software-architecture-the-hard-parts/frameworks.md#data-access-patterns`
+- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-6-sysops-squad-saga-justifying-database-decomposition` (the case study's clearest lesson: bring the DBA in early)
