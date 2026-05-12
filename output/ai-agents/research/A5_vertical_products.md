@@ -179,18 +179,18 @@
 
 ## What changed in the last 90 days (Feb → May 2026)
 
-- **Feb 2026** — Harvey $300M Series E at $5B; NYC office legal-vertical AmLaw100 GTM hiring confirmed.
-- **Feb 2026** — Hippocratic AI $150M Series C at $2B; NYC HQ anchor strengthens; enterprise health-system GTM hiring spikes.
-- **Feb 2026** — Sierra confirmed $175M+ ARR (Bret Taylor, AI Engineer Summit Feb 2026); ~400% YoY; per-resolution pricing exported as segment standard.
-- **Mar 2026** — Mistral €600M Series C at €11B; first credible non-US enterprise-agent platform with US F500 EU-sub traction.
-- **Mar 2026** — Sierra additional $350M at rumored $10B (The Information; treat as upper bound).
-- **Mar 2026** — Stripe/Ramp/Datadog/Snowflake AE migration to Sierra/Decagon/Glean/Hippocratic at highest cadence yet (Pallet aggregates).
-- **Apr 2026** — Anthropic ARR disputed $24–30B; Claude Code biggest single driver, validating coding-vertical encroachment thesis.
-- **Apr 2026** — Lovable hits $80M Q1 ARR (Anton Osika public); fastest EU SaaS curve; H2 2026 M&A interest from Adobe/Figma/Microsoft rumored.
-- **Apr 2026** — Clay $80M+ ARR (TechCrunch); NYC HQ enterprise GTM hiring expanded; only durable RevOps winner.
-- **May 2026** — Rogo $30M+ ARR rumored (PitchBook unconfirmed); next round expected to clear $1B at Q3 2026 close.
-- **May 2026** — 11x ARR flat at $20M, GTM repositioning underway, founder Hasan Sukkar public on "synthetic SDR quality ceiling" — segment cautionary tale.
-- **May 2026** — Ramp internal-AI org hiring memo (LinkedIn signal) expands enterprise-AI GTM headcount; rumored $20B+ raise underway.
+- **Feb'26** — Harvey $300M E at $5B; NYC office AmLaw100 GTM hiring confirmed.
+- **Feb'26** — Hippocratic $150M C at $2B; NYC anchor strengthens.
+- **Feb'26** — Sierra confirmed $175M+ ARR (Taylor at AI Engineer Summit); 400% YoY; per-resolution pricing exported as segment standard.
+- **Mar'26** — Mistral €600M C at €11B; first credible non-US enterprise-agent platform with US F500 EU-sub traction.
+- **Mar'26** — Sierra add'l $350M at rumored $10B (The Information; upper bound).
+- **Mar'26** — Stripe/Ramp/Datadog/Snowflake AE migration to Sierra/Decagon/Glean/Hippocratic at highest cadence yet.
+- **Apr'26** — Anthropic ARR disputed $24–30B; Claude Code biggest driver — validates coding-vertical encroachment thesis.
+- **Apr'26** — Lovable $80M Q1 ARR (Osika public); fastest EU SaaS curve; Adobe/Figma/MSFT M&A rumored H2'26.
+- **Apr'26** — Clay $80M+ ARR; NYC HQ enterprise GTM hiring expanded; only durable RevOps winner.
+- **May'26** — Rogo $30M+ ARR rumored (PitchBook unconfirmed); next round should clear $1B by Q3'26.
+- **May'26** — 11x ARR flat at $20M; Sukkar public on "synthetic SDR quality ceiling" — segment cautionary tale.
+- **May'26** — Ramp internal-AI org hiring memo expands enterprise-AI GTM headcount; $20B+ raise rumored.
 
 ---
 
