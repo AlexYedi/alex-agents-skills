@@ -293,3 +293,37 @@ Source: *Fundamentals of Software Architecture* by Mark Richards and Neal
 Ford (distributed systems chapters), and *Foundations of Scalable Systems*
 by Ian Gorton (Ch 9 for the cascading-failure framing that motivates Saga
 + resilience patterns together).
+
+---
+
+## Hard Parts Deepening (Sagas Are Not One Pattern)
+
+The "Saga" treatment above is the introductory framing. *Software Architecture:
+The Hard Parts* (Ford/Richards/Sadalage/Dehghani 2021) shows the "Saga pattern"
+is actually **8 distinct patterns** along three axes (communication × consistency
+× coordination):
+
+| Pattern | Communication | Consistency | Coordination | Coupling |
+|---|---|---|---|---|
+| **Epic Saga (sao)** | sync | atomic | orchestrated | **very high** |
+| Phone Tag Saga (sac) | sync | atomic | choreographed | high |
+| Fairy Tale Saga (seo) | sync | eventual | orchestrated | high |
+| Time Travel Saga (sec) | sync | eventual | choreographed | medium |
+| Fantasy Fiction Saga (aao) | async | atomic | orchestrated | high |
+| Horror Story (aac) | async | atomic | choreographed | medium |
+| **Parallel Saga (aeo)** | async | eventual | orchestrated | **low** |
+| **Anthology Saga (aec)** | async | eventual | choreographed | **very low** |
+
+**The "Saga" pattern most other materials describe is Epic Saga — the
+highest-coupling pattern in this taxonomy.** Most teams should default to
+Parallel Saga or Anthology Saga and only escalate when domain requirements
+force atomic/sync/orchestrated.
+
+For real saga selection, **load `distributed-workflows-and-sagas` skill** — it
+walks the full selection procedure and produces an ADR. Don't pick a saga
+pattern from this skill's overview section without going through that workflow.
+
+References:
+- `references/software-architecture-the-hard-parts/frameworks.md#the-8-transactional-sagas`
+- `references/software-architecture-the-hard-parts/frameworks.md#saga-selection-matrix`
+- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` (the case study lands on Parallel Saga)
