@@ -1,0 +1,17 @@
+{
+  "name": "ai-agents",
+  "version": "1.0.0",
+  "description": "Volume III of the SUBSTRATE atlas: agent-layer deep dive. Generates AI_AGENTS_REPORT.docx and AI_AGENTS_ADDENDUM.docx via docx-js.",
+  "main": "build_report.js",
+  "scripts": {
+    "report": "node build_report.js",
+    "addendum": "node build_addendum.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "docx": "^9.6.1"
+  }
+}

@@ -2,11 +2,11 @@
 
 **Date:** 2026-05-12 · **Author:** Alex Yedi · **Word target:** ≤2,400 · **Register:** OCQ_TRACKER.
 
-**Scope.** Surfaces the **human** uses to direct, observe, approve, and converse with an agent. Distinct from A4 — A4 covers surfaces the agent reaches *into* (browser automation, computer use, sandboxes, outbound voice). A7 is the inverse: what does the person sit at when the work happens? **In May 2026 this is the binding constraint on enterprise agentic adoption — not capability.**
+**Scope.** Surfaces the **human** uses to direct, observe, approve, and converse with an agent. Distinct from A4 — A4 covers what the agent reaches *into* (browser automation, computer use, sandboxes, outbound voice). A7 is the inverse: what does the person sit at when the work happens? **In May 2026 this is the binding constraint on enterprise agentic adoption — not capability.**
 
 ## Thesis
 
-Model and agent capability are increasingly form-factor-indifferent. Humans are not. **Form factor governs four things at once: adoption velocity, buyer persona, threat model, regulatory surface.** As long as humans remain in the loop — true across virtually all enterprise 2026 deployments — the surface is the bottleneck. Form factor and model **co-evolve**, not sequentially: ChatGPT mobile made multimodal-vision a product requirement; Claude Code made long-context tool-loop reliability a model-team OKR. Treat surfaces as inputs to model roadmaps, not outputs.
+Capability is increasingly form-factor-indifferent. Humans are not. **Form factor governs four things at once: adoption velocity, buyer persona, threat model, regulatory surface.** As long as humans remain in the loop — true across virtually all 2026 enterprise deployments — the surface is the bottleneck. Form factor and model **co-evolve**: ChatGPT mobile made multimodal-vision a product requirement; Claude Code made long-context tool-loop reliability a model-team OKR. Surfaces are inputs to model roadmaps, not outputs.
 
 ---
 
