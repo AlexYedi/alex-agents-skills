@@ -6,6 +6,8 @@
 **Owner:** Alex
 **Companion artifacts:** `AI_STACK_SUBSTRATE.pdf` (the map), `AI_STACK_REPORT.docx` (the prose), `AI_STACK_ADDENDUM.docx` (the framework analyses).
 
+> **VOL III ADDENDUM (2026-05-12):** Agent-layer sub-tracker now live at `output/ai-agents/AI_AGENTS_TRACKER.md`. Volume III refreshes the seven Bets at agent-layer resolution. Key deltas: **Bet #1 sequenced first** (was implicit-third), **Bet #3 reframed** from productized MCP servers to advisory + gateway-adjacent, **Bet #2 NYC target list expanded** (+ Hebbia, Rogo, Clay, Runway, Ramp AI), **Bet #4 split** into per-token + per-trajectory FinOps, **Bet #5 absorbs** memory architecture as service line. New agent-specific Crux: OSWorld 65% on a frontier system (Q3 2026). See `AI_AGENTS_TRACKER.md §F` for the full proposed delta list and `AI_AGENTS_ADDENDUM.docx Part XI` for the synthesis.
+
 ---
 
 ## How to use this tracker

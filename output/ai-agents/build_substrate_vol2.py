@@ -281,11 +281,11 @@ def plate_viii(pdf):
             fontsize=5.2, fontname=F_MONO, color=VERMILION, va="top")
     ax.plot([ix0, ix1], [pe_y - 0.8, pe_y - 0.8], color=RULE, lw=0.3)
     pe = [
-        "1 · MCP gateways · Custom → Product · H2 '26",
-        "2 · Computer use · Genesis → Custom · mid-late '26",
-        "3 · Voice substrate · Product → Commodity · mid-late '26",
+        "1 · MCP gateways · Custom to Product · H2 '26",
+        "2 · Computer use · Genesis to Custom · mid-late '26",
+        "3 · Voice substrate · Product to Commodity · mid-late '26",
         "4 · Memory · forced binary · H2 '26",
-        "5 · Procurement-grade controls · Genesis → Custom · Q4 '26",
+        "5 · Procurement-grade controls · Genesis to Custom · Q4 '26",
         "6 · Eval / obs consolidation · Q4 '26 – H1 '27",
         "7 · Foundation labs walking up-stack · continuous",
     ]
@@ -514,7 +514,7 @@ def plate_xi(pdf):
             ["Sustain · paid tier", "Distribution layer for #1–#3", ""]),
         ("7", "VC Operating Partner", "3 / 5", VERDIGRIS,
             ["Background networking", "RAAIS · Betaworks · MAD", "No applications"],
-            ["3 NYC funds · relationships", "Watch principal→operator", ""],
+            ["3 NYC funds · relationships", "Watch principal-to-operator", ""],
             ["Primary path if 1–3 stall", "Active applications Q4 '26", ""]),
     ]
 
