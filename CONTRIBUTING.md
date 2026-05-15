@@ -1,0 +1,91 @@
+# Contributing to alex-agents-skills
+
+This repo is a Claude Code plugin (`alex`). Changes here ship to every Claude Code session via the user-scope install.
+
+## Repository layout
+
+```
+alex-agents-skills/
+├── .claude-plugin/
+│   ├── plugin.json          # Plugin manifest (name, version, author)
+│   └── marketplace.json     # Marketplace manifest (registers the plugin)
+├── skills/                  # Plugin-loaded skills. FLAT, one level deep.
+│   └── <skill-name>/
+│       ├── SKILL.md         # Required. Frontmatter + instructions.
+│       └── references/      # Optional supporting files.
+├── Product/                 # Archive — un-migrated skills (not plugin-loaded)
+├── Software Development/    # Archive
+├── GTM/                     # Archive
+├── Data Engineering/        # Archive
+├── ...                      # Other archive domains
+├── Me/                      # Personal context and usage patterns
+└── output/                  # Generated artifacts (gitignored where relevant)
+```
+
+Only `skills/<name>/SKILL.md` files are auto-discovered by Claude Code. Anything under domain folders is treated as documentation/source-of-truth for future migration, not a live skill.
+
+## Adding a new skill
+
+1. Create `skills/<kebab-name>/` (lowercase, hyphen-separated, max 64 chars).
+2. Create `skills/<kebab-name>/SKILL.md` with YAML frontmatter:
+   ```yaml
+   ---
+   description: One sentence on what the skill does and when to use it. This is what Claude reads to decide whether to invoke it.
+   ---
+
+   # Skill title
+
+   Body — instructions, frameworks, examples.
+   ```
+3. Keep the body concise. Once invoked, the full SKILL.md sits in context for the rest of the session.
+4. Skill names must be unique across `skills/`. There's no nested subdirectory discovery.
+
+## Editing an existing skill
+
+1. Edit `skills/<name>/SKILL.md` directly.
+2. Commit.
+3. Run `claude plugin update alex@alex-agents-skills` to refresh the user-scope cache.
+4. To preview changes without committing, run Claude Code with `--plugin-dir /Users/<you>/Documents/GitHub/alex-agents-skills` — the local copy overrides the installed cache for that session.
+
+## Naming conventions
+
+- Skill folder name = invocation name. `skills/cto-architect/` → `alex:cto-architect`.
+- The `alex:` prefix is the plugin namespace; it's added automatically.
+- Avoid collisions across `skills/` (the migration from domain folders had 3 — they were resolved by prefixing the GTM-Marketing duplicates with `marketing-`).
+- For project-specific skills, put them in `<project>/.claude/skills/<name>/`. They get a short name (no namespace) and override any same-named plugin skill.
+
+## Adding agents and commands
+
+Plugin-loaded:
+- `agents/<name>.md` at repo root — plugin agents.
+- `commands/<name>.md` at repo root — plugin commands (deprecated by Anthropic; prefer skills).
+
+Neither directory exists yet. The 5 loose `*-prompt.md` files in domain folders (e.g., `Software Development/cto-architect/cto-principal-architect-prompt.md`) are agent prompts that should be promoted to `agents/` in a future migration.
+
+## Migration policy (resolves drift from YED-25)
+
+The "frozen forks" pattern from YED-25 — copying skills into individual project repos — is replaced by:
+
+1. **One source of truth**: `skills/<name>/SKILL.md` in this repo.
+2. **One distribution mechanism**: the `alex` plugin, installed at user scope.
+3. **Project-local overrides allowed**: each project can keep skills in its own `.claude/skills/` that take precedence over the plugin version for that project only.
+
+When porting a skill that lives both here and in a project repo, treat this repo as canonical. If a project version has diverged in ways that should be universal, port the changes back here and remove the project-local copy.
+
+## Releasing a new version
+
+1. Edit `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` — bump `version`.
+2. Commit.
+3. (Optional) `claude plugin tag` to create a `alex--v<version>` git tag.
+4. Anyone with the plugin installed runs `claude plugin update alex@alex-agents-skills`.
+
+## What does NOT belong in `skills/`
+
+- Reference material that isn't an action skill — put it in domain folders or inside the skill's own `references/` subdir.
+- Project-specific skills (Empire State, gtm-os, job-hunt-system) — they live in the project's `.claude/skills/`.
+- Agent prompt files — they go in `agents/` (not yet present in this repo).
+- Slash commands — they go in `commands/` (deprecated; convert to a skill).
+
+## Migration backlog
+
+~205 skills still live in domain folders awaiting promotion. See the issue tracker (YED-28 and successors) for the planned waves.
