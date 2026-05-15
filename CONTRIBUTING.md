@@ -44,14 +44,26 @@ Only `skills/<name>/SKILL.md` files are auto-discovered by Claude Code. Anything
 
 1. Edit `skills/<name>/SKILL.md` directly.
 2. Commit.
-3. Run `claude plugin update alex@alex-agents-skills` to refresh the user-scope cache.
+3. (Automatic if `scripts/install-git-hooks.sh` has been run — see [One-time setup](#one-time-setup).) Otherwise: run `claude plugin update alex@alex-agents-skills` to refresh the user-scope cache.
 4. To preview changes without committing, run Claude Code with `--plugin-dir /Users/<you>/Documents/GitHub/alex-agents-skills` — the local copy overrides the installed cache for that session.
+
+## One-time setup
+
+Run once per clone of this repo:
+
+```bash
+bash scripts/install-git-hooks.sh
+```
+
+Installs a `post-commit` hook in `.git/hooks/` (local, not tracked) that runs `claude plugin update alex@alex-agents-skills` in the background after every commit. Output goes to `${TMPDIR:-/tmp}/alex-agents-skills-plugin-update.log` — check it if a commit doesn't seem to have propagated.
+
+To remove: `rm .git/hooks/post-commit`. If you don't run the installer, the manual `claude plugin update` step in step 3 above is required.
 
 ## Naming conventions
 
 - Skill folder name = invocation name. `skills/cto-architect/` → `alex:cto-architect`.
 - The `alex:` prefix is the plugin namespace; it's added automatically.
-- Avoid collisions across `skills/` (the migration from domain folders had 3 — they were resolved by prefixing the GTM-Marketing duplicates with `marketing-`).
+- Avoid collisions across `skills/`. The first migration audit (YED-32) found 3 collisions (`suppression-logic`, `signal-scoring`, `outbound-plays`) under `GTM/Growth/intent-signal-orchestration/` and `GTM/Marketing/intent-signal-orchestration/`. Both umbrellas were byte-identical (Marketing was a copy of Growth from commit `7d16627`), so the Marketing umbrella was deleted and Growth is canonical. For future collisions: if byte-identical, dedupe by deleting the copy; if truly distinct, prefix with the lower-precedence umbrella name (e.g., `marketing-foo`).
 - For project-specific skills, put them in `<project>/.claude/skills/<name>/`. They get a short name (no namespace) and override any same-named plugin skill.
 
 ## Adding agents and commands
