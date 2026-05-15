@@ -47,4 +47,36 @@ This repo is a Claude Code plugin. It loads automatically in every session.
 3. Commit, run `claude plugin update alex@alex-agents-skills`.
 
 ### MVP scope (as of YED-28)
-15 skills migrated: systems-thinking, head-of-product-engineering, cto-architect, writing-prds, shipping-products, defining-product-vision, prioritizing-roadmap, ai-product-strategy, brand-storytelling, conducting-user-interviews, writing-north-star-metrics, karpathy-coder, risk-playbooks, launch-tiering, iterative-engineering-practices. Remaining ~205 skills stay in domain folders pending follow-up migration.
+15 skills migrated: systems-thinking, head-of-product-engineering, cto-architect, writing-prds, shipping-products, defining-product-vision, prioritizing-roadmap, ai-product-strategy, brand-storytelling, conducting-user-interviews, writing-north-star-metrics, karpathy-coder, risk-playbooks, launch-tiering, iterative-engineering-practices. Remaining ~205 skills stay in domain folders pending follow-up migration (YED-31).
+
+## Universal discipline hooks (YED-29)
+
+User-scope hooks fire in every Claude Code session, in every project, automatically. They live at `~/.claude/hooks/` and are registered in `~/.claude/settings.json`.
+
+### What fires
+
+| Hook | Event | Behavior |
+|---|---|---|
+| `linear-priorities.sh` | SessionStart | Pulls up to 5 open Medium+ priority Linear issues, formats as markdown, injects at session start. Graceful-fallback if `LINEAR_API_KEY` not set. |
+| `repo-touch-tally.sh` | PostToolUse (Edit/Write) | Silently counts edits under `.claude/{skills,agents,commands,proposals}/` per session, per project. |
+| `repo-touch-remind.sh` | Stop | If the tally > 0, emits a reminder to reconcile with Linear (open issue / comment / acknowledge doc-only). |
+
+### Disable / opt out
+
+Add `"hooks": {"disable": ["<hook-name>"]}` to either:
+- `.claude/settings.local.json` in a project — disables for that project only
+- `~/.claude/settings.local.json` — disables for every project
+
+Hook names: `linear-priorities`, `repo-touch-nudge`.
+
+### Project-scope hooks coexist
+
+Per-project `.claude/settings.json` can register additional hooks that fire alongside the universal ones. Empire State keeps `v2-trigger-detect.sh` + `v2-trigger-log.sh` at project scope because the v2 triggers are pipeline-specific. Stop-event hooks from both layers fire; their `additionalContext` outputs concatenate.
+
+### Adding a new universal hook
+
+1. Drop script into `~/.claude/hooks/`, chmod +x.
+2. Register in `~/.claude/settings.json` under the relevant event.
+3. Use `$HOME/.claude/hooks/<name>.sh` in the `command` field (env var expansion works).
+4. Honor both `.claude/settings.local.json` and `~/.claude/settings.local.json` `hooks.disable[]` overrides.
+5. Use relative paths (`.claude/.state/`) for per-project state so each project gets isolated bookkeeping.
