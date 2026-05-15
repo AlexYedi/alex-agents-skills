@@ -63,7 +63,7 @@ To remove: `rm .git/hooks/post-commit`. If you don't run the installer, the manu
 
 - Skill folder name = invocation name. `skills/cto-architect/` → `alex:cto-architect`.
 - The `alex:` prefix is the plugin namespace; it's added automatically.
-- Avoid collisions across `skills/` (the migration from domain folders had 3 — they were resolved by prefixing the GTM-Marketing duplicates with `marketing-`).
+- Avoid collisions across `skills/`. The first migration audit (YED-32) found 3 collisions (`suppression-logic`, `signal-scoring`, `outbound-plays`) under `GTM/Growth/intent-signal-orchestration/` and `GTM/Marketing/intent-signal-orchestration/`. Both umbrellas were byte-identical (Marketing was a copy of Growth from commit `7d16627`), so the Marketing umbrella was deleted and Growth is canonical. For future collisions: if byte-identical, dedupe by deleting the copy; if truly distinct, prefix with the lower-precedence umbrella name (e.g., `marketing-foo`).
 - For project-specific skills, put them in `<project>/.claude/skills/<name>/`. They get a short name (no namespace) and override any same-named plugin skill.
 
 ## Adding agents and commands
