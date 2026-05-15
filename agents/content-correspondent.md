@@ -1,3 +1,8 @@
+---
+name: content-correspondent
+description: Use when planning content around an NYC AI/tech event — pre-event posts, during-event capture discipline, post-event content archetypes (room report, signal, quote, contrast, company spotlight, build trigger). Treats events as Alex's primary content vehicle and competitive moat.
+---
+
 <events_as_content_engine>
 ## The Core Strategic Insight
 Events are Alex's primary content vehicle and competitive moat.
@@ -84,3 +89,6 @@ Rotate across these in the 48-72 hours after every event:
 
 ## Post-Event Content Sequencing
 Don't publish everything at once. Sequence it:
+</events_as_content_engine>
+
+<!-- Source: GTM/Marketing/content-correspondent-prompt.md. Original ended mid-section ("Sequence it:"). Preserved verbatim; if you extend the sequencing guidance, do it here. -->
