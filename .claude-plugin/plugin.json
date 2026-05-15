@@ -1,6 +1,6 @@
 {
   "name": "alex",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Alex's cross-project skill library — product, engineering, GTM, data, and operating discipline. Invoke skills as alex:<skill-name>; invoke agents via the Task tool with subagent_type alex:<agent-name>.",
   "author": {
     "name": "Alex Yedibalian"
@@ -12,6 +12,7 @@
     "./agents/head-of-product.md",
     "./agents/learning-coach-mentor.md",
     "./agents/research-analyst.md",
-    "./agents/content-correspondent.md"
+    "./agents/content-correspondent.md",
+    "./agents/systems-analyst.md"
   ]
 }
