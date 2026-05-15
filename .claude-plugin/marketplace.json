@@ -1,0 +1,25 @@
+{
+  "name": "alex-agents-skills",
+  "owner": {
+    "name": "Alex Yedibalian"
+  },
+  "plugins": [
+    {
+      "name": "alex",
+      "source": "./",
+      "description": "Alex's cross-project skill library — product, engineering, GTM, data, and operating discipline.",
+      "version": "0.1.0",
+      "author": {
+        "name": "Alex Yedibalian"
+      },
+      "license": "MIT",
+      "keywords": [
+        "product",
+        "engineering",
+        "gtm",
+        "operating-discipline",
+        "skills"
+      ]
+    }
+  ]
+}

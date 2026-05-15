@@ -1,0 +1,10 @@
+{
+  "name": "alex",
+  "version": "0.1.0",
+  "description": "Alex's cross-project skill library — product, engineering, GTM, data, and operating discipline. Invoke as alex:<skill-name>.",
+  "author": {
+    "name": "Alex Yedibalian"
+  },
+  "repository": "https://github.com/Yedimaing/alex-agents-skills",
+  "license": "MIT"
+}
