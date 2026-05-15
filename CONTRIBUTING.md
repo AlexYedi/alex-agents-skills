@@ -69,10 +69,10 @@ To remove: `rm .git/hooks/post-commit`. If you don't run the installer, the manu
 ## Adding agents and commands
 
 Plugin-loaded:
-- `agents/<name>.md` at repo root — plugin agents.
+- `agents/<name>.md` at repo root — plugin agents. Each file must have YAML frontmatter with `name` + `description`. List the path in `.claude-plugin/plugin.json` under the `agents` array. Invoke via the Task tool with `subagent_type: alex:<agent-name>`.
 - `commands/<name>.md` at repo root — plugin commands (deprecated by Anthropic; prefer skills).
 
-Neither directory exists yet. The 5 loose `*-prompt.md` files in domain folders (e.g., `Software Development/cto-architect/cto-principal-architect-prompt.md`) are agent prompts that should be promoted to `agents/` in a future migration.
+`agents/` currently holds 5 agents migrated in YED-33 from loose `*-prompt.md` files: `cto-principal-architect`, `head-of-product`, `learning-coach-mentor`, `research-analyst`, `content-correspondent`. One known un-migrated prompt remains at `GTM/Sales/sales-operations/sales-strategy-consultant-prompt.md`; it lives inside an umbrella skill folder and will be promoted as part of the YED-34 umbrella audit.
 
 ## Migration policy (resolves drift from YED-25)
 

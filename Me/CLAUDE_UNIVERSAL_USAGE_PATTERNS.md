@@ -49,6 +49,9 @@ This repo is a Claude Code plugin. It loads automatically in every session.
 ### MVP scope (as of YED-28)
 15 skills migrated: systems-thinking, head-of-product-engineering, cto-architect, writing-prds, shipping-products, defining-product-vision, prioritizing-roadmap, ai-product-strategy, brand-storytelling, conducting-user-interviews, writing-north-star-metrics, karpathy-coder, risk-playbooks, launch-tiering, iterative-engineering-practices. Remaining ~205 skills stay in domain folders pending follow-up migration (YED-31).
 
+### Plugin agents (YED-33)
+5 agents bundled with the plugin and invocable via the Task tool with `subagent_type: alex:<name>`: `cto-principal-architect`, `head-of-product`, `learning-coach-mentor`, `research-analyst`, `content-correspondent`. Each was promoted from a loose `*-prompt.md` file. See `agents/` and `CONTRIBUTING.md` "Adding agents and commands".
+
 ## Universal discipline hooks (YED-29)
 
 User-scope hooks fire in every Claude Code session, in every project, automatically. They live at `~/.claude/hooks/` and are registered in `~/.claude/settings.json`.
