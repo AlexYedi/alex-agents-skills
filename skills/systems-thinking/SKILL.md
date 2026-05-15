@@ -5,6 +5,22 @@ description: Help users think in systems and understand complex dynamics. Use wh
 
 # Systems Thinking
 
+## Using this skill in a new project
+
+This skill ships with the `alex` plugin and is automatically available in every Claude Code session as `alex:systems-thinking`. No copying required.
+
+Companion pieces in the same plugin:
+- `alex:systems-analyst` (agent) — invoke via Task tool for the delegated eight-phase walk
+- `alex:systems-analyze` (skill) — orchestrator workflow that bounds the problem and dispatches the analyst
+
+The skill's `references/` directory holds the canonical Meadows-derived source files. The agent reads from these.
+
+**Drift policy:** the `alex` plugin is the single source of truth. Project-local overrides at `<project>/.claude/skills/systems-thinking/` take precedence over the plugin version inside that project only (e.g., Empire State keeps its own H1/H2/H3 horizon framework and pipeline-specific applications file locally). Updates to the canonical version go in this plugin and propagate to all projects automatically via `claude plugin update alex@alex-agents-skills` (or the post-commit hook if installed). Project overrides need to be kept in sync manually.
+
+Replaces the YED-25 "bootstrap by copying" pattern — copying was the pre-plugin distribution method. Today the plugin handles distribution; only the project-specific overlay (horizon framework + applications-to-<project>.md) is copy-and-customize.
+
+
+
 Help the user apply systems thinking to complex problems using the canonical frameworks distilled from Donella Meadows' *Thinking in Systems: A Primer* (2008), the upstream guest insights from a product-leader podcast set, and applied lessons from real diagnostic runs.
 
 ## When to use this skill
