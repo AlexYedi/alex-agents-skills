@@ -104,7 +104,7 @@ Migration is happening in waves under YED-31.
 
 - **MVP (YED-28)** — 15 skills migrated on 2026-05-15.
 - **Wave 2a — Product (YED-31)** — 23 skills migrated on 2026-05-19: 18 standalone Product skills plus 5 sub-skills promoted out of the `product-launch-orchestration` and `product-led-growth` umbrellas (`war-room-ops`, `usage-health-scorecard`, `in-app-messaging-kit`, `onboarding-blueprint`, `pql-framework`). The umbrellas' `agents/` and `commands/` subdirs are out of scope for YED-31 and remain pending under YED-34.
-- **Wave 2b — Software Development** — pending (~40 skills).
+- **Wave 2b — Software Development (YED-31)** — 44 skills migrated on 2026-05-19: 40 standalone SD skills plus 4 sub-skills promoted out of the `technical-writing` umbrella (`doc-requirements-matrix`, `api-style-guide`, `quality-review-checklist`, `versioning-dashboard`). `Software Development/classification/` and `summarization/` (Anthropic-cookbook style external material) and `references/` (shared book/source distillations) remain in place. Several SKILL.md bodies cite `references/software-architecture-the-hard-parts/...` paths that were already not resolving relative to the SKILL.md location; consolidating those is follow-up work.
 - **Wave 2c — GTM** — pending (~80 skills).
 - **Wave 2d — Data Engineering** — pending (~20 skills).
 - **Wave 2e — Long tail** — pending (Evals/Harness/Observability, Organizational Leadership, Research/Financial Modeling).
