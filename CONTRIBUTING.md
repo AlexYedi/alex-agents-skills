@@ -100,4 +100,13 @@ When porting a skill that lives both here and in a project repo, treat this repo
 
 ## Migration backlog
 
-~205 skills still live in domain folders awaiting promotion. See the issue tracker (YED-28 and successors) for the planned waves.
+Migration is happening in waves under YED-31.
+
+- **MVP (YED-28)** — 15 skills migrated on 2026-05-15.
+- **Wave 2a — Product (YED-31)** — 23 skills migrated on 2026-05-19: 18 standalone Product skills plus 5 sub-skills promoted out of the `product-launch-orchestration` and `product-led-growth` umbrellas (`war-room-ops`, `usage-health-scorecard`, `in-app-messaging-kit`, `onboarding-blueprint`, `pql-framework`). The umbrellas' `agents/` and `commands/` subdirs are out of scope for YED-31 and remain pending under YED-34.
+- **Wave 2b — Software Development** — pending (~40 skills).
+- **Wave 2c — GTM** — pending (~80 skills).
+- **Wave 2d — Data Engineering** — pending (~20 skills).
+- **Wave 2e — Long tail** — pending (Evals/Harness/Observability, Organizational Leadership, Research/Financial Modeling).
+
+`Product/references/` is shared reference material (Decision_Intelligence, Jobs_to_be_Done, building-ai-powered-products) that the migrated skills still draw from; it stays under `Product/` pending a later decision on whether to move it under each skill's local `references/`.
