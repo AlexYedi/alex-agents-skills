@@ -5,6 +5,7 @@ Mirrors the aesthetic of Volume I (ink-on-cream, hairline rules,
 vermilion / verdigris / ochre accents, condensed display caps,
 monospace marginalia, depth-scale ticks).
 """
+# plate-fonts-scaled-v1
 import os
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -68,8 +69,8 @@ VERDIGRIS = "#456C5C"
 OCHRE = "#A37425"
 
 # ---------- Geometry (tabloid portrait) ----------
-PAGE_W = 11.0
-PAGE_H = 17.0
+PAGE_W = 15.4
+PAGE_H = 23.8
 DPI = 300
 OUT_PATH = "/Users/sameoldexpressions/Documents/GitHub/alex-agents-skills/output/ai-agents/AI_AGENTS_SUBSTRATE.pdf"
 
@@ -108,32 +109,32 @@ def page_frame(ax, plate_no, title_top, subtitle_top, latin, plate_label):
                 color=RULE, lw=0.35)
         if long:
             ax.text(LEFT - 4.1, y, f"{i*5:02d}", ha="right", va="center",
-                    fontsize=4.4, fontname=F_DMMONO, color=GRAY)
+                    fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     ax.text(LEFT, TOP - 1.0, sp("AN ATLAS OF THE AGENT STRATA", 4),
-            ha="left", va="top", fontsize=6.0, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, TOP - 1.9, title_top.upper(),
-            ha="left", va="top", fontsize=18, fontname=F_DISPLAY, color=INK)
+            ha="left", va="top", fontsize=21.6, fontname=F_DISPLAY, color=INK)
     ax.text(RIGHT - 4.0, TOP - 2.0, sp(plate_label, 2),
-            ha="right", va="top", fontsize=7.5, fontname=F_DISPLAY_REG, color=INK_SOFT)
+            ha="right", va="top", fontsize=10, fontname=F_DISPLAY_REG, color=INK_SOFT)
     ax.text(LEFT, TOP - 4.5, subtitle_top,
-            ha="left", va="top", fontsize=6.2, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
     ax.text(LEFT, TOP - 5.4, latin,
-            ha="left", va="top", fontsize=5.0, fontname=F_SERIF_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     ax.add_patch(mpatches.Circle((RIGHT - 1.4, TOP - 2.0), 1.05, fill=False,
                                  ec=VERMILION, lw=0.6))
     ax.text(RIGHT - 1.4, TOP - 2.0, plate_no, ha="center", va="center",
-            fontsize=6.2, fontname=F_MONO_BOLD, color=VERMILION)
+            fontsize=10, fontname=F_MONO_BOLD, color=VERMILION)
 
     ax.text(LEFT, BOTTOM + 3.0, sp("SUBSTRATE · VOL III · THE AGENT LAYER", 3),
-            ha="left", va="top", fontsize=4.6, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, BOTTOM + 1.4, sp("Compiled for A. Yedi · Cycle MMXXVI · Rev. I", 2),
-            ha="left", va="top", fontsize=5.2, fontname=F_SERIF_DISP_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=GRAY)
     ax.text(RIGHT, BOTTOM + 1.4, plate_label, ha="right", va="top",
-            fontsize=5.4, fontname=F_DMMONO, color=GRAY)
+            fontsize=10, fontname=F_DMMONO, color=GRAY)
     ax.text(50, BOTTOM + 1.4, "·   ·   ·   ·   ·", ha="center", va="top",
-            fontsize=5, fontname=F_MONO, color=GRAY_LIGHT)
+            fontsize=10, fontname=F_MONO, color=GRAY_LIGHT)
 
     return LEFT, RIGHT, TOP - 6.5, BOTTOM + 4.7
 
@@ -144,15 +145,15 @@ def stratum(ax, x0, x1, y_top, height, *, num, name, scale, accent=INK_SOFT, tag
     ax.plot([x0, x1], [y_bot, y_bot], color=RULE, lw=0.35)
     label_x_right = x0 + 16.5
     ax.text(x0 + 0.5, y_top - 1.8, num, ha="left", va="top",
-            fontsize=8.5, fontname=F_DMMONO, color=accent)
+            fontsize=10.2, fontname=F_DMMONO, color=accent)
     for i, line in enumerate(name.split("\n")):
         ax.text(x0 + 0.5, y_top - 4.0 - i*2.6, line, ha="left", va="top",
-                fontsize=10.0, fontname=F_DISPLAY, color=INK)
+                fontsize=12, fontname=F_DISPLAY, color=INK)
     ax.text(x0 + 0.5, y_bot + 1.2, scale, ha="left", va="bottom",
-            fontsize=5.0, fontname=F_SERIF_IT, color=GRAY)
+            fontsize=10, fontname=F_SERIF_IT, color=GRAY)
     if tagline:
         ax.text(x0 + 0.5, y_bot + 0.0, sp(tagline, 2), ha="left", va="bottom",
-                fontsize=4.4, fontname=F_MONO, color=GRAY)
+                fontsize=10, fontname=F_MONO, color=GRAY)
     ax.plot([label_x_right, label_x_right], [y_top - 0.4, y_bot + 0.4],
             color=RULE, lw=0.3, ls=(0, (0.6, 0.9)))
     return label_x_right, y_top, y_bot
@@ -162,14 +163,16 @@ def node(ax, x, y, label, sublabel=None, *, dot=True, color=INK):
     if dot:
         ax.add_patch(mpatches.Circle((x, y), 0.32, fc=color, ec=color, lw=0))
     ax.text(x + 0.85, y + 0.05, label, ha="left", va="center",
-            fontsize=5.6, fontname=F_SERIF, color=INK)
+            fontsize=10, fontname=F_SERIF, color=INK)
     if sublabel:
-        ax.text(x + 0.85, y - 1.1, sp(sublabel, 1), ha="left", va="center",
-                fontsize=4.3, fontname=F_MONO, color=GRAY)
+        # Letter-spacing dropped at 10pt floor — it doubled the rendered width
+        # and forced sub-labels into the next column.
+        ax.text(x + 0.85, y - 1.4, sublabel, ha="left", va="center",
+                fontsize=10, fontname=F_MONO, color=GRAY)
 
 
-def grid_nodes(ax, items, *, x0, x1, y_top, y_bot, cols=4, color=INK,
-               row_h=2.4, top_pad=1.2):
+def grid_nodes(ax, items, *, x0, x1, y_top, y_bot, cols=3, color=INK,
+               row_h=3.2, top_pad=1.2):
     cw = (x1 - x0) / cols
     for i, it in enumerate(items):
         r = i // cols
@@ -186,9 +189,9 @@ def grid_nodes(ax, items, *, x0, x1, y_top, y_bot, cols=4, color=INK,
 def metric_bar(ax, x, y, width, label, value, *, accent=VERMILION):
     ax.plot([x, x + width], [y, y], color=accent, lw=0.7)
     ax.text(x, y + 0.4, sp(label, 2), ha="left", va="bottom",
-            fontsize=4.0, fontname=F_MONO, color=GRAY)
+            fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(x + width, y - 0.2, value, ha="right", va="top",
-            fontsize=8.5, fontname=F_DISPLAY, color=INK)
+            fontsize=10.2, fontname=F_DISPLAY, color=INK)
 
 
 def build_strata_page(pdf, plate_no, plate_label, title, subtitle, latin, layers):
@@ -218,7 +221,7 @@ def build_strata_page(pdf, plate_no, plate_label, title, subtitle, latin, layers
         content_top = y_top - 1.5
         if sub:
             ax.text(x_content_left, content_top, sp(sub, 1), ha="left", va="top",
-                    fontsize=4.8, fontname=F_MONO, color=VERMILION)
+                    fontsize=10, fontname=F_MONO, color=VERMILION)
             ax.plot([x_content_left, x_content_right],
                     [content_top - 1.4, content_top - 1.4], color=RULE, lw=0.3)
             content_top = content_top - 2.4
@@ -260,7 +263,7 @@ def page_index(pdf):
 
     ax.text(inner_x0, TOP - 0.5,
             sp("X SUB-STRATA · IV META · DESCENDING", 3),
-            ha="left", va="top", fontsize=8.2, fontname=F_DISPLAY, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_DISPLAY, color=VERMILION)
     ax.plot([inner_x0, inner_x1], [TOP - 2.2, TOP - 2.2], color=RULE, lw=0.4)
 
     strata = [
@@ -298,20 +301,20 @@ def page_index(pdf):
         y_bot = y_top - h
         ax.plot([band_x0, band_x1], [y_top, y_top], color=RULE, lw=0.35)
         ax.text(band_x0 + 0.5, (y_top + y_bot)/2 + 0.2, sp(num, 1), ha="left", va="center",
-                fontsize=8.0, fontname=F_DMMONO, color=VERMILION)
+                fontsize=10, fontname=F_DMMONO, color=VERMILION)
         ax.text(band_x0 + 9.5, (y_top + y_bot)/2 + 0.6, name, ha="left", va="center",
-                fontsize=12.5, fontname=F_DISPLAY, color=INK)
+                fontsize=15, fontname=F_DISPLAY, color=INK)
         ax.text(band_x0 + 9.5, (y_top + y_bot)/2 - 1.4, scale, ha="left", va="center",
-                fontsize=5.0, fontname=F_SERIF_IT, color=GRAY)
+                fontsize=10, fontname=F_SERIF_IT, color=GRAY)
         ax.plot([band_x0 + label_w + 17.5, band_x0 + label_w + 17.5],
                 [y_top - 0.4, y_bot + 0.4], color=RULE, lw=0.25, ls=(0, (0.6, 0.9)))
         ax.text(band_x0 + label_w + 19.0, (y_top + y_bot)/2 + 0.2, desc,
-                ha="left", va="center", fontsize=6.4, fontname=F_SERIF, color=INK)
+                ha="left", va="center", fontsize=10, fontname=F_SERIF, color=INK)
         ax.add_patch(mpatches.Circle((band_x1 - 1.2, (y_top+y_bot)/2 + 0.2),
                                      0.42, fill=False, ec=INK_SOFT, lw=0.4))
         ax.text(band_x1 - 1.2, (y_top + y_bot)/2 + 0.2, str(10 - i),
                 ha="center", va="center",
-                fontsize=4.6, fontname=F_DMMONO, color=INK_SOFT)
+                fontsize=10, fontname=F_DMMONO, color=INK_SOFT)
 
     ax.plot([band_x0, band_x1], [avail_bot, avail_bot], color=RULE, lw=0.5)
 
@@ -321,22 +324,22 @@ def page_index(pdf):
     meta_h = (meta_top - meta_bot) / 4
     ax.text(band_x0, meta_top + 0.4, sp("META · WRAPPING FORCES", 3),
             ha="left", va="bottom",
-            fontsize=5.4, fontname=F_MONO, color=VERDIGRIS)
+            fontsize=10, fontname=F_MONO, color=VERDIGRIS)
     for i, (let, name, desc) in enumerate(meta):
         y_top = meta_top - i * meta_h
         y_bot = y_top - meta_h
         ax.plot([band_x0, band_x1], [y_top, y_top], color=RULE, lw=0.3)
         ax.text(band_x0 + 0.5, (y_top + y_bot)/2 + 0.2, let, ha="left", va="center",
-                fontsize=7.5, fontname=F_DMMONO, color=VERDIGRIS)
+                fontsize=10, fontname=F_DMMONO, color=VERDIGRIS)
         ax.text(band_x0 + 4.5, (y_top + y_bot)/2 + 0.2, name, ha="left", va="center",
-                fontsize=8.5, fontname=F_DISPLAY, color=INK_SOFT)
+                fontsize=10.2, fontname=F_DISPLAY, color=INK_SOFT)
         ax.text(band_x0 + label_w + 19.0, (y_top + y_bot)/2 + 0.2, desc,
-                ha="left", va="center", fontsize=5.8, fontname=F_SERIF_IT, color=GRAY)
+                ha="left", va="center", fontsize=10, fontname=F_SERIF_IT, color=GRAY)
     ax.plot([band_x0, band_x1], [meta_bot, meta_bot], color=RULE, lw=0.4)
 
     # Footer key
     ax.text(inner_x0, BOT + 6.5, sp("KEY", 3),
-            fontsize=5.2, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.plot([inner_x0, inner_x1], [BOT + 6.0, BOT + 6.0], color=RULE, lw=0.3)
     keys = [
         ("○", "sub-stratum"),
@@ -346,8 +349,8 @@ def page_index(pdf):
     ]
     for i, (sym, txt) in enumerate(keys):
         x = inner_x0 + i * 21
-        ax.text(x, BOT + 5.0, sym, fontsize=8, fontname=F_SERIF_DISP, color=VERMILION)
-        ax.text(x + 1.8, BOT + 5.0, txt, fontsize=5.2, fontname=F_SERIF_IT,
+        ax.text(x, BOT + 5.0, sym, fontsize=10, fontname=F_SERIF_DISP, color=VERMILION)
+        ax.text(x + 1.8, BOT + 5.0, txt, fontsize=10, fontname=F_SERIF_IT,
                 color=INK_SOFT, va="center")
 
     pdf.savefig(fig, dpi=DPI, facecolor=PAPER)
@@ -366,7 +369,7 @@ def page_capability_substrate(pdf):
             "scale": "stratum tertium · the joint to the world",
             "tagline": "MCP · JSON-RPC · GATEWAYS",
             "subhead": "MODEL CONTEXT PROTOCOL · ADOPTION · FORK VECTORS",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("MCP — Anthropic Nov '24", "JSON-RPC; Py + TS SDKs"),
                 ("OpenAI adoption — Mar '25", "Agents SDK · Responses API"),
@@ -399,7 +402,7 @@ def page_capability_substrate(pdf):
             "scale": "stratum secundum · the harness",
             "tagline": "SDK · LOOP · SUB-AGENTS",
             "subhead": "AGENT RUNTIMES · HARNESSES · ORCHESTRATORS",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("Claude Agent SDK", "Sep '25 · sub-agents · skills"),
                 ("OpenAI Agents SDK", "Mar '25 · handoffs"),
@@ -430,7 +433,7 @@ def page_capability_substrate(pdf):
             "scale": "stratum primum · the agentic delta",
             "tagline": "TAU · SWE · OSWORLD · BROWSECOMP",
             "subhead": "AGENTIC CAPABILITY DELTAS · NOT PROVIDER ECONOMICS",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("Claude Opus 4.5", "Nov '25 · 82.8% SWE-V"),
                 ("Claude Sonnet 4.5", "interactive executor"),
@@ -477,7 +480,7 @@ def page_cognition_loops(pdf):
             "scale": "stratum quintum · the inner loop",
             "tagline": "REACT · PLANNER-EXECUTOR · TTC",
             "subhead": "WHAT SURVIVED · TEST-TIME COMPUTE · ECONOMICS",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("ReAct (Yao Oct '22)", "still dominant 2026 loop"),
                 ("Plan-and-Solve (May '23)", "prompting · alive"),
@@ -508,7 +511,7 @@ def page_cognition_loops(pdf):
             "scale": "stratum quartum · persistence",
             "tagline": "EPISODIC · SEMANTIC · PROCEDURAL",
             "subhead": "STANDALONE OR ABSORBED · COMPLIANCE WEDGE",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("Mem0 (YC W24)", "$24M A Dec '25 · 40K stars"),
                 ("Letta (MemGPT)", "$10M seed · A rumored '26"),
@@ -555,7 +558,7 @@ def page_action_defense(pdf):
             "scale": "stratum octavum · the tool boundary",
             "tagline": "PI · ACTION GATES · SANDBOXING",
             "subhead": "GUARDRAILS · INJECTION DEFENSE · BUNDLING",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("Lakera (Guard · Red)", "Series A '23 · B Q4 '25"),
                 ("Protect AI · to Palo Alto", "~$700M Q3 '25 · the bell"),
@@ -586,7 +589,7 @@ def page_action_defense(pdf):
             "scale": "stratum septimum · trajectory analytics",
             "tagline": "TRAJECTORY · REPLAY · ONLINE",
             "subhead": "AGENT EVAL · OBS · BENCHMARKS",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("Braintrust", "$36M A · B rumored '26"),
                 ("LangSmith / LangChain", "$25M C · LangGraph 1.0"),
@@ -617,7 +620,7 @@ def page_action_defense(pdf):
             "scale": "stratum sextum · agent reaches into world",
             "tagline": "SANDBOX · BROWSER · COMPUTER · VOICE",
             "subhead": "SANDBOXED CODE · BROWSER · COMPUTER · VOICE OUTBOUND",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("E2B", "OSS-core · ~$15–25M ARR"),
                 ("Modal", "agent-workload pivot · >$50M"),
@@ -668,7 +671,7 @@ def page_productized(pdf):
             "scale": "stratum decimum · form factor",
             "tagline": "BUYER · THREAT · ADOPTION",
             "subhead": "TWELVE FORM FACTORS · THE BINDING CONSTRAINT",
-            "h": 1.0, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("Chat — web/desktop", "ChatGPT 800M WAU · plateau"),
                 ("Chat — mobile/on-device", "Apple Intelligence slot"),
@@ -701,7 +704,7 @@ def page_productized(pdf):
             "scale": "stratum nonum · productized agents",
             "tagline": "CX · CODE · LEGAL · HEALTH · FINANCE",
             "subhead": "ENTERPRISE REVENUE LAYER · BUYING MOTION BY DOMAIN",
-            "h": 1.2, "cols": 4, "row_h": 2.5, "accent": VERMILION,
+            "h": 1.2, "cols": 3, "row_h": 3.4, "accent": VERMILION,
             "items": [
                 ("Sierra — $175M+ ARR", "$10B (Mar '26) · NYC dual"),
                 ("Decagon — $80M+", "$4.5B Sep '25 · NYC/SF"),
@@ -754,7 +757,7 @@ def page_meta(pdf):
             "scale": "meta · sovereign agents",
             "tagline": "SOVEREIGN · EXPORT · JURISDICTION",
             "subhead": "WHERE AGENTS RUN · EXPORT CONTROLS · SIT-CONTROLS",
-            "h": 1.0, "cols": 4, "row_h": 2.6, "accent": VERDIGRIS, "dot_color": VERDIGRIS,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERDIGRIS, "dot_color": VERDIGRIS,
             "items": [
                 ("Mistral Le Chat Ent.", "€600M @ €11B Mar '26"),
                 ("G42 · Falcon · UAE", "Humain ties · sovereign AI"),
@@ -776,7 +779,7 @@ def page_meta(pdf):
             "scale": "meta · the inversion",
             "tagline": "PER-TASK · OUTCOME · FINOPS",
             "subhead": "FROM PER-TOKEN TO PER-TASK · OUTCOME PRICING",
-            "h": 1.0, "cols": 4, "row_h": 2.6, "accent": OCHRE, "dot_color": OCHRE,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": OCHRE, "dot_color": OCHRE,
             "items": [
                 ("Token price · –4× / –10×", "Q1 '24 to Q1 '26"),
                 ("CX trajectory · 4–25K tok", "~$0.02–$0.30 / task"),
@@ -798,7 +801,7 @@ def page_meta(pdf):
             "scale": "meta · the gauntlet",
             "tagline": "EU AI ACT · CA SB 53 · SECTORAL",
             "subhead": "EU ARTICLE 14 · CA SB 53 · BARTZ · SECTORAL",
-            "h": 1.0, "cols": 4, "row_h": 2.6, "accent": VERMILION, "dot_color": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION, "dot_color": VERMILION,
             "items": [
                 ("EU AI Act · Art. 55 GPAI", "enforceable Aug 2 '25"),
                 ("EU AI Act · Art. 14 oversight", "draft Apr '26 · agentic"),
@@ -820,7 +823,7 @@ def page_meta(pdf):
             "scale": "meta · the deploy gate",
             "tagline": "ASL · PREPAREDNESS · FRONTIER",
             "subhead": "LAB-SIDE SAFETY REGIMES · EVAL INSTITUTES",
-            "h": 1.0, "cols": 4, "row_h": 2.6, "accent": VERMILION, "dot_color": VERMILION,
+            "h": 1.0, "cols": 3, "row_h": 3.4, "accent": VERMILION, "dot_color": VERMILION,
             "items": [
                 ("Anthropic ASL framework", "ASL-3 Opus 4 May '25"),
                 ("Anthropic RSP — Nov '24", "binding policy"),

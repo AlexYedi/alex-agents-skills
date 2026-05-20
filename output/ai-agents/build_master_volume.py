@@ -12,6 +12,7 @@ Combines all six deliverables into a single navigable PDF in reading order:
 Tools: pandoc (docx/md -> html), weasyprint (html -> pdf), pypdf (merge),
 matplotlib (cover page in Substrate aesthetic).
 """
+# plate-fonts-scaled-v1
 import os
 import subprocess
 import tempfile
@@ -79,7 +80,7 @@ def sp(text, n=1):
 # ============================================================
 
 def build_cover_pdf(out_path):
-    PAGE_W, PAGE_H = 8.5, 11.0  # Letter — matches the prose pages
+    PAGE_W, PAGE_H = 11.9, 15.4  # Letter scaled 1.4x — matches the prose pages
     with PdfPages(out_path) as pdf:
         # ----- COVER -----
         fig = plt.figure(figsize=(PAGE_W, PAGE_H), facecolor=PAPER)
@@ -94,36 +95,36 @@ def build_cover_pdf(out_path):
 
         # Eyebrow
         ax.text(50, 100, sp("AN ATLAS OF THE AGENT STRATA", 4),
-                ha="center", va="center", fontsize=7, fontname=F_MONO, color=GRAY)
+                ha="center", va="center", fontsize=10, fontname=F_MONO, color=GRAY)
         ax.plot([20, 80], [97, 97], color=RULE, lw=0.4)
 
         # Title
         ax.text(50, 85, "THE AGENT, SEEN WHOLE",
-                ha="center", va="center", fontsize=32, fontname=F_DISPLAY, color=INK)
+                ha="center", va="center", fontsize=38.4, fontname=F_DISPLAY, color=INK)
         ax.text(50, 78, "A Master Volume",
-                ha="center", va="center", fontsize=14, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
+                ha="center", va="center", fontsize=16.8, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
         ax.plot([35, 65], [73, 73], color=VERMILION, lw=0.8)
 
         # Subtitle
         ax.text(50, 67, "Volume III · the agent layer unfolded as ten sub-strata plus four wrapping meta-strata.",
-                ha="center", va="center", fontsize=9, fontname=F_SERIF_IT, color=INK_SOFT, wrap=True)
+                ha="center", va="center", fontsize=10.8, fontname=F_SERIF_IT, color=INK_SOFT, wrap=True)
         ax.text(50, 63, "Seven artifacts in one bound order — frontispiece, foundation, decisions, plates, tracker.",
-                ha="center", va="center", fontsize=9, fontname=F_SERIF_IT, color=INK_SOFT, wrap=True)
+                ha="center", va="center", fontsize=10.8, fontname=F_SERIF_IT, color=INK_SOFT, wrap=True)
 
         # Center mark
         ax.add_patch(mpatches.Circle((50, 45), 8, fill=False, ec=VERMILION, lw=0.7))
         ax.text(50, 45, "M", ha="center", va="center",
-                fontsize=24, fontname=F_DISPLAY, color=VERMILION)
+                fontsize=28.8, fontname=F_DISPLAY, color=VERMILION)
 
         # Compiled-for
         ax.text(50, 26, "Compiled for A. Yedi",
-                ha="center", va="center", fontsize=11, fontname=F_SERIF_DISP_IT, color=INK)
+                ha="center", va="center", fontsize=13.2, fontname=F_SERIF_DISP_IT, color=INK)
         ax.text(50, 22, "Cycle MMXXVI · Revision I · 2026-05-12",
-                ha="center", va="center", fontsize=8, fontname=F_DMMONO, color=GRAY)
+                ha="center", va="center", fontsize=10, fontname=F_DMMONO, color=GRAY)
 
         # Footer
         ax.text(50, 12, sp("SUBSTRATE · VOLUME III · MASTER VOLUME", 3),
-                ha="center", va="center", fontsize=6, fontname=F_MONO, color=GRAY)
+                ha="center", va="center", fontsize=10, fontname=F_MONO, color=GRAY)
 
         pdf.savefig(fig, facecolor=PAPER)
         plt.close(fig)
@@ -140,14 +141,14 @@ def build_cover_pdf(out_path):
 
         # Header
         ax.text(10, 120, sp("READING GUIDE", 3),
-                ha="left", va="center", fontsize=8, fontname=F_MONO, color=VERMILION)
+                ha="left", va="center", fontsize=10, fontname=F_MONO, color=VERMILION)
         ax.text(10, 115, "How to navigate this volume",
-                ha="left", va="center", fontsize=18, fontname=F_DISPLAY, color=INK)
+                ha="left", va="center", fontsize=21.6, fontname=F_DISPLAY, color=INK)
         ax.plot([10, 90], [111, 111], color=RULE, lw=0.4)
 
         # Reading order — sequential
         ax.text(10, 106, sp("A · SEQUENTIAL READ (FULL CYCLE)", 2),
-                ha="left", va="center", fontsize=7, fontname=F_MONO, color=VERMILION)
+                ha="left", va="center", fontsize=10, fontname=F_MONO, color=VERMILION)
         seq = [
             ("01", "Cover + this guide", "1–2"),
             ("02", "Master Plate · the synthesis frontispiece", "3"),
@@ -160,17 +161,17 @@ def build_cover_pdf(out_path):
         for i, (num, label, pgs) in enumerate(seq):
             y = 101 - i * 4
             ax.text(11, y, num, ha="left", va="center",
-                    fontsize=7, fontname=F_DMMONO, color=VERMILION)
+                    fontsize=10, fontname=F_DMMONO, color=VERMILION)
             ax.text(17, y, label, ha="left", va="center",
-                    fontsize=9, fontname=F_SERIF, color=INK)
+                    fontsize=10.8, fontname=F_SERIF, color=INK)
 
         # Reading order — speed read
         ax.plot([10, 90], [70, 70], color=RULE, lw=0.4)
         ax.text(10, 67, sp("B · NINETY-MINUTE SPEED READ", 2),
-                ha="left", va="center", fontsize=7, fontname=F_MONO, color=VERMILION)
+                ha="left", va="center", fontsize=10, fontname=F_MONO, color=VERMILION)
         ax.text(10, 63,
                 "If you cannot read the volume cover-to-cover, take this path. Total ~90 min.",
-                ha="left", va="center", fontsize=8, fontname=F_SERIF_IT, color=INK_SOFT)
+                ha="left", va="center", fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
         speed = [
             ("5 min", "Master Plate — the whole synthesis on one page"),
@@ -184,24 +185,24 @@ def build_cover_pdf(out_path):
         for i, (time, label) in enumerate(speed):
             y = 58 - i * 3.5
             ax.text(11, y, time, ha="left", va="center",
-                    fontsize=7, fontname=F_DMMONO, color=OCHRE)
+                    fontsize=10, fontname=F_DMMONO, color=OCHRE)
             ax.text(22, y, label, ha="left", va="center",
-                    fontsize=8.5, fontname=F_SERIF, color=INK)
+                    fontsize=10.2, fontname=F_SERIF, color=INK)
 
         # The Volume III delta in one line
         ax.plot([10, 90], [28, 28], color=RULE, lw=0.4)
         ax.text(10, 25, sp("THE VOL III DELTA (ONE LINE)", 2),
-                ha="left", va="center", fontsize=7, fontname=F_MONO, color=VERMILION)
+                ha="left", va="center", fontsize=10, fontname=F_MONO, color=VERMILION)
         ax.text(10, 21,
                 "Bet #1 sequenced first (claim Process Power) · Bet #2 second (collect equity)",
-                ha="left", va="center", fontsize=9, fontname=F_SERIF_DISP, color=INK)
+                ha="left", va="center", fontsize=10.8, fontname=F_SERIF_DISP, color=INK)
         ax.text(10, 18,
                 "· Bet #3 third (compound as advisory) · Bets 4–5 fold into #1 as modules.",
-                ha="left", va="center", fontsize=9, fontname=F_SERIF_DISP, color=INK)
+                ha="left", va="center", fontsize=10.8, fontname=F_SERIF_DISP, color=INK)
 
         # Footer
         ax.text(50, 10, sp("SUBSTRATE · VOLUME III · MASTER VOLUME", 3),
-                ha="center", va="center", fontsize=6, fontname=F_MONO, color=GRAY)
+                ha="center", va="center", fontsize=10, fontname=F_MONO, color=GRAY)
 
         pdf.savefig(fig, facecolor=PAPER)
         plt.close(fig)
@@ -218,21 +219,21 @@ UNIFIED_CSS = """
   @top-right {
     content: "SUBSTRATE · VOLUME III";
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 7pt;
+    font-size: 10pt;
     color: #6E6356;
     letter-spacing: 0.08em;
   }
   @bottom-center {
     content: counter(page);
     font-family: 'Consolas', 'Courier New', monospace;
-    font-size: 8pt;
+    font-size: 10pt;
     color: #6E6356;
   }
 }
 
 body {
   font-family: Calibri, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-size: 11pt;
+  font-size: 13.2pt;
   line-height: 1.55;
   color: #1A1410;
   background: #F1E9D6;
@@ -240,7 +241,7 @@ body {
 
 h1 {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 22pt;
+  font-size: 26.4pt;
   font-weight: 700;
   color: #1A1410;
   page-break-before: always;
@@ -256,7 +257,7 @@ h1:first-of-type {
 
 h2 {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 16pt;
+  font-size: 19.2pt;
   font-weight: 700;
   color: #1A1410;
   margin-top: 18pt;
@@ -266,7 +267,7 @@ h2 {
 
 h3 {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 12.5pt;
+  font-size: 15pt;
   font-weight: 700;
   color: #A6371F;
   margin-top: 14pt;
@@ -276,7 +277,7 @@ h3 {
 
 h4, h5, h6 {
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 11pt;
+  font-size: 13.2pt;
   font-weight: 700;
   color: #3A2F26;
   margin-top: 12pt;
@@ -315,7 +316,7 @@ table {
   border-collapse: collapse;
   width: 100%;
   margin: 10pt 0;
-  font-size: 9.5pt;
+  font-size: 11.4pt;
 }
 th, td {
   border: 0.4pt solid #6E6356;
@@ -332,7 +333,7 @@ th {
 
 code, pre {
   font-family: 'Consolas', 'Courier New', monospace;
-  font-size: 9.5pt;
+  font-size: 11.4pt;
   color: #3A2F26;
 }
 pre {
@@ -355,14 +356,14 @@ hr {
 }
 .section-divider .eyebrow {
   font-family: 'Consolas', monospace;
-  font-size: 8pt;
+  font-size: 10pt;
   letter-spacing: 0.32em;
   color: #A6371F;
   text-transform: uppercase;
 }
 .section-divider .title {
   font-family: Georgia, serif;
-  font-size: 28pt;
+  font-size: 33.6pt;
   font-weight: 700;
   color: #1A1410;
   margin: 16pt 0 8pt 0;
@@ -370,12 +371,12 @@ hr {
 .section-divider .subtitle {
   font-family: Georgia, serif;
   font-style: italic;
-  font-size: 12pt;
+  font-size: 14.4pt;
   color: #6E6356;
 }
 .section-divider .badge {
   font-family: 'Consolas', monospace;
-  font-size: 9pt;
+  font-size: 10.8pt;
   letter-spacing: 0.2em;
   color: #A6371F;
   margin-top: 24pt;

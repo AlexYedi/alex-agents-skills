@@ -11,6 +11,7 @@ ink-on-cream, hairline rules, condensed display caps, single vermilion accent.
 Output: AGENTS_GTM_DECISIONS.pdf — 5 plates (Tabloid where landscape, US Letter
 where portrait), all written via PdfPages with per-plate savefig + close.
 """
+# plate-fonts-scaled-v1
 import os
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -84,7 +85,7 @@ def sp(text, n=1):
 
 def new_page_landscape():
     """Tabloid landscape, 17 x 11 in.  ax coords 0–170 x 0–110."""
-    fig = plt.figure(figsize=(17.0, 11.0), dpi=DPI, facecolor=PAPER)
+    fig = plt.figure(figsize=(23.8, 15.4), dpi=DPI, facecolor=PAPER)
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 170); ax.set_ylim(0, 110)
     ax.set_facecolor(PAPER); ax.set_xticks([]); ax.set_yticks([])
@@ -95,7 +96,7 @@ def new_page_landscape():
 
 def new_page_portrait():
     """US Letter portrait, 8.5 x 11 in.  ax coords 0–100 x 0–129.5."""
-    fig = plt.figure(figsize=(8.5, 11.0), dpi=DPI, facecolor=PAPER)
+    fig = plt.figure(figsize=(11.9, 15.4), dpi=DPI, facecolor=PAPER)
     ax = fig.add_axes([0, 0, 1, 1])
     ax.set_xlim(0, 100); ax.set_ylim(0, 129.5)
     ax.set_facecolor(PAPER); ax.set_xticks([]); ax.set_yticks([])
@@ -126,38 +127,38 @@ def page_frame_landscape(ax, plate_no, title_top, subtitle_top, latin, plate_lab
                 color=RULE, lw=0.35)
         if long:
             ax.text(tickx - 1.6, y, f"{i*4:02d}", ha="right", va="center",
-                    fontsize=4.4, fontname=F_DMMONO, color=GRAY)
+                    fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     # Title block
     ax.text(LEFT, TOP - 1.5,
             sp("AN ATLAS OF THE AGENT STRATA   ·   VOLUME IV   ·   DECISIONS PLAYBOOK", 3),
-            ha="left", va="top", fontsize=6.5, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, TOP - 3.1, title_top.upper(),
-            ha="left", va="top", fontsize=22, fontname=F_DISPLAY, color=INK)
+            ha="left", va="top", fontsize=26.4, fontname=F_DISPLAY, color=INK)
     ax.text(LEFT, TOP - 6.4, subtitle_top,
-            ha="left", va="top", fontsize=6.8, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
     ax.text(LEFT, TOP - 7.6, latin,
-            ha="left", va="top", fontsize=5.2, fontname=F_SERIF_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     # Plate badge — vermilion ring with Roman numeral
     ax.add_patch(mpatches.Circle((RIGHT - 2.2, TOP - 3.3), 1.5,
                                  fill=False, ec=VERMILION, lw=0.7))
     ax.text(RIGHT - 2.2, TOP - 3.3, plate_no, ha="center", va="center",
-            fontsize=9, fontname=F_MONO_BOLD, color=VERMILION)
+            fontsize=10.8, fontname=F_MONO_BOLD, color=VERMILION)
     ax.text(RIGHT, TOP - 6.4, sp(plate_label, 2),
-            ha="right", va="top", fontsize=6.2, fontname=F_DISPLAY_REG, color=INK_SOFT)
+            ha="right", va="top", fontsize=10, fontname=F_DISPLAY_REG, color=INK_SOFT)
     ax.text(RIGHT, TOP - 7.7, sp("VOL IV  ·  MMXXVI  ·  MAY", 2),
-            ha="right", va="top", fontsize=4.8, fontname=F_DMMONO, color=GRAY)
+            ha="right", va="top", fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     # Footer
     ax.text(LEFT, BOTTOM + 4.5,
             sp("SUBSTRATE  ·  VOL IV  ·  DECISIONS  ·  " + plate_label, 3),
-            ha="left", va="top", fontsize=4.7, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, BOTTOM + 2.6,
             sp("Compiled for A. Yedi  ·  Cycle MMXXVI  ·  Rev. I", 2),
-            ha="left", va="top", fontsize=5.2, fontname=F_SERIF_DISP_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=GRAY)
     ax.text(RIGHT, BOTTOM + 2.6, sp("MMXXVI · V", 2), ha="right", va="top",
-            fontsize=5.3, fontname=F_DMMONO, color=GRAY)
+            fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     return LEFT, RIGHT, TOP - 8.0, BOTTOM + 9.0
 
@@ -180,35 +181,35 @@ def page_frame_portrait(ax, plate_no, title_top, subtitle_top, latin, plate_labe
                 color=RULE, lw=0.35)
         if long:
             ax.text(tickx - 1.6, y, f"{i*5:02d}", ha="right", va="center",
-                    fontsize=4.3, fontname=F_DMMONO, color=GRAY)
+                    fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     ax.text(LEFT, TOP - 1.2,
             sp("AN ATLAS OF THE AGENT STRATA   ·   VOLUME IV   ·   DECISIONS", 3),
-            ha="left", va="top", fontsize=5.8, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, TOP - 2.5, title_top.upper(),
-            ha="left", va="top", fontsize=18, fontname=F_DISPLAY, color=INK)
+            ha="left", va="top", fontsize=21.6, fontname=F_DISPLAY, color=INK)
     ax.text(LEFT, TOP - 5.2, subtitle_top,
-            ha="left", va="top", fontsize=6.0, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
     ax.text(LEFT, TOP - 6.3, latin,
-            ha="left", va="top", fontsize=4.8, fontname=F_SERIF_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     ax.add_patch(mpatches.Circle((RIGHT - 1.8, TOP - 2.4), 1.3,
                                  fill=False, ec=VERMILION, lw=0.65))
     ax.text(RIGHT - 1.8, TOP - 2.4, plate_no, ha="center", va="center",
-            fontsize=8, fontname=F_MONO_BOLD, color=VERMILION)
+            fontsize=10, fontname=F_MONO_BOLD, color=VERMILION)
     ax.text(RIGHT, TOP - 5.3, sp(plate_label, 2),
-            ha="right", va="top", fontsize=5.6, fontname=F_DISPLAY_REG, color=INK_SOFT)
+            ha="right", va="top", fontsize=10, fontname=F_DISPLAY_REG, color=INK_SOFT)
     ax.text(RIGHT, TOP - 6.4, sp("VOL IV · MMXXVI · MAY", 2),
-            ha="right", va="top", fontsize=4.4, fontname=F_DMMONO, color=GRAY)
+            ha="right", va="top", fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     ax.text(LEFT, BOTTOM + 4.5,
             sp("SUBSTRATE  ·  VOL IV  ·  DECISIONS  ·  " + plate_label, 3),
-            ha="left", va="top", fontsize=4.4, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, BOTTOM + 2.4,
             sp("Compiled for A. Yedi · Cycle MMXXVI · Rev. I", 2),
-            ha="left", va="top", fontsize=4.9, fontname=F_SERIF_DISP_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=GRAY)
     ax.text(RIGHT, BOTTOM + 2.4, sp("MMXXVI · V", 2), ha="right", va="top",
-            fontsize=5.0, fontname=F_DMMONO, color=GRAY)
+            fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     return LEFT, RIGHT, TOP - 7.0, BOTTOM + 7.5
 
@@ -300,10 +301,10 @@ def plate_vi(pdf):
         cx = grid_left + (ci + 0.5) * col_w
         ax.text(cx, grid_top + 2.6, letter,
                 ha="center", va="center",
-                fontsize=10, fontname=F_DISPLAY, color=INK)
+                fontsize=12, fontname=F_DISPLAY, color=INK)
         ax.text(cx, grid_top + 0.8, sp(short, 0),
                 ha="center", va="center",
-                fontsize=4.2, fontname=F_MONO, color=VERMILION)
+                fontsize=10, fontname=F_MONO, color=VERMILION)
 
     # Function row labels (terse, leftside)
     for ri, (num, short) in enumerate(FUNCTIONS):
@@ -311,9 +312,9 @@ def plate_vi(pdf):
         ax.add_patch(mpatches.Circle((L + 2.0, y_mid), 1.1,
                                      fc=PAPER, ec=VERMILION, lw=0.5))
         ax.text(L + 2.0, y_mid, num, ha="center", va="center",
-                fontsize=5.2, fontname=F_DMMONO, color=VERMILION)
+                fontsize=10, fontname=F_DMMONO, color=VERMILION)
         ax.text(L + 4.2, y_mid, short, ha="left", va="center",
-                fontsize=6.6, fontname=F_DISPLAY, color=INK)
+                fontsize=10, fontname=F_DISPLAY, color=INK)
 
     # Render heat cells (NO text, only intensity bands)
     for ri, (fnum_s, _) in enumerate(FUNCTIONS):
@@ -377,7 +378,7 @@ def plate_vi(pdf):
         y_mid = grid_top - (r0 + r1) / 2 * row_h
         ax.text(L - 6.0, y_mid, sp(name, 2),
                 ha="center", va="center", rotation=90,
-                fontsize=4.5, fontname=F_MONO, color=VERDIGRIS)
+                fontsize=10, fontname=F_MONO, color=VERDIGRIS)
 
     # ---- Right-side histogram of OCQ distribution ------------------------
     hist_left  = grid_right + 5.0
@@ -392,11 +393,11 @@ def plate_vi(pdf):
 
     ax.text(hist_left, hist_top + 2.5, sp("OCQ DISTRIBUTION", 2),
             ha="left", va="bottom",
-            fontsize=5.4, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(hist_left, hist_top + 0.9,
             "Counts of scored cells by OCQ band.",
             ha="left", va="bottom",
-            fontsize=4.6, fontname=F_SERIF_IT, color=GRAY)
+            fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     bar_h = (hist_top - hist_bot) / len(bins)
     bar_max_w = hist_right - hist_left - 8.0
@@ -407,7 +408,7 @@ def plate_vi(pdf):
         col = VERMILION if is_top15_band else (INK if b >= 11 else GRAY)
         ax.text(hist_left + 1.0, y_mid, f"{b:02d}",
                 ha="right", va="center",
-                fontsize=4.8, fontname=F_DMMONO, color=col)
+                fontsize=10, fontname=F_DMMONO, color=col)
         # Bar
         bw = (c / max_c) * bar_max_w if c > 0 else 0
         if c > 0:
@@ -418,7 +419,7 @@ def plate_vi(pdf):
         # Count text
         ax.text(hist_left + 2.5 + bw, y_mid, f" {c}",
                 ha="left", va="center",
-                fontsize=4.2, fontname=F_DMMONO, color=INK_SOFT)
+                fontsize=10, fontname=F_DMMONO, color=INK_SOFT)
     # Frame around histogram axis
     ax.plot([hist_left + 2.0, hist_left + 2.0], [hist_bot, hist_top],
             color=RULE, lw=0.4)
@@ -427,7 +428,7 @@ def plate_vi(pdf):
     leg_y = BOT + 6.0
     ax.plot([L + 1.0, R - 1.0], [leg_y + 1.5, leg_y + 1.5], color=RULE, lw=0.45)
     ax.text(L + 1.0, leg_y + 0.5, sp("SATURATION BANDS  ·  THREE  ·  SCORE 6—19", 2),
-            ha="left", va="top", fontsize=5.0, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
 
     # Three band swatches
     band_defs = [
@@ -439,7 +440,7 @@ def plate_vi(pdf):
         x = L + 1.0 + bi * 52.0
         ax.text(x, leg_y - 1.5, label,
                 ha="left", va="top",
-                fontsize=4.6, fontname=F_SERIF_IT, color=INK)
+                fontsize=10, fontname=F_SERIF_IT, color=INK)
         for j, s_ocq in enumerate(samples):
             sx = x + 1.0 + j * 5.0
             sy = leg_y - 4.5
@@ -458,13 +459,13 @@ def plate_vi(pdf):
                                             fc=fc, ec=ec, lw=0.4, alpha=alpha))
             ax.text(sx + sw / 2, sy - 0.9, str(s_ocq),
                     ha="center", va="top",
-                    fontsize=4.2, fontname=F_DMMONO, color=col if False else GRAY)
+                    fontsize=10, fontname=F_DMMONO, color=col if False else GRAY)
 
     # Empty cell key (placed inline with last band sample)
     x_empty = L + 1.0 + 2 * 52.0 + 22.0
     ax.text(x_empty, leg_y - 1.5, "EMPTY  ·  unscored",
             ha="left", va="top",
-            fontsize=4.6, fontname=F_SERIF_IT, color=INK)
+            fontsize=10, fontname=F_SERIF_IT, color=INK)
     ax.add_patch(mpatches.Rectangle((x_empty + 1.0, leg_y - 4.5), 4.0, 2.2,
                                     fill=False, ec=GRAY_LIGHT, lw=0.4))
 
@@ -510,66 +511,67 @@ def plate_vii(pdf):
                                     fc=VERDIGRIS, ec="none", alpha=band_alpha))
     # Quadrant labels (tiny corner glyphs)
     ax.text(mx0 + 0.5, my1 - 1.0, sp("PIONEER", 2),
-            ha="left", va="top", fontsize=5.5, fontname=F_DISPLAY, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_DISPLAY, color=VERMILION)
     ax.text(mx0 + sw * 1.5 + 0.5, my0 + (my1 - my0) * 0.55, sp("SETTLE", 2),
-            ha="left", va="bottom", fontsize=5.5, fontname=F_DISPLAY, color=OCHRE)
+            ha="left", va="bottom", fontsize=10, fontname=F_DISPLAY, color=OCHRE)
     ax.text(mx1 - 0.6, my0 + 1.0, sp("TOWN-PLAN", 2),
-            ha="right", va="bottom", fontsize=5.5, fontname=F_DISPLAY, color=VERDIGRIS)
+            ha="right", va="bottom", fontsize=10, fontname=F_DISPLAY, color=VERDIGRIS)
     ax.text(mx1 - 0.6, my1 - 1.0, sp("PARTNER", 2),
-            ha="right", va="top", fontsize=5.5, fontname=F_DISPLAY, color=GRAY)
+            ha="right", va="top", fontsize=10, fontname=F_DISPLAY, color=GRAY)
 
     # Stage gridlines
     for i, (s, c) in enumerate(zip(stages, scolors)):
         sx = mx0 + i * sw
         ax.plot([sx, sx], [my0, my1], color=GRAY_LIGHT, lw=0.4, ls=(0, (1, 2)))
         ax.text(sx + sw / 2, my0 - 2.0, sp(s, 2),
-                fontsize=5.2, fontname=F_MONO, color=c,
+                fontsize=10, fontname=F_MONO, color=c,
                 ha="center", va="top")
     ax.plot([mx1, mx1], [my0, my1], color=GRAY_LIGHT, lw=0.4, ls=(0, (1, 2)))
 
     # Axes
     ax.plot([mx0, mx0], [my0, my1], color=RULE, lw=0.6)
     ax.plot([mx0, mx1], [my0, my0], color=RULE, lw=0.6)
-    ax.text(mx0 - 4.5, my1, "USER", fontsize=8, fontname=F_DISPLAY,
+    ax.text(mx0 - 4.5, my1, "USER", fontsize=10, fontname=F_DISPLAY,
             color=INK, ha="right", va="top", rotation=90)
-    ax.text(mx0 - 4.5, my0 + 0.5, "FOUNDATION", fontsize=8, fontname=F_DISPLAY,
+    ax.text(mx0 - 4.5, my0 + 0.5, "FOUNDATION", fontsize=10, fontname=F_DISPLAY,
             color=INK, ha="right", va="bottom", rotation=90)
     ax.text(mx0 + 0.5, my1 + 1.2, sp("VISIBILITY (up)", 2),
-            fontsize=5, fontname=F_MONO, color=GRAY, va="bottom")
+            fontsize=10, fontname=F_MONO, color=GRAY, va="bottom")
     ax.text(mx1, my0 - 5.0, sp("EVOLUTION (rightward)", 2),
-            fontsize=5, fontname=F_MONO, color=GRAY, ha="right", va="top")
+            fontsize=10, fontname=F_MONO, color=GRAY, ha="right", va="top")
 
     # ------- Four anchored user needs (at top of map) ----------------
+    # Stagger x (more breathing room) AND y (alternate so labels never share a line).
     needs = [
-        ("Fill funnel · no headcount scaling",   1.2),
-        ("Compress sales cycle · procurement",   2.1),
-        ("Increase NRR via CS · expansion",      2.5),
-        ("Forecast board trusts (±5%)",          2.8),
+        ("Fill funnel · no headcount scaling",   0.40, 0.99),
+        ("Compress sales cycle · procurement",   1.55, 0.94),
+        ("Increase NRR via CS · expansion",      2.60, 0.99),
+        ("Forecast board trusts (±5%)",          3.55, 0.94),
     ]
-    need_y = 0.96
-    for label, sx in needs:
+    for label, sx, ny in needs:
         x = mx0 + sx * sw
-        y = my0 + need_y * (my1 - my0)
+        y = my0 + ny * (my1 - my0)
         ax.add_patch(mpatches.Circle((x, y), 0.7, fc=INK, ec=INK, lw=0))
-        ax.text(x + 1.0, y, label, fontsize=4.8, fontname=F_SERIF,
+        ax.text(x + 1.0, y, label, fontsize=10, fontname=F_SERIF,
                 color=INK, va="center")
 
     # ------- Components: matrix cells placed by stage and visibility ----
     # (label, x_stage_position 0..4, y_visibility 0..1, color)
     components = [
         # End-user surfaces / functions  ·  high visibility
-        ("(10,D) CX resolution", 2.8, 0.88, VERDIGRIS),
-        ("MS 365 Copilot · Sales", 2.7, 0.84, VERDIGRIS),
-        ("SF Agentforce", 2.6, 0.82, OCHRE),
-        ("Glean · cross-system retrieval", 2.5, 0.86, VERDIGRIS),
-        ("Hebbia · Rogo (NYC verticals)", 2.0, 0.80, OCHRE),
-        ("Sierra · Decagon (CX)", 2.4, 0.78, VERDIGRIS),
-        ("Harvey · Hippocratic", 2.1, 0.76, OCHRE),
+        # Staggered both x and y so 10pt text labels don't collide.
+        ("(10,D) CX resolution", 3.30, 0.89, VERDIGRIS),
+        ("MS 365 Copilot · Sales", 2.95, 0.85, VERDIGRIS),
+        ("Glean · cross-system retrieval", 3.45, 0.81, VERDIGRIS),
+        ("SF Agentforce", 2.55, 0.81, OCHRE),
+        ("Sierra · Decagon (CX)", 3.20, 0.77, VERDIGRIS),
+        ("Hebbia · Rogo (NYC verticals)", 2.40, 0.74, OCHRE),
+        ("Harvey · Hippocratic", 3.00, 0.71, OCHRE),
 
         # Mid-stack: Common Room, Clay, Pocus
-        ("(3,A+L+F) Common Room", 2.0, 0.68, OCHRE),
-        ("(4,A) Clay enrichment", 2.4, 0.66, VERDIGRIS),
-        ("(8,F) Default · Syft · Truva", 2.2, 0.64, OCHRE),
+        ("(3,A+L+F) Common Room", 2.05, 0.68, OCHRE),
+        ("(4,A) Clay enrichment", 3.05, 0.66, VERDIGRIS),
+        ("(8,F) Default · Syft · Truva", 2.40, 0.63, OCHRE),
 
         # Genesis cells (vermilion) — load-bearing
         ("(9,G) Procurement gauntlet", 0.5, 0.58, VERMILION),
@@ -613,7 +615,7 @@ def plate_vii(pdf):
         x = mx0 + sx * sw
         y = my0 + sy * (my1 - my0)
         ax.add_patch(mpatches.Circle((x, y), 0.45, fc=color, ec=color, lw=0, alpha=0.9))
-        ax.text(x + 0.7, y, label, fontsize=4.3, fontname=F_SERIF,
+        ax.text(x + 0.7, y, label, fontsize=10, fontname=F_SERIF,
                 color=INK, va="center")
 
     # Alex's positioning marker (vermilion star) in Pioneer quadrant
@@ -628,7 +630,7 @@ def plate_vii(pdf):
             color=VERMILION, lw=0.7)
     ax.add_patch(mpatches.Circle((star_x, star_y), 0.35, fc=VERMILION, ec=VERMILION))
     ax.text(star_x + 1.6, star_y + 0.9, "ALEX  ·  Pioneer flag",
-            fontsize=4.8, fontname=F_DISPLAY, color=VERMILION, va="center")
+            fontsize=10, fontname=F_DISPLAY, color=VERMILION, va="center")
 
     # ------- Six Punctuated Equilibria as vermilion arrows ------------
     # Each PE is an arrow showing direction of movement
@@ -653,7 +655,7 @@ def plate_vii(pdf):
     pe_x = mx1 + 5.0
     pe_y = my1 - 1.5
     ax.text(pe_x, pe_y, sp("PUNCTUATED EQUILIBRIA · 6", 2),
-            fontsize=5.2, fontname=F_MONO, color=VERMILION, va="top")
+            fontsize=10, fontname=F_MONO, color=VERMILION, va="top")
     pe_text = [
         "PE-1 · OSWorld 65% on frontier · Q3 '26",
         "         entire K-column moves Genesis to Custom",
@@ -671,7 +673,7 @@ def plate_vii(pdf):
     for i, line in enumerate(pe_text):
         is_head = not line.startswith("        ")
         ax.text(pe_x, pe_y - 2.4 - i * 1.45, line,
-                fontsize=4.5 if is_head else 4.2,
+                fontsize=10 if is_head else 4.2,
                 fontname=F_SERIF if is_head else F_SERIF_IT,
                 color=INK if is_head else INK_SOFT, va="top")
 
@@ -680,12 +682,12 @@ def plate_vii(pdf):
     ax.plot([L + 1.0, R - 1.0], [leg_y + 1.5, leg_y + 1.5], color=RULE, lw=0.45)
     ax.text(L + 1.0, leg_y + 0.5,
             sp("STRATEGIC QUADRANT  ·  ALEX POSITIONING  ·  PIONEER", 2),
-            ha="left", va="top", fontsize=5.0, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(L + 1.0, leg_y - 1.5,
             "Pioneer = Genesis cells where Alex publishes flag and earns Process Power + Branding. "
             "Settle = Custom-to-Product cells where Alex rents Power inside a vertical-agent operator role. "
             "Partner = pair-with at the gateway control plane. Town-Plan = rent, do not build.",
-            fontsize=4.8, fontname=F_SERIF_IT, color=INK_SOFT, va="top")
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="top")
 
     pdf.savefig(fig, dpi=DPI, facecolor=PAPER)
     plt.close(fig)
@@ -768,14 +770,14 @@ def plate_viii(pdf):
 
     # Power column headers
     ax.text(L + 1.0, grid_top + 1.4, sp("COMPANY", 1),
-            fontsize=5.4, fontname=F_MONO, color=VERMILION, va="bottom")
+            fontsize=10, fontname=F_MONO, color=VERMILION, va="bottom")
     for ci, pw in enumerate(powers):
         cx = grid_left + (ci + 0.5) * col_w
         ax.text(cx, grid_top + 2.4, sp(pw.upper(), 1),
-                fontsize=4.6, fontname=F_MONO, color=VERMILION,
+                fontsize=10, fontname=F_MONO, color=VERMILION,
                 ha="center", va="bottom", rotation=25)
     ax.text(grid_right + 1.0, grid_top + 1.4, sp("DOMINANT POWER  ·  VERDICT", 1),
-            fontsize=5.4, fontname=F_MONO, color=VERMILION, va="bottom")
+            fontsize=10, fontname=F_MONO, color=VERMILION, va="bottom")
     ax.plot([L + 0.5, R - 0.5], [grid_top, grid_top], color=RULE, lw=0.5)
 
     # Sub-group color mapping
@@ -791,21 +793,27 @@ def plate_viii(pdf):
         y_top = grid_top - i * row_h
         y_mid = y_top - row_h / 2
         y_bot = y_top - row_h
+        is_new_sg = (sg != last_sg)
         # Sub-group divider when changes
-        if sg != last_sg and i > 0:
+        if is_new_sg and i > 0:
             ax.plot([L + 0.5, R - 0.5], [y_top, y_top], color=GRAY_LIGHT, lw=0.4)
         last_sg = sg
 
         # Subgroup color tab on far left
         ax.plot([L + 0.4, L + 0.4], [y_top, y_bot], color=sg_color[sg], lw=1.2)
 
-        # Name (display)
+        # Name (display) — vertically centered in the row at full font
         name_col = VERMILION if is_top5 else INK
-        ax.text(L + 1.5, y_mid + 0.3, name, fontsize=6.5,
+        ax.text(L + 1.5, y_mid, name, fontsize=10,
                 fontname=F_DISPLAY, color=name_col, va="center")
-        # Sub-group label below name (tiny italic)
-        ax.text(L + 1.5, y_mid - 1.6, sg_label[sg],
-                fontsize=3.7, fontname=F_SERIF_IT, color=GRAY, va="center")
+        # Sub-group label rendered ONCE per group (as a header above first row).
+        # Removed per-row repetition that collided with the next row's name
+        # when font floor moved to 10pt.
+        if is_new_sg:
+            ax.text(grid_left - 1.0, y_top + 0.3,
+                    sg_label[sg].upper(), fontsize=10,
+                    fontname=F_MONO, color=sg_color[sg],
+                    ha="right", va="bottom")
 
         # Over-rated slash (horizontal vermilion strike across the name)
         if is_overrated:
@@ -834,7 +842,7 @@ def plate_viii(pdf):
         # Verdict text (right)
         v_color = VERMILION if is_top5 else INK_SOFT
         ax.text(grid_right + 1.0, y_mid, verdict,
-                fontsize=4.5, fontname=F_SERIF if not is_top5 else F_SERIF_IT,
+                fontsize=10, fontname=F_SERIF if not is_top5 else F_SERIF_IT,
                 color=v_color, va="center")
 
     # Grid bottom rule
@@ -853,7 +861,7 @@ def plate_viii(pdf):
     ax.plot([L + 1.0, R - 1.0], [leg_y + 1.5, leg_y + 1.5], color=RULE, lw=0.45)
     ax.text(L + 1.0, leg_y + 0.5,
             sp("LEGEND  ·  YES  /  FORMING  /  NO  ·  TOP-5 DURABLE  ·  TOP-5 OVER-RATED", 2),
-            ha="left", va="top", fontsize=4.9, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     # Y / F / N samples
     samples = [
         ("Yes · Benefit + Barrier", VERMILION, "Y"),
@@ -873,19 +881,19 @@ def plate_viii(pdf):
         else:
             ax.add_patch(mpatches.Circle((x + 0.7, y), 0.4,
                                          fill=False, ec=c, lw=0.4))
-        ax.text(x + 2.4, y, lbl, fontsize=4.6, fontname=F_SERIF_IT,
+        ax.text(x + 2.4, y, lbl, fontsize=10, fontname=F_SERIF_IT,
                 color=INK_SOFT, va="center")
 
     # Top-5 durable + over-rated marker examples
     x = L + 1.0 + 3 * 26.0
     y = leg_y - 2.8
     ax.text(x, y, "vermilion name = top-5 durable  ·  horizontal slash = top-5 over-rated",
-            fontsize=4.6, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
 
     ax.text(L + 1.0, leg_y - 5.0,
             "Discipline: ARR is not a Power. Brand recall is not a Power. A Power requires Benefit + Barrier. "
             "Six entities clear the strict bar with one or more 'Yes'; another eight carry forming structures.",
-            fontsize=4.6, fontname=F_SERIF_IT, color=INK, va="center")
+            fontsize=10, fontname=F_SERIF_IT, color=INK, va="center")
 
     pdf.savefig(fig, dpi=DPI, facecolor=PAPER)
     plt.close(fig)
@@ -980,13 +988,13 @@ def plate_ix(pdf):
     for ci, ph in enumerate(phases):
         cx = grid_left + (ci + 0.5) * col_w
         ax.text(cx, grid_top + 2.4, sp(ph, 1),
-                fontsize=5.4, fontname=F_MONO, color=VERMILION,
+                fontsize=10, fontname=F_MONO, color=VERMILION,
                 ha="center", va="bottom")
         # tick down
         ax.plot([cx, cx], [grid_top, grid_top - 0.4],
                 color=RULE, lw=0.35)
     ax.text(L + 1.0, grid_top + 2.4, sp("JOB", 1),
-            fontsize=5.4, fontname=F_MONO, color=VERMILION, va="bottom")
+            fontsize=10, fontname=F_MONO, color=VERMILION, va="bottom")
     ax.plot([L + 0.5, R - 0.5], [grid_top, grid_top], color=RULE, lw=0.5)
 
     # Job rows
@@ -1012,11 +1020,11 @@ def plate_ix(pdf):
         # Job label
         job_c = VERMILION if jid in alex_fit_jobs else INK
         ax.text(L + 0.5, y_mid + 0.7, jid,
-                fontsize=6.5, fontname=F_DMMONO, color=VERMILION, va="center")
+                fontsize=10, fontname=F_DMMONO, color=VERMILION, va="center")
         ax.text(L + 3.5, y_mid + 0.7, jname,
-                fontsize=6.4, fontname=F_DISPLAY, color=job_c, va="center")
+                fontsize=10, fontname=F_DISPLAY, color=job_c, va="center")
         ax.text(L + 3.5, y_mid - 1.6, owner,
-                fontsize=4.0, fontname=F_SERIF_IT, color=GRAY, va="center")
+                fontsize=10, fontname=F_SERIF_IT, color=GRAY, va="center")
 
         # Phase cells
         for ci, (cell_coord, outcome, gap) in enumerate(cells):
@@ -1034,18 +1042,18 @@ def plate_ix(pdf):
             # Cell coordinate (top)
             ax.text(x_left + col_w / 2, y_top - 1.0, cell_coord,
                     ha="center", va="top",
-                    fontsize=5.0, fontname=F_DMMONO,
+                    fontsize=10, fontname=F_DMMONO,
                     color=VERMILION if gap >= 7 else INK)
             # Outcome compressed (middle)
             ax.text(x_left + col_w / 2, y_mid + 0.4, outcome,
                     ha="center", va="center",
-                    fontsize=3.7, fontname=F_SERIF, color=INK_SOFT,
+                    fontsize=10, fontname=F_SERIF, color=INK_SOFT,
                     wrap=True)
             # Gap badge (bottom)
             gap_color = VERMILION if gap >= 7 else GRAY
             ax.text(x_left + col_w / 2, y_bot + 1.0, f"gap {gap}",
                     ha="center", va="center",
-                    fontsize=4.2, fontname=F_MONO_BOLD, color=gap_color)
+                    fontsize=10, fontname=F_MONO_BOLD, color=gap_color)
 
     # Grid box
     ax.add_patch(mpatches.Rectangle((grid_left, grid_bot),
@@ -1057,18 +1065,18 @@ def plate_ix(pdf):
     ax.plot([L + 1.0, R - 1.0], [leg_y + 1.5, leg_y + 1.5], color=RULE, lw=0.45)
     ax.text(L + 1.0, leg_y + 0.5,
             sp("LEGEND  ·  GAP SCORE 1—10  ·  ALEX-FIT JOBS BRACKETED", 2),
-            ha="left", va="top", fontsize=5.0, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
 
     ax.text(L + 1.0, leg_y - 1.5,
             "Gap = Ulwick ODI proxy at GTM-org scale (10 = critical unsolved). "
             "Vermilion fills mark gap 7 and above. Alex-fit jobs (1, 4, 2) get a vermilion bracket — "
             "12yr enterprise B2B + procurement scar-tissue lands directly here.",   # gap = N where N is integer
-            fontsize=4.7, fontname=F_SERIF_IT, color=INK_SOFT, va="top")
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="top")
 
     # L-column callout
     ax.text(L + 1.0, leg_y - 5.0,
             sp("L-COLUMN LIGHTS UP AT 3 OF 5 JOBS  ·  M-COLUMN AT 3 CONCLUDES  ·  (9,G) AT JOBS 1 + 2", 2),
-            ha="left", va="top", fontsize=4.4, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
 
     pdf.savefig(fig, dpi=DPI, facecolor=PAPER)
     plt.close(fig)
@@ -1093,7 +1101,7 @@ def plate_x(pdf):
     top_band_bot = TOP - 22.0
     ax.plot([L + 0.5, R - 0.5], [top_band_bot, top_band_bot], color=RULE, lw=0.4)
     ax.text(L + 1.0, top_band_top - 0.5, sp("UPDATED  ·  THE SEVEN BETS  ·  STAR CONVICTION", 2),
-            fontsize=5.4, fontname=F_MONO, color=VERMILION, va="top")
+            fontsize=10, fontname=F_MONO, color=VERMILION, va="top")
 
     bets = [
         ("1",  "Enterprise AI Procurement Operating Standard", 5, VERMILION,
@@ -1122,7 +1130,7 @@ def plate_x(pdf):
         ax.add_patch(mpatches.Circle((x0 + 1.4, y0 - 2.0), 1.2,
                                      fc=color, ec=color, lw=0))
         ax.text(x0 + 1.4, y0 - 2.0, num, ha="center", va="center",
-                fontsize=6.0, fontname=F_DMMONO, color=PAPER)
+                fontsize=10, fontname=F_DMMONO, color=PAPER)
         # Stars
         if stars > 0:
             # Filled circles for active stars, open circles for unfilled
@@ -1137,14 +1145,14 @@ def plate_x(pdf):
                                                  fill=False, ec=GRAY_LIGHT, lw=0.45))
         else:
             ax.text(x0 + 3.0, y0 - 1.3, sp("PARK", 1),
-                    fontsize=5.0, fontname=F_MONO, color=GRAY, va="center")
+                    fontsize=10, fontname=F_MONO, color=GRAY, va="center")
         # Name (wrap manually with double-line if long)
         ax.text(x0 + 0.4, y0 - 4.5, name,
-                fontsize=5.5, fontname=F_DISPLAY, color=INK,
+                fontsize=10, fontname=F_DISPLAY, color=INK,
                 va="top", wrap=True)
         # Sub-caption
         ax.text(x0 + 0.4, y0 - 9.5, sub,
-                fontsize=3.9, fontname=F_SERIF_IT, color=INK_SOFT,
+                fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT,
                 va="top", wrap=True)
 
     # ----- MIDDLE REGISTER  ·  GANTT 18 months  -----
@@ -1153,7 +1161,7 @@ def plate_x(pdf):
     ax.plot([L + 0.5, R - 0.5], [gantt_top + 1.5, gantt_top + 1.5], color=RULE, lw=0.4)
     ax.text(L + 1.0, gantt_top + 0.5,
             sp("EIGHTEEN-MONTH GANTT  ·  MAY 2026 — NOV 2027", 2),
-            fontsize=5.4, fontname=F_MONO, color=VERMILION, va="top")
+            fontsize=10, fontname=F_MONO, color=VERMILION, va="top")
 
     # Time axis: 18 months from May 2026 (m=0) to Nov 2027 (m=17)
     # Quarters: Q2'26 (m=0-1) ·  Q3'26 (m=2-4) · Q4'26 (m=5-7) · Q1'27 (m=8-10) · Q2'27 (11-13) · Q3'27 (14-16) · Q4'27 (17)
@@ -1173,7 +1181,7 @@ def plate_x(pdf):
         x = timeline_left + m * month_w
         ax.plot([x, x], [axis_y - 0.4, axis_y + 0.4], color=RULE, lw=0.35)
         ax.text(x, axis_y - 1.0, label, ha="center", va="top",
-                fontsize=4.4, fontname=F_DMMONO, color=GRAY)
+                fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     # Gantt rows (bets that need timelines)
     # (bet_id, label, start_month, end_month, color, style)
@@ -1197,7 +1205,7 @@ def plate_x(pdf):
     for i, (bid, label, m0, m1, color, style) in enumerate(gantt_rows):
         y = gantt_top - 1.5 - (i + 0.5) * row_h
         # Label column
-        ax.text(L + 1.0, y, label, fontsize=4.5, fontname=F_SERIF, color=INK,
+        ax.text(L + 1.0, y, label, fontsize=10, fontname=F_SERIF, color=INK,
                 va="center")
         # Bar
         bar_x = timeline_left + m0 * month_w
@@ -1233,7 +1241,7 @@ def plate_x(pdf):
     crux_bot = BOT + 9.5
     ax.plot([L + 0.5, R - 0.5], [crux_top, crux_top], color=RULE, lw=0.4)
     ax.text(L + 1.0, crux_top - 1.0, sp("SIX CRUXES  ·  DECIDABILITY TRIGGERS", 2),
-            fontsize=5.4, fontname=F_MONO, color=VERMILION, va="top")
+            fontsize=10, fontname=F_MONO, color=VERMILION, va="top")
 
     # Cruxes positioned along timeline by their decidability date.
     # Stagger vertically by row_idx (0/1) to avoid label collision.
@@ -1259,19 +1267,19 @@ def plate_x(pdf):
         ax.add_patch(mpatches.Circle((x, cy), 1.1,
                                      fc=PAPER, ec=VERMILION, lw=0.7))
         ax.text(x, cy, cid, ha="center", va="center",
-                fontsize=4.5, fontname=F_MONO_BOLD, color=VERMILION)
+                fontsize=10, fontname=F_MONO_BOLD, color=VERMILION)
         ax.text(x + 1.6, cy + 0.6, label,
-                fontsize=4.6, fontname=F_DISPLAY, color=INK,
+                fontsize=10, fontname=F_DISPLAY, color=INK,
                 va="center")
         ax.text(x + 1.6, cy - 0.9, sub,
-                fontsize=3.7, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
+                fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
 
     # ----- RIGHT-SIDE MICRO-REGISTER  ·  10 candidate-bet verdicts -----
     cb_x = timeline_right + 4.0
     cb_top = gantt_top - 2.5
     cb_bot = gantt_bot + 2.0
     ax.text(cb_x, cb_top + 0.5, sp("CANDIDATE BETS  ·  10  ·  VERDICTS", 1),
-            fontsize=5.0, fontname=F_MONO, color=VERMILION, va="top")
+            fontsize=10, fontname=F_MONO, color=VERMILION, va="top")
     candidates = [
         ("C1",  "Buying-Committee Graph",          "PARK",     GRAY),
         ("C2",  "Procurement-seam coach",          "ABSORB",   INK),
@@ -1288,30 +1296,30 @@ def plate_x(pdf):
     for i, (cid, name, verdict, color) in enumerate(candidates):
         y = cb_top - 1.5 - (i + 0.5) * cb_row_h
         ax.text(cb_x, y, cid,
-                fontsize=4.4, fontname=F_DMMONO, color=VERMILION, va="center")
+                fontsize=10, fontname=F_DMMONO, color=VERMILION, va="center")
         ax.text(cb_x + 3.5, y + 0.3, name,
-                fontsize=4.6, fontname=F_DISPLAY, color=INK, va="center")
+                fontsize=10, fontname=F_DISPLAY, color=INK, va="center")
         # Verdict badge
         v_alpha = 1.0 if color == VERMILION else (0.85 if color == INK else 0.55)
         ax.text(cb_x + 28.0, y, verdict,
-                fontsize=4.8, fontname=F_MONO_BOLD, color=color, alpha=v_alpha,
+                fontsize=10, fontname=F_MONO_BOLD, color=color, alpha=v_alpha,
                 va="center", ha="right")
 
     # Counts footer
     ax.text(cb_x, cb_bot - 0.5,
             "3 promotions  ·  4 absorptions  ·  3 parks / watch",
-            fontsize=4.5, fontname=F_SERIF_IT, color=INK_SOFT, va="top")
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="top")
 
     # ----- FOOTER LEGEND -----
     leg_y = BOT + 5.5
     ax.plot([L + 1.0, R - 1.0], [leg_y + 1.5, leg_y + 1.5], color=RULE, lw=0.45)
     ax.text(L + 1.0, leg_y + 0.5,
             sp("OPERATING PLAN  ·  PUBLISH (#1)  ·  RENT EQUITY (#2)  ·  COMPOUND (#3a)  ·  DISTRIBUTE (#6)  ·  FALLBACK (#7)", 2),
-            ha="left", va="top", fontsize=4.8, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(L + 1.0, leg_y - 1.5,
             "Solid bars = active build window. Hatched = ongoing maintenance / role continuity. Dotted = background. "
             "Cruxes are decidability triggers: a 'wrong' answer at any one re-ranks the portfolio.",
-            fontsize=4.6, fontname=F_SERIF_IT, color=INK_SOFT, va="top")
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="top")
 
     pdf.savefig(fig, dpi=DPI, facecolor=PAPER)
     plt.close(fig)

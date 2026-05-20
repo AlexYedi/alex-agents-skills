@@ -3,6 +3,7 @@ SUBSTRATE · Vol III · Master Plate (Plate M).
 The agent layer as a single connected system — strata, flows, feedback loops,
 binding constraints, wrapping meta-forces, and the seven Bets sequenced.
 """
+# plate-fonts-scaled-v1
 import os
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -60,7 +61,7 @@ VERDIGRIS = "#456C5C"
 OCHRE = "#A37425"
 INDIGO = "#3D4A6B"
 
-PAGE_W, PAGE_H = 11.0, 17.0
+PAGE_W, PAGE_H = 15.4, 23.8
 DPI = 300
 OUT_PATH = "/Users/sameoldexpressions/Documents/GitHub/alex-agents-skills/output/ai-agents/AI_AGENTS_MASTER_PLATE.pdf"
 
@@ -89,31 +90,31 @@ def page_frame(ax):
         ax.plot([LEFT - 2.6 - (1.0 if long else 0.5), LEFT - 2.6], [y, y], color=RULE, lw=0.35)
         if long:
             ax.text(LEFT - 4.1, y, f"{i*5:02d}", ha="right", va="center",
-                    fontsize=4.4, fontname=F_DMMONO, color=GRAY)
+                    fontsize=10, fontname=F_DMMONO, color=GRAY)
     # Title block
     ax.text(LEFT, TOP - 1.4, sp("AN ATLAS OF THE AGENT STRATA  ·  MASTER SECTION", 4),
-            ha="left", va="top", fontsize=6.0, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, TOP - 2.6, "THE AGENT, SEEN WHOLE",
-            ha="left", va="top", fontsize=22, fontname=F_DISPLAY, color=INK)
+            ha="left", va="top", fontsize=26.4, fontname=F_DISPLAY, color=INK)
     ax.text(RIGHT - 4.0, TOP - 2.8, sp("MASTER PLATE", 2),
-            ha="right", va="top", fontsize=7.5, fontname=F_DISPLAY_REG, color=INK_SOFT)
+            ha="right", va="top", fontsize=10, fontname=F_DISPLAY_REG, color=INK_SOFT)
     ax.text(LEFT, TOP - 5.4,
             "Ten sub-strata · four wrapping forces · cross-layer flows · binding constraints · sequenced Bets — the agent layer as a single connected system.",
-            ha="left", va="top", fontsize=6.5, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
     ax.text(LEFT, TOP - 6.5,
             "Stratum agenticum tota machina · quomodo strata simul operentur",
-            ha="left", va="top", fontsize=5.0, fontname=F_SERIF_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_IT, color=GRAY)
     # Plate badge — use 'M' since Big Shoulders lacks Omega
     ax.add_patch(mpatches.Circle((RIGHT - 1.6, TOP - 2.6), 1.1, fill=False, ec=VERMILION, lw=0.7))
     ax.text(RIGHT - 1.6, TOP - 2.6, "M", ha="center", va="center",
-            fontsize=8, fontname=F_MONO_BOLD, color=VERMILION)
+            fontsize=10, fontname=F_MONO_BOLD, color=VERMILION)
     # Footer
     ax.text(LEFT, BOTTOM + 3.0, sp("SUBSTRATE  ·  VOL III  ·  MASTER PLATE", 3),
-            ha="left", va="top", fontsize=4.6, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, BOTTOM + 1.4, sp("Compiled for A. Yedi · Cycle MMXXVI · Rev. I", 2),
-            ha="left", va="top", fontsize=5.2, fontname=F_SERIF_DISP_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=GRAY)
     ax.text(RIGHT, BOTTOM + 1.4, sp("MASTER", 2), ha="right", va="top",
-            fontsize=5.4, fontname=F_DMMONO, color=GRAY)
+            fontsize=10, fontname=F_DMMONO, color=GRAY)
     return LEFT, RIGHT, TOP - 7.5, BOTTOM + 5.0
 
 
@@ -128,7 +129,7 @@ def curved_flow(ax, x0, y0, x1, y1, color=GRAY, lw=0.5, alpha=0.65, label=None,
     patch = mpatches.PathPatch(path, fill=False, ec=color, lw=lw, alpha=alpha)
     ax.add_patch(patch)
     if label:
-        ax.text(cx + label_offset, cy, label, fontsize=4.2, fontname=F_SERIF_IT,
+        ax.text(cx + label_offset, cy, label, fontsize=10, fontname=F_SERIF_IT,
                 color=color, va="center", alpha=0.9)
 
 
@@ -178,13 +179,13 @@ def page_master(pdf):
 
         # Roman numeral
         ax.text(col_x0 + 0.6, y_mid + 0.4, num, ha="left", va="center",
-                fontsize=8.5, fontname=F_DMMONO, color=VERMILION)
+                fontsize=10.2, fontname=F_DMMONO, color=VERMILION)
         # Stratum name
         ax.text(col_x0 + 5.8, y_mid + 0.8, name, ha="left", va="center",
-                fontsize=8.5, fontname=F_DISPLAY, color=INK)
+                fontsize=10.2, fontname=F_DISPLAY, color=INK)
         # Tagline (italic)
         ax.text(col_x0 + 5.8, y_mid - 1.4, tagline, ha="left", va="center",
-                fontsize=4.6, fontname=F_SERIF_IT, color=GRAY)
+                fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     # ---------- Cross-layer flows (Bezier arcs to the right) ----------
     # Flow positions (y) for each stratum
@@ -218,7 +219,7 @@ def page_master(pdf):
     # ---------- Binding constraints (left side) ----------
     bc_top = TOP - 5
     ax.text(constraint_x, bc_top, sp("BINDING CONSTRAINTS", 2),
-            ha="left", va="top", fontsize=4.8, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.plot([constraint_x, constraint_x + 6], [bc_top - 0.8, bc_top - 0.8],
             color=RULE, lw=0.3)
 
@@ -241,19 +242,19 @@ def page_master(pdf):
         ax.add_patch(mpatches.Circle((constraint_x + 0.4, y + 0.5), 0.7,
                                      fc=PAPER, ec=VERMILION, lw=0.5))
         ax.text(constraint_x + 0.4, y + 0.5, s, ha="center", va="center",
-                fontsize=4.6, fontname=F_DMMONO, color=VERMILION)
+                fontsize=10, fontname=F_DMMONO, color=VERMILION)
         ax.text(constraint_x + 1.8, y + 1.0, c, ha="left", va="center",
-                fontsize=5.5, fontname=F_DISPLAY, color=INK)
+                fontsize=10, fontname=F_DISPLAY, color=INK)
         ax.text(constraint_x + 1.8, y - 0.5, why, ha="left", va="center",
-                fontsize=4.0, fontname=F_SERIF_IT, color=GRAY)
+                fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     # ---------- The Seven Bets sequenced (right side) ----------
     bet_top = TOP - 5
     ax.text(bet_x0, bet_top, sp("SEVEN BETS · SEQUENCED", 2),
-            ha="left", va="top", fontsize=4.8, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(bet_x0, bet_top - 1.8,
             "Bet #1 first (claim Process Power) · Bet #2 second (collect equity) · Bet #3 third (compound)",
-            ha="left", va="top", fontsize=4.5, fontname=F_SERIF_IT, color=INK_SOFT)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
     ax.plot([bet_x0, bet_x1], [bet_top - 2.6, bet_top - 2.6], color=RULE, lw=0.3)
 
     bets = [
@@ -291,19 +292,19 @@ def page_master(pdf):
         ax.add_patch(mpatches.Circle((bet_x0 + 1.2, y_mid + 0.5), 1.0,
                                      fc=color, ec=color, lw=0))
         ax.text(bet_x0 + 1.2, y_mid + 0.5, num, ha="center", va="center",
-                fontsize=7, fontname=F_DMMONO, color=PAPER)
+                fontsize=10, fontname=F_DMMONO, color=PAPER)
         ax.text(bet_x0 + 3.2, y_mid + 1.0, name, ha="left", va="center",
-                fontsize=6, fontname=F_DISPLAY, color=INK)
+                fontsize=10, fontname=F_DISPLAY, color=INK)
         ax.text(bet_x0 + 3.2, y_mid - 0.5, score, ha="left", va="center",
-                fontsize=5.2, fontname=F_DMMONO, color=color)
+                fontsize=10, fontname=F_DMMONO, color=color)
         ax.text(bet_x0 + 14, y_mid + 0.3, detail, ha="left", va="center",
-                fontsize=4.2, fontname=F_SERIF_IT, color=INK_SOFT)
+                fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
     # ---------- META-STRATA wrapping band (bottom) ----------
     meta_y = BOT + 17
     ax.plot([L + 1, R - 1], [meta_y + 1.2, meta_y + 1.2], color=RULE, lw=0.4)
     ax.text(L + 1, meta_y, sp("FOUR WRAPPING META-FORCES", 3),
-            ha="left", va="top", fontsize=5.2, fontname=F_MONO, color=VERDIGRIS)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERDIGRIS)
     meta = [
         ("META-A", "CAPABILITY SAFETY",
          "ASL · Preparedness · Frontier · METR · AISI", VERMILION),
@@ -318,17 +319,17 @@ def page_master(pdf):
         x = L + 1 + i * 23
         ax.add_patch(mpatches.Rectangle((x, meta_y - 7.5), 22, 5.5,
                                          fc=PAPER, ec=color, lw=0.4))
-        ax.text(x + 0.8, meta_y - 2.5, k, fontsize=5.2, fontname=F_DMMONO,
+        ax.text(x + 0.8, meta_y - 2.5, k, fontsize=10, fontname=F_DMMONO,
                 color=color, va="center")
-        ax.text(x + 0.8, meta_y - 4.0, name, fontsize=6.5, fontname=F_DISPLAY,
+        ax.text(x + 0.8, meta_y - 4.0, name, fontsize=10, fontname=F_DISPLAY,
                 color=INK, va="center")
-        ax.text(x + 0.8, meta_y - 6.0, blurb, fontsize=4.3, fontname=F_SERIF_IT,
+        ax.text(x + 0.8, meta_y - 6.0, blurb, fontsize=10, fontname=F_SERIF_IT,
                 color=INK_SOFT, va="center")
 
     # ---------- CRUXES (bottom strip) ----------
     cy = BOT + 7.5
     ax.text(L + 1, cy, sp("FIVE CRUXES · ANSWER-EVENTS THAT RE-RANK EVERYTHING", 2),
-            ha="left", va="top", fontsize=5, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     cruxes = [
         ("C1", "Anthropic ARR · $24B vs $30B · Q3 '26"),
         ("C2", "MCP commons vs silent fork · EOY '26"),
@@ -340,9 +341,9 @@ def page_master(pdf):
         x = L + 1 + i * 18
         ax.add_patch(mpatches.Circle((x + 0.6, cy - 2.2), 0.8, fc=VERMILION, ec=VERMILION, lw=0))
         ax.text(x + 0.6, cy - 2.2, k, ha="center", va="center",
-                fontsize=4.4, fontname=F_DMMONO, color=PAPER)
+                fontsize=10, fontname=F_DMMONO, color=PAPER)
         ax.text(x + 2.2, cy - 2.2, txt, ha="left", va="center",
-                fontsize=4.6, fontname=F_SERIF_IT, color=INK_SOFT)
+                fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
     pdf.savefig(fig, dpi=DPI, facecolor=PAPER)
     plt.close(fig)

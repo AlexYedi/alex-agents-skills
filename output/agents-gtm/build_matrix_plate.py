@@ -9,6 +9,7 @@ whisper-thin marginalia, vermilion as the single oxidized accent.
 
 Output: AGENTS_GTM_MATRIX.pdf (Tabloid 11x17, single page).
 """
+# plate-fonts-scaled-v1
 import os
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -60,7 +61,7 @@ OCHRE       = "#A37425"
 
 # Tabloid landscape — wide plate. The 12 functions fit comfortably as rows;
 # the 13 capability columns fit horizontally.
-PAGE_W, PAGE_H = 17.0, 11.0
+PAGE_W, PAGE_H = 23.8, 15.4
 DPI = 300
 OUT_PATH = "/Users/sameoldexpressions/Documents/GitHub/alex-agents-skills/output/agents-gtm/AGENTS_GTM_MATRIX.pdf"
 
@@ -304,41 +305,41 @@ def page_frame(ax):
                 color=RULE, lw=0.35)
         if long:
             ax.text(tickx - 1.6, y, f"{i*4:02d}", ha="right", va="center",
-                    fontsize=4.6, fontname=F_DMMONO, color=GRAY)
+                    fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     # Title block
     ax.text(LEFT, TOP - 1.5,
             sp("AN ATLAS OF THE AGENT STRATA   ·   VOLUME IV   ·   GO-TO-MARKET CELLULAR MAP", 3),
-            ha="left", va="top", fontsize=6.5, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, TOP - 3.0, "AGENTS GTM  ·  CELL MATRIX",
-            ha="left", va="top", fontsize=24, fontname=F_DISPLAY, color=INK)
+            ha="left", va="top", fontsize=28.8, fontname=F_DISPLAY, color=INK)
     ax.text(LEFT, TOP - 6.7,
             "Twelve revenue functions stratified against thirteen agent capabilities — "
             "one hundred fifty-six cells of demand, density, and vapour.",
-            ha="left", va="top", fontsize=7.0, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
     ax.text(LEFT, TOP - 8.0,
             "Tabula cellularum agenticarum  ·  functio per capacitatem  ·  intensitas opportunitatis",
-            ha="left", va="top", fontsize=5.3, fontname=F_SERIF_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     # Plate badge — vermilion ring with 'I'
     ax.add_patch(mpatches.Circle((RIGHT - 2.0, TOP - 3.2), 1.4,
                                  fill=False, ec=VERMILION, lw=0.7))
     ax.text(RIGHT - 2.0, TOP - 3.2, "I", ha="center", va="center",
-            fontsize=10, fontname=F_MONO_BOLD, color=VERMILION)
+            fontsize=12, fontname=F_MONO_BOLD, color=VERMILION)
     ax.text(RIGHT, TOP - 6.3, sp("PLATE I OF I", 2),
-            ha="right", va="top", fontsize=6.5, fontname=F_DISPLAY_REG, color=INK_SOFT)
+            ha="right", va="top", fontsize=10, fontname=F_DISPLAY_REG, color=INK_SOFT)
     ax.text(RIGHT, TOP - 8.0, sp("VOL IV  ·  MMXXVI  ·  MAY", 2),
-            ha="right", va="top", fontsize=5.0, fontname=F_DMMONO, color=GRAY)
+            ha="right", va="top", fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     # Footer
     ax.text(LEFT, BOTTOM + 4.5,
             sp("SUBSTRATE  ·  VOL IV  ·  CELL MATRIX  ·  PLATE I OF I", 3),
-            ha="left", va="top", fontsize=4.8, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, BOTTOM + 2.6,
             sp("Compiled for A. Yedi  ·  Cycle MMXXVI  ·  Rev. I", 2),
-            ha="left", va="top", fontsize=5.3, fontname=F_SERIF_DISP_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=GRAY)
     ax.text(RIGHT, BOTTOM + 2.6, sp("MMXXVI · V", 2), ha="right", va="top",
-            fontsize=5.4, fontname=F_DMMONO, color=GRAY)
+            fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     return LEFT, RIGHT, TOP - 8.5, BOTTOM + 9.5
 
@@ -403,27 +404,27 @@ def render_matrix(pdf):
         # Letter (display caps)
         ax.text(cx, grid_top + col_header_h - 2.4, letter,
                 ha="center", va="center",
-                fontsize=10, fontname=F_DISPLAY, color=INK)
+                fontsize=12, fontname=F_DISPLAY, color=INK)
         # Short name caps
         ax.text(cx, grid_top + col_header_h - 5.5, sp(short, 0),
                 ha="center", va="center",
-                fontsize=4.6, fontname=F_MONO, color=VERMILION)
+                fontsize=10, fontname=F_MONO, color=VERMILION)
 
     # Top hairline above grid
     ax.plot([grid_left, grid_right], [grid_top, grid_top], color=RULE, lw=0.55)
     # Header marker for the function column
     ax.text(L + 1.0, grid_top + col_header_h - 2.4, sp("FUNCTIONS", 1),
             ha="left", va="center",
-            fontsize=6.0, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(L + 1.0, grid_top + col_header_h - 5.5, sp("12 ROWS  ·  REVENUE STRATA", 1),
             ha="left", va="center",
-            fontsize=4.3, fontname=F_SERIF_IT, color=GRAY)
+            fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     # Header marker for capability columns
     ax.text(grid_left + (grid_right - grid_left) / 2, grid_top + col_header_h - 7.0,
             sp("CAPABILITIES  ·  13 COLUMNS  ·  A — M", 2),
             ha="center", va="center",
-            fontsize=4.4, fontname=F_SERIF_IT, color=GRAY)
+            fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     # ---- Function row labels (left gutter) -------------------------------
     for ri, (num, short, desc) in enumerate(FUNCTIONS):
@@ -432,13 +433,13 @@ def render_matrix(pdf):
         ax.add_patch(mpatches.Circle((L + 1.4, y_mid), 1.1,
                                      fc=PAPER, ec=VERMILION, lw=0.55))
         ax.text(L + 1.4, y_mid, num, ha="center", va="center",
-                fontsize=5.4, fontname=F_DMMONO, color=VERMILION)
+                fontsize=10, fontname=F_DMMONO, color=VERMILION)
         # Short display caps
         ax.text(L + 3.5, y_mid + 0.6, short, ha="left", va="center",
-                fontsize=7.3, fontname=F_DISPLAY, color=INK)
+                fontsize=10, fontname=F_DISPLAY, color=INK)
         # Italic descriptor
         ax.text(L + 3.5, y_mid - 1.6, desc, ha="left", va="center",
-                fontsize=4.0, fontname=F_SERIF_IT, color=GRAY)
+                fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     # ---- The 156 cells ---------------------------------------------------
     for ri, (fnum_s, _, _) in enumerate(FUNCTIONS):
@@ -494,22 +495,22 @@ def render_matrix(pdf):
             if vnd:
                 ax.text(x_left + col_w / 2, y_bot + row_h - 1.5, vnd,
                         ha="center", va="center",
-                        fontsize=4.5, fontname=F_DMMONO, color=txt_c)
+                        fontsize=10, fontname=F_DMMONO, color=txt_c)
             # Stratum tag (middle, small bracketed letter)
             if strat:
                 ax.text(x_left + col_w / 2, y_bot + row_h / 2 + 0.1,
                         f"[{strat}]",
                         ha="center", va="center",
-                        fontsize=4.0, fontname=F_SERIF_IT, color=strat_c)
+                        fontsize=10, fontname=F_SERIF_IT, color=strat_c)
             # OCQ score (bottom)
             if ocq is not None:
                 ax.text(x_left + col_w / 2, y_bot + 1.4, f"{ocq:02d}",
                         ha="center", va="center",
-                        fontsize=5.2, fontname=F_MONO_BOLD, color=txt_c)
+                        fontsize=10, fontname=F_MONO_BOLD, color=txt_c)
             else:
                 ax.text(x_left + col_w / 2, y_bot + 1.4, "—",
                         ha="center", va="center",
-                        fontsize=4.2, fontname=F_DMMONO, color=GRAY)
+                        fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     # Grid bounding rule
     ax.add_patch(mpatches.Rectangle((grid_left, grid_bottom),
@@ -532,7 +533,7 @@ def render_matrix(pdf):
         y_mid = grid_top - (r0 + r1) / 2 * row_h
         ax.text(L - 5.5, y_mid, sp(name, 2),
                 ha="center", va="center", rotation=90,
-                fontsize=4.6, fontname=F_MONO, color=VERDIGRIS)
+                fontsize=10, fontname=F_MONO, color=VERDIGRIS)
 
     # ---- Footer block: legend + key + cruxes -----------------------------
     leg_y_top = grid_bottom - 1.0
@@ -542,7 +543,7 @@ def render_matrix(pdf):
     # Legend column 1 — OCQ intensity bar
     lx = L + 1.0
     ax.text(lx, legend_y - 0.8, sp("OCQ INTENSITY  ·  CELL FILL", 2),
-            ha="left", va="top", fontsize=5.0, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     bar_y0 = legend_y - 4.5
     swatch_w = 2.2
     swatch_h = 1.6
@@ -553,7 +554,7 @@ def render_matrix(pdf):
         ax.add_patch(mpatches.Rectangle((x, bar_y0), swatch_w, swatch_h,
                                          fc=fc, ec=INK_SOFT, lw=0.3, alpha=alpha))
         ax.text(x + swatch_w / 2, bar_y0 - 1.0, str(s_ocq),
-                ha="center", va="top", fontsize=4.3, fontname=F_DMMONO, color=GRAY)
+                ha="center", va="top", fontsize=10, fontname=F_DMMONO, color=GRAY)
     # Top-15 vermilion swatch
     for i, s_ocq in enumerate([14, 16, 19]):
         x = lx + (5 + i) * (swatch_w + 0.4) + 1.0
@@ -561,14 +562,14 @@ def render_matrix(pdf):
         ax.add_patch(mpatches.Rectangle((x, bar_y0), swatch_w, swatch_h,
                                          fc=fc, ec=VERMILION, lw=0.55, alpha=alpha))
         ax.text(x + swatch_w / 2, bar_y0 - 1.0, str(s_ocq),
-                ha="center", va="top", fontsize=4.3, fontname=F_DMMONO, color=VERMILION)
+                ha="center", va="top", fontsize=10, fontname=F_DMMONO, color=VERMILION)
     ax.text(lx + 5 * (swatch_w + 0.4) + 0.6, bar_y0 + swatch_h / 2, "TOP-15",
-            ha="left", va="center", fontsize=4.4, fontname=F_MONO, color=VERMILION)
+            ha="left", va="center", fontsize=10, fontname=F_MONO, color=VERMILION)
 
     # Legend column 2 — stratum-letter key
     sx = L + 50.0
     ax.text(sx, legend_y - 0.8, sp("STRATUM KEY  ·  [BRACKET]", 2),
-            ha="left", va="top", fontsize=5.0, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     stratum_entries = [
         ("II",   "Agent runtimes"),
         ("IV",   "Memory · state"),
@@ -582,29 +583,29 @@ def render_matrix(pdf):
         row = i % 3
         x = sx + col * 19
         y = legend_y - 2.5 - row * 1.5
-        ax.text(x, y, f"[{k}]", fontsize=5.2, fontname=F_SERIF_IT, color=VERMILION,
+        ax.text(x, y, f"[{k}]", fontsize=10, fontname=F_SERIF_IT, color=VERMILION,
                 va="center")
-        ax.text(x + 5.5, y, v, fontsize=4.7, fontname=F_SERIF, color=INK_SOFT,
+        ax.text(x + 5.5, y, v, fontsize=10, fontname=F_SERIF, color=INK_SOFT,
                 va="center")
 
     # Legend column 3 — vermilion meaning
     vx = L + 92.0
     ax.text(vx, legend_y - 0.8, sp("VERMILION  ·  TOP-15 BY OCQ", 2),
-            ha="left", va="top", fontsize=5.0, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(vx, legend_y - 2.5,
             "Vermilion-bordered cells are the fifteen highest OCQ scores in the",
-            fontsize=4.7, fontname=F_SERIF, color=INK_SOFT, va="center")
+            fontsize=10, fontname=F_SERIF, color=INK_SOFT, va="center")
     ax.text(vx, legend_y - 3.7,
             "matrix — opportunity × claimability × time-to-monetize. The cell",
-            fontsize=4.7, fontname=F_SERIF, color=INK_SOFT, va="center")
+            fontsize=10, fontname=F_SERIF, color=INK_SOFT, va="center")
     ax.text(vx, legend_y - 4.9,
             "of record is (9, G) at 19/20 — the agent-procurement gauntlet.",
-            fontsize=4.7, fontname=F_SERIF_IT, color=INK, va="center")
+            fontsize=10, fontname=F_SERIF_IT, color=INK, va="center")
 
     # Legend column 4 — anatomy of a cell glyph
     ax_x = L + 138.0
     ax.text(ax_x, legend_y - 0.8, sp("ANATOMY OF A CELL", 2),
-            ha="left", va="top", fontsize=5.0, fontname=F_MONO, color=VERMILION)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=VERMILION)
     # Sample cell mockup
     sx0 = ax_x
     sy0 = legend_y - 6.5
@@ -613,24 +614,24 @@ def render_matrix(pdf):
     ax.add_patch(mpatches.Rectangle((sx0, sy0), sw, sh,
                                      fc=VERMILION, ec=VERMILION, lw=0.7, alpha=0.7))
     ax.text(sx0 + sw / 2, sy0 + sh - 1.0, "Lpo Vnt",
-            ha="center", va="center", fontsize=4.6, fontname=F_DMMONO, color=PAPER)
+            ha="center", va="center", fontsize=10, fontname=F_DMMONO, color=PAPER)
     ax.text(sx0 + sw / 2, sy0 + sh / 2, "[IX]",
-            ha="center", va="center", fontsize=4.2, fontname=F_SERIF_IT, color=PAPER)
+            ha="center", va="center", fontsize=10, fontname=F_SERIF_IT, color=PAPER)
     ax.text(sx0 + sw / 2, sy0 + 0.8, "19",
-            ha="center", va="center", fontsize=5.4, fontname=F_MONO_BOLD, color=PAPER)
+            ha="center", va="center", fontsize=10, fontname=F_MONO_BOLD, color=PAPER)
     # Annotation lines
     ax.plot([sx0 + sw + 0.4, sx0 + sw + 1.8], [sy0 + sh - 1.0, sy0 + sh - 1.0],
             color=GRAY, lw=0.3)
     ax.text(sx0 + sw + 2.0, sy0 + sh - 1.0, "vendor abbrev.",
-            fontsize=3.9, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
     ax.plot([sx0 + sw + 0.4, sx0 + sw + 1.8], [sy0 + sh / 2, sy0 + sh / 2],
             color=GRAY, lw=0.3)
     ax.text(sx0 + sw + 2.0, sy0 + sh / 2, "stratum tag",
-            fontsize=3.9, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
     ax.plot([sx0 + sw + 0.4, sx0 + sw + 1.8], [sy0 + 0.8, sy0 + 0.8],
             color=GRAY, lw=0.3)
     ax.text(sx0 + sw + 2.0, sy0 + 0.8, "OCQ /20",
-            fontsize=3.9, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT, va="center")
 
     pdf.savefig(fig, dpi=DPI, facecolor=PAPER)
     plt.close(fig)

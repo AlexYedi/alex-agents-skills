@@ -9,6 +9,7 @@ A single tabloid plate that mirrors Volume III's Master Plate construction:
 - the Hebbia / Sierra / Rogo NYC operator ranking, vermilion on Hebbia
 - one italic-serif framing line — the field-narrative-lag thesis
 """
+# plate-fonts-scaled-v1
 import os
 import matplotlib as mpl
 from matplotlib import pyplot as plt
@@ -57,7 +58,7 @@ VERMILION   = "#A6371F"
 VERDIGRIS   = "#456C5C"
 OCHRE       = "#A37425"
 
-PAGE_W, PAGE_H = 11.0, 17.0
+PAGE_W, PAGE_H = 15.4, 23.8
 DPI = 300
 OUT_PATH = "/Users/sameoldexpressions/Documents/GitHub/alex-agents-skills/output/agents-gtm/AGENTS_GTM_MASTER_PLATE.pdf"
 
@@ -101,38 +102,38 @@ def page_frame(ax):
                 [y, y], color=RULE, lw=0.35)
         if long:
             ax.text(LEFT - 4.1, y, f"{i*5:02d}", ha="right", va="center",
-                    fontsize=4.4, fontname=F_DMMONO, color=GRAY)
+                    fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     # Title block
     ax.text(LEFT, TOP - 1.4,
             sp("AN ATLAS OF THE AGENT STRATA  ·  VOLUME IV  ·  MASTER SECTION", 4),
-            ha="left", va="top", fontsize=6.0, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, TOP - 2.6, "AGENTS GTM, SEEN WHOLE",
-            ha="left", va="top", fontsize=22, fontname=F_DISPLAY, color=INK)
+            ha="left", va="top", fontsize=26.4, fontname=F_DISPLAY, color=INK)
     ax.text(RIGHT - 4.4, TOP - 2.8, sp("MASTER PLATE", 2),
-            ha="right", va="top", fontsize=7.5, fontname=F_DISPLAY_REG, color=INK_SOFT)
+            ha="right", va="top", fontsize=10, fontname=F_DISPLAY_REG, color=INK_SOFT)
     ax.text(LEFT, TOP - 5.4,
             "The 12 × 13 cell field condensed · the seven-counterparty gauntlet · the seven Bets sequenced · the five Cruxes that re-rank everything.",
-            ha="left", va="top", fontsize=6.5, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=INK_SOFT)
     ax.text(LEFT, TOP - 6.5,
             "Mercatura agenticum tota machina  ·  ubi opus emat  ·  ubi opus laboret",
-            ha="left", va="top", fontsize=5.0, fontname=F_SERIF_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_IT, color=GRAY)
 
     # Master plate badge — letter M in vermilion ring
     ax.add_patch(mpatches.Circle((RIGHT - 1.6, TOP - 2.6), 1.1,
                                  fill=False, ec=VERMILION, lw=0.7))
     ax.text(RIGHT - 1.6, TOP - 2.6, "M", ha="center", va="center",
-            fontsize=8, fontname=F_MONO_BOLD, color=VERMILION)
+            fontsize=10, fontname=F_MONO_BOLD, color=VERMILION)
 
     # Footer
     ax.text(LEFT, BOTTOM + 3.0,
             sp("SUBSTRATE  ·  VOL IV  ·  AGENTS GTM  ·  MASTER PLATE", 3),
-            ha="left", va="top", fontsize=4.6, fontname=F_MONO, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_MONO, color=GRAY)
     ax.text(LEFT, BOTTOM + 1.4,
             sp("Compiled for A. Yedi  ·  Cycle MMXXVI  ·  May  ·  Rev. I", 2),
-            ha="left", va="top", fontsize=5.2, fontname=F_SERIF_DISP_IT, color=GRAY)
+            ha="left", va="top", fontsize=10, fontname=F_SERIF_DISP_IT, color=GRAY)
     ax.text(RIGHT, BOTTOM + 1.4, sp("MMXXVI · V", 2),
-            ha="right", va="top", fontsize=5.4, fontname=F_DMMONO, color=GRAY)
+            ha="right", va="top", fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     return LEFT, RIGHT, TOP - 7.5, BOTTOM + 5.0
 
@@ -191,7 +192,7 @@ def render_master(pdf):
     ax.text(inset_left, inset_top + 0.5,
             sp("12 X 13 CELL FIELD  ·  HEAT INTENSITY = OCQ", 1),
             ha="left", va="bottom",
-            fontsize=4.7, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
 
     # Outline
     ax.add_patch(mpatches.Rectangle((inset_left, inset_bot),
@@ -230,19 +231,19 @@ def render_master(pdf):
         cx = inset_left + ci * cell_w + cell_w / 2
         ax.text(cx, inset_top + 0.05 - 0.1, lt,
                 ha="center", va="bottom",
-                fontsize=3.6, fontname=F_DMMONO, color=GRAY)
+                fontsize=10, fontname=F_DMMONO, color=GRAY)
     for ri in range(n_rows):
         cy = inset_top - ri * cell_h - cell_h / 2
         ax.text(inset_left - 0.4, cy, str(ri + 1),
                 ha="right", va="center",
-                fontsize=3.6, fontname=F_DMMONO, color=GRAY)
+                fontsize=10, fontname=F_DMMONO, color=GRAY)
 
     # Inset caption
     ax.text(inset_left, inset_bot - 0.5,
             "Vermilion = the fifteen highest-OCQ cells. Ink density = mid-tier "
             "scored cells.\nFull-resolution version on Plate I of I.",
             ha="left", va="top",
-            fontsize=4.0, fontname=F_SERIF_IT, color=INK_SOFT)
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
     ax.plot([inset_left, inset_right], [inset_bot - 3.0, inset_bot - 3.0],
             color=GRAY_LIGHT, lw=0.3)
 
@@ -250,7 +251,7 @@ def render_master(pdf):
     ax.text(thesis_x0, thesis_y_top,
             sp("THE FIELD-NARRATIVE LAG", 2),
             ha="left", va="top",
-            fontsize=5.5, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.plot([thesis_x0, thesis_x1], [thesis_y_top - 1.0, thesis_y_top - 1.0],
             color=RULE, lw=0.35)
 
@@ -276,7 +277,7 @@ def render_master(pdf):
     for i, line in enumerate(thesis_lines):
         ax.text(thesis_x0, thesis_y_top - 2.6 - i * 1.35, line,
                 ha="left", va="top",
-                fontsize=5.0, fontname=F_SERIF_IT if i < 8 else F_SERIF, color=INK)
+                fontsize=10, fontname=F_SERIF_IT if i < 8 else F_SERIF, color=INK)
 
     # ---- (C) The Seven-Counterparty Gauntlet ----------------------------
     g_top = inset_bot - 5.5
@@ -285,12 +286,12 @@ def render_master(pdf):
     ax.text(L + 1, g_top,
             sp("THE SEVEN-COUNTERPARTY GAUNTLET  ·  F1000 BUYER-SIDE", 3),
             ha="left", va="top",
-            fontsize=5.3, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(L + 1, g_top - 1.5,
             "Seven approver chairs in the F1000 procurement room. Each rejects on a different vector. "
             "An agent that does not pre-answer all seven does not ship.",
             ha="left", va="top",
-            fontsize=4.7, fontname=F_SERIF_IT, color=INK_SOFT)
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
     counterparties = [
         ("01", "INFOSEC",
@@ -335,19 +336,19 @@ def render_master(pdf):
         ax.add_patch(mpatches.Circle((L + 2.0, y_mid), 0.95,
                                       fc=PAPER, ec=VERMILION, lw=0.5))
         ax.text(L + 2.0, y_mid, nm, ha="center", va="center",
-                fontsize=4.6, fontname=F_DMMONO, color=VERMILION)
+                fontsize=10, fontname=F_DMMONO, color=VERMILION)
         # Name (display caps)
         ax.text(L + 4.0, y_mid + 0.7, name, ha="left", va="center",
-                fontsize=7.0, fontname=F_DISPLAY, color=INK)
+                fontsize=10, fontname=F_DISPLAY, color=INK)
         # Who (italic serif)
         ax.text(L + 4.0, y_mid - 1.0, who, ha="left", va="center",
-                fontsize=4.5, fontname=F_SERIF_IT, color=GRAY)
+                fontsize=10, fontname=F_SERIF_IT, color=GRAY)
         # Question (serif body)
         ax.text(L + 22, y_mid + 0.15, q, ha="left", va="center",
-                fontsize=4.7, fontname=F_SERIF, color=INK_SOFT)
+                fontsize=10, fontname=F_SERIF, color=INK_SOFT)
         # Cycle window
         ax.text(R - 2, y_mid + 0.15, cycle, ha="right", va="center",
-                fontsize=4.5, fontname=F_DMMONO, color=VERDIGRIS)
+                fontsize=10, fontname=F_DMMONO, color=VERDIGRIS)
 
     # ---- (D) The Seven Updated Bets ------------------------------------
     bets_top = g_bot - 4
@@ -357,12 +358,12 @@ def render_master(pdf):
     ax.text(L + 1, bets_top,
             sp("THE SEVEN BETS  ·  SEQUENCED  ·  CONVICTION /5", 3),
             ha="left", va="top",
-            fontsize=5.3, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(L + 1, bets_top - 1.5,
             "Bet 1 first (claim Process Power) · Bet 2 second (collect equity at a power-holder) · Bet 3 third (compound advisory). "
             "Bets 4–5 fold as Bet 1 modules; Bet 6 is the distribution layer; Bet 7 the long-arc fallback.",
             ha="left", va="top",
-            fontsize=4.7, fontname=F_SERIF_IT, color=INK_SOFT)
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
     bets = [
         ("1", "PROCUREMENT OPERATING STANDARD", 5, VERMILION,
@@ -392,10 +393,10 @@ def render_master(pdf):
         ax.add_patch(mpatches.Circle((L + 2.0, y_mid + 0.4), 1.1,
                                       fc=color, ec=color, lw=0))
         ax.text(L + 2.0, y_mid + 0.4, num, ha="center", va="center",
-                fontsize=6.5, fontname=F_DMMONO, color=PAPER)
+                fontsize=10, fontname=F_DMMONO, color=PAPER)
         # Name (display caps)
         ax.text(L + 4.5, y_mid + 1.1, name, ha="left", va="center",
-                fontsize=6.6, fontname=F_DISPLAY, color=INK)
+                fontsize=10, fontname=F_DISPLAY, color=INK)
         # Stars: filled / hollow circles
         sx0 = L + 4.5
         for k in range(5):
@@ -409,10 +410,10 @@ def render_master(pdf):
                                              fc="none", ec=color, lw=0.4))
         ax.text(sx0 + 7.5, cy, f"{stars}/5",
                 ha="left", va="center",
-                fontsize=4.7, fontname=F_DMMONO, color=color)
+                fontsize=10, fontname=F_DMMONO, color=color)
         # Detail (italic serif)
         ax.text(L + 22, y_mid + 0.4, det, ha="left", va="center",
-                fontsize=4.5, fontname=F_SERIF_IT, color=INK_SOFT)
+                fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
     # ---- (E) NYC Operator Ranking ---------------------------------------
     ny_top = bets_bot - 4
@@ -421,11 +422,11 @@ def render_master(pdf):
     ax.text(L + 1, ny_top,
             sp("NYC VERTICAL-AGENT OPERATOR RANKING  ·  ALEX-FIT", 3),
             ha="left", va="top",
-            fontsize=5.3, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
     ax.text(L + 1, ny_top - 1.5,
             "Composite of equity asymmetry × power-rent × NYC anchor × Alex profile fit. F4 + F2 agree.",
             ha="left", va="top",
-            fontsize=4.7, fontname=F_SERIF_IT, color=INK_SOFT)
+            fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
     nyc = [
         ("01", "HEBBIA",  "0.20-0.40% · $250-350K · Mehta + MBB anchor · 2-quarter window",
@@ -446,16 +447,16 @@ def render_master(pdf):
         ax.add_patch(mpatches.Circle((L + 2.0, y_mid), 1.1,
                                       fc=color, ec=color, lw=0))
         ax.text(L + 2.0, y_mid, rank, ha="center", va="center",
-                fontsize=5.5, fontname=F_DMMONO, color=PAPER)
+                fontsize=10, fontname=F_DMMONO, color=PAPER)
         # Name caps
         ax.text(L + 4.5, y_mid + 0.9, name, ha="left", va="center",
-                fontsize=8.5, fontname=F_DISPLAY, color=color)
+                fontsize=10.2, fontname=F_DISPLAY, color=color)
         # Terms (mono)
         ax.text(L + 4.5, y_mid - 1.1, terms, ha="left", va="center",
-                fontsize=4.4, fontname=F_DMMONO, color=GRAY)
+                fontsize=10, fontname=F_DMMONO, color=GRAY)
         # Why (serif italic)
         ax.text(L + 35, y_mid + 0.0, why, ha="left", va="center",
-                fontsize=4.7, fontname=F_SERIF_IT, color=INK_SOFT)
+                fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
     # ---- (F) The Five Cruxes (bottom strip) ----------------------------
     cy_top = ny_bot - 4
@@ -464,7 +465,7 @@ def render_master(pdf):
     ax.text(L + 1, cy_top,
             sp("FIVE CRUXES  ·  ANSWER-EVENTS THAT RE-RANK THE MATRIX", 2),
             ha="left", va="top",
-            fontsize=5.0, fontname=F_MONO, color=VERMILION)
+            fontsize=10, fontname=F_MONO, color=VERMILION)
 
     cruxes = [
         ("C1", "ANTHROPIC ARR",
@@ -491,16 +492,16 @@ def render_master(pdf):
         ax.add_patch(mpatches.Circle((x0 + 1.4, cyy), 1.2,
                                       fc=VERMILION, ec=VERMILION, lw=0))
         ax.text(x0 + 1.4, cyy, k, ha="center", va="center",
-                fontsize=4.8, fontname=F_DMMONO, color=PAPER)
+                fontsize=10, fontname=F_DMMONO, color=PAPER)
         # Name caps
         ax.text(x0 + 3.3, cyy + 0.9, name, ha="left", va="center",
-                fontsize=5.4, fontname=F_DISPLAY, color=INK)
+                fontsize=10, fontname=F_DISPLAY, color=INK)
         # When (mono)
         ax.text(x0 + 3.3, cyy - 0.4, when, ha="left", va="center",
-                fontsize=4.0, fontname=F_DMMONO, color=VERDIGRIS)
+                fontsize=10, fontname=F_DMMONO, color=VERDIGRIS)
         # Why
         ax.text(x0 + 3.3, cyy - 1.6, why, ha="left", va="center",
-                fontsize=3.9, fontname=F_SERIF_IT, color=INK_SOFT)
+                fontsize=10, fontname=F_SERIF_IT, color=INK_SOFT)
 
     pdf.savefig(fig, dpi=DPI, facecolor=PAPER)
     plt.close(fig)
