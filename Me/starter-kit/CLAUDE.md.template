@@ -1,0 +1,69 @@
+<!--
+PROJECT CLAUDE.md TEMPLATE
+==========================
+
+How this file is structured:
+
+1. The IMPORT line below inherits the canonical 6 invariant blocks
+   (source-of-truth discipline, build-better-not-faster, event-triggered
+   habits, skill-bundling conventions, communication rules, behavioral rules).
+   Do NOT duplicate any of those rules here — they live in the canonical
+   fragment, edited once and inherited everywhere.
+
+2. The PROJECT-SPECIFIC OVERLAYS section is where this project diverges from
+   the canonical. Use the <identity_overlay>, <project_architecture>, and
+   <standing_context_overlay> blocks to encode what's unique. Leave the
+   blocks empty (or delete them) if there's nothing project-specific to add.
+
+3. To replace the placeholders: search for {{...}} and fill them in.
+-->
+
+@~/Documents/GitHub/alex-agents-skills/Me/canonical-claude-md.md
+
+<identity_overlay>
+<!--
+Optional. Adds to or amends the canonical <identity>. Use sparingly — most
+projects don't need this. Common reasons to add:
+  - This project assumes a different role for Claude (e.g., "for this repo,
+    operate as a security reviewer, not a general implementer").
+  - The user persona needs adjustment (e.g., a multi-stakeholder project).
+-->
+
+{{PROJECT_IDENTITY_OVERLAY_OR_DELETE_THIS_BLOCK}}
+</identity_overlay>
+
+<project_architecture>
+## {{PROJECT_NAME}}
+
+### Purpose
+{{ONE_OR_TWO_SENTENCES_ON_WHAT_THIS_PROJECT_DOES}}
+
+### Architecture philosophy
+{{WHY_THIS_PROJECT_IS_STRUCTURED_THE_WAY_IT_IS_INCLUDING_FAILURE_MODES_LEARNED_FROM_PREVIOUS_ITERATIONS}}
+
+### Where to start
+{{POINTER_TO_THE_PRIMARY_README_OR_WORKFLOW_DOC_THAT_A_FRESH_SESSION_SHOULD_READ_FIRST}}
+
+### Stack
+{{LIST_TOOLS_THAT_ARE_SPECIFIC_TO_THIS_PROJECT_BEYOND_THE_UNIVERSAL_STACK_IN_CANONICAL}}
+
+### Data model (if applicable)
+{{NOTION_DB_IDS_SUPABASE_TABLES_API_CONTRACTS_OR_DELETE_THIS_BLOCK}}
+
+### Known gotchas
+{{LEARNED_THE_HARD_WAY_RULES_THAT_DO_NOT_BELONG_IN_THE_CANONICAL_FRAGMENT_BECAUSE_THEY_ARE_PROJECT_SPECIFIC}}
+
+### Phased roadmap (if applicable)
+{{PHASES_WITH_STATUS_OR_DELETE_THIS_BLOCK}}
+</project_architecture>
+
+<standing_context_overlay>
+<!--
+Optional. Adds to the canonical <standing_context>. Use for context that's
+true ONLY when working in this project (e.g., "this codebase is being
+audited by an external firm in Q3"; "all changes to this repo go through
+the mobile release train").
+-->
+
+{{PROJECT_SPECIFIC_STANDING_CONTEXT_OR_DELETE_THIS_BLOCK}}
+</standing_context_overlay>
