@@ -320,9 +320,10 @@ trade-off table.
 - `code-reuse-in-distributed-systems` — Replicated Code / Shared Library / Shared Service / Sidecar
 - `service-granularity-forces` — disintegrators vs integrators
 
-**Reference:** `Software Development/references/software-architecture-the-hard-parts/`
-contains the full distillation, the frameworks catalog with stable anchors, and
-the Sysops Squad worked example (every ADR the case-study team ratifies).
+**Reference:** *Software Architecture: The Hard Parts* (Ford, Richards, Sadalage,
+Dehghani — O'Reilly, 2021) covers the full method, the frameworks catalog
+(architectural quantum, coupling vocabulary, modularity drivers, decomposition
+patterns, etc.), and the Sysops Squad worked example that ratifies every ADR.
 
 **The discipline that matters:** every architecture decision Alex makes should
 produce an ADR with a trade-off table. Without it, future-Alex (or future-CTO) can't

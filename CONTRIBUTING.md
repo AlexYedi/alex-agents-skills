@@ -100,4 +100,20 @@ When porting a skill that lives both here and in a project repo, treat this repo
 
 ## Migration backlog
 
-~205 skills still live in domain folders awaiting promotion. See the issue tracker (YED-28 and successors) for the planned waves.
+Migration is happening in waves under YED-31.
+
+- **MVP (YED-28)** — 15 skills migrated on 2026-05-15.
+- **Wave 2a — Product (YED-31)** — 23 skills migrated on 2026-05-19: 18 standalone Product skills plus 5 sub-skills promoted out of the `product-launch-orchestration` and `product-led-growth` umbrellas (`war-room-ops`, `usage-health-scorecard`, `in-app-messaging-kit`, `onboarding-blueprint`, `pql-framework`). The umbrellas' `agents/` and `commands/` subdirs are out of scope for YED-31 and remain pending under YED-34.
+- **Wave 2b — Software Development (YED-31)** — 44 skills migrated on 2026-05-19: 40 standalone SD skills plus 4 sub-skills promoted out of the `technical-writing` umbrella (`doc-requirements-matrix`, `api-style-guide`, `quality-review-checklist`, `versioning-dashboard`). `Software Development/classification/` and `summarization/` (Anthropic-cookbook style external material) and `references/` (shared book/source distillations) remain in place. Several SKILL.md bodies cite `references/software-architecture-the-hard-parts/...` paths that were already not resolving relative to the SKILL.md location; consolidating those is follow-up work.
+- **Wave 2c — GTM (YED-31)** — 120 skills migrated on 2026-05-19, covering CS_Post_Sale, Growth, Marketing, RevOps, Sales, and partnership-bd. Four hybrid folders that owned a SKILL.md and an inner `agents/` (or sibling sub-skills) were extracted surgically — their SKILL.md, `references/`, and content siblings moved to `skills/<name>/`; the `agents/` subdirs stayed in `GTM/` for YED-34. Folder names were renamed to match each SKILL.md's YAML `name` (notably `Sales/Sales-Methodology-Skills/Challenger Sale` → `skills/the-challenger-sale`). `GTM/Marketing/marketing-autoresearch/` (Python tool, no SKILL.md) is unchanged.
+- **Wave 2d — Data Engineering (YED-31)** — 22 skills migrated on 2026-05-19. All whole-folder moves; several `architecture/` skills were renamed to match their YAML names (e.g., `lifecycle-and-principles` → `data-engineering-lifecycle-and-principles`). `Data Engineering/playbooks/`, `references/`, `retrieval/{text-to-sql,tutorials}/`, and the pipelines' `agents/`/`commands/` subdirs remain — playbooks and cookbook content aren't skills; the agents/commands are YED-34.
+- **Wave 2e — Long tail (YED-31)** — 30 skills migrated on 2026-05-19 across Evals/Harness/Observability (8), Organizational Leadership (8), and Research/Financial Modeling (14). All whole-folder moves; folder names already matched YAML names everywhere.
+
+**Total plugin skills after wave 2e:** 256.
+
+**Still under domain folders after YED-31:**
+- `Product/references/` (Decision_Intelligence, Jobs_to_be_Done, building-ai-powered-products), `Software Development/references/` (book distillations), `Data Engineering/references/` — shared source material; SKILL.md bodies cite these paths, but the citations don't resolve relative to the SKILL.md's location now and didn't before the migration either. Consolidation is follow-up.
+- All `agents/` and `commands/` subdirs across umbrellas — YED-34.
+- `Software Development/classification/`, `Software Development/summarization/`, `Data Engineering/retrieval/{text-to-sql,tutorials}/` — Anthropic-cookbook style notebooks/material, not skills.
+- `Data Engineering/playbooks/` — markdown walkthroughs.
+- `GTM/Marketing/marketing-autoresearch/` — Python research tool with `skills.md` (lowercase, not a SKILL.md).
