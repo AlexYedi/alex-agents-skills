@@ -1,14 +1,12 @@
 # Chapter 3 — Big Bets, Risks, Cruxes
 
-Chapter 1 mapped the field. Chapter 2 ran five lenses across it. This chapter is the decision layer — what to do with what the lenses found.
+Chapter 1 mapped the field. Chapter 2 ran five lenses across it. This chapter is the decision layer.
 
-The artifacts that follow are three: seven Big Bets that name what to do, five Structural Risks that name what to watch, and five Cruxes that name what to wait for. Each is named precisely enough to be falsifiable.
+Three artifacts follow: seven Big Bets that name what to do, five Structural Risks that name what to watch, and five Cruxes that name what to wait for. Each is named precisely enough to be falsifiable.
 
-Two things this chapter is not. It is not a forecast — the bets are choices Alex is making with limited information, not predictions about the field. It is not a hedge list — the risks are not warnings he can read and feel better about. They are binding constraints that, if they fire, materially reprice every bet above them. The cruxes are honest admissions: questions Alex has not answered, whose resolution will re-rank the playbook.
+The bets are choices Alex is making with limited information, not predictions about the field. The risks are not warnings he can read and feel better about — they are binding constraints that, if they fire, materially reprice every bet above them. The cruxes are honest admissions: questions Alex has not answered, whose resolution will re-rank the playbook.
 
-The five frameworks converged unambiguously on three things. First, enterprise AI procurement is the single highest-leverage position for Alex's exact profile. Second, vertical agent companies are the most durable upper-stack power AND the most actionable hiring market. Third, MCP is a 2026 punctuated equilibrium gated by one crux. Those three signals drive the top of the ranking. The remaining bets compound around them.
-
-The 6/12/18-month action map in §3.4 sequences the seven bets into a playbook with explicit decision points. Plate 5 (Cross-Stratum Flows) visualizes the coupling graph: which bets compound, which die together when a risk fires, which cruxes reprice multiple bets at once.
+The five frameworks converged unambiguously on three signals. Enterprise AI procurement is the single highest-leverage position for Alex's exact profile. Vertical agent companies are the most durable upper-stack power AND the most actionable hiring market. MCP is a 2026 punctuated equilibrium gated by one crux. Those drive the top of the ranking; the remaining bets compound around them. The 6/12/18-month action map in §3.4 sequences the seven bets into a playbook with explicit decision points. Plate 5 visualizes the coupling graph.
 
 ## §3.1 The 7 Big Bets
 
@@ -176,33 +174,29 @@ The risks below are re-checked quarterly. None are mitigatable from Alex's level
 
 **What to watch.** SK Hynix and Micron HBM4 ramp telemetry; TSMC capex commentary and CoWoS-L throughput disclosures (SemiAnalysis is the canonical secondary source).
 
-**Probability × Severity × Alex Exposure.** 2/5 × 4/5 × 2/5. Real but unlikely; severe if it fires; Alex is only indirectly exposed (Bet #4 benefits from tight GPU supply because optimization gains widen).
-
-**Mitigation posture.** Unmitigatable at Alex's level. The right posture is to recognize when the constraint binds and re-rank Bet #4 upward.
+**Probability × Severity × Alex Exposure.** 2/5 × 4/5 × 2/5. Unmitigatable at Alex's level. The right posture is to recognize when the constraint binds and re-rank Bet #4 upward (tight GPU supply widens optimization gains).
 
 ### Risk 2 — Hyperscaler FCF reckoning
 
-**What triggers it.** Amazon, Alphabet, Meta, or Microsoft reports a write-down on AI assets in Q3–Q4 2026 simultaneously with deceleration in AI ARR growth at any frontier lab.
+**What triggers it.** Amazon, Alphabet, Meta, or Microsoft reports a write-down on AI assets in Q3–Q4 2026 simultaneously with deceleration in AI ARR growth at a frontier lab.
 
-**What it threatens.** The entire AI infrastructure trade reprices. Sales cycles harden 2–4 quarters. Every Stratum II neocloud refinancing risk goes up. Vertical agent valuations (Bet #2 targets) compress 30–50%.
+**What it threatens.** The entire AI infrastructure trade reprices. Sales cycles harden 2–4 quarters. Vertical agent valuations (Bet #2 targets) compress 30–50%. Bets #2, #3, #4, #5 all reprice down together.
 
 **What to watch.** Amazon FCF (projected -$17B 2026 per Morgan Stanley, -$28B per BofA); Alphabet FCF (Pivotal projects ~$8B, down from $73B in 2025); Microsoft and Meta capex commentary.
 
-**Probability × Severity × Alex Exposure.** 3/5 × 5/5 × 4/5. The most consequential risk for Alex's portfolio — Bets #2, #3, #4, #5 all reprice down if it fires.
+**Probability × Severity × Alex Exposure.** 3/5 × 5/5 × 4/5. The most consequential risk for Alex's portfolio.
 
-**Mitigation posture.** Bet #1 is partially counter-cyclical (compliance demand rises when capital tightens). Maintain Bet #1 momentum independent of macro.
+**Mitigation posture.** Bet #1 is partially counter-cyclical — compliance demand rises when capital tightens. Maintain Bet #1 momentum independent of macro.
 
 ### Risk 3 — OpenAI Preparedness adjustment-clause activation
 
-**What triggers it.** OpenAI publicly invokes its Preparedness Framework v2 adjustment clause to relax safeguards in response to a rival lab deploying lower-threshold models without comparable mitigations.
+**What triggers it.** OpenAI publicly invokes its Preparedness Framework v2 adjustment clause to relax safeguards in response to a rival lab deploying lower-threshold models.
 
-**What it threatens.** Voluntary safety regimes destabilize. The Anthropic safety-as-moat positioning erodes. Bet #1 (procurement) becomes harder to sell on safety differentiation if the market reads safety as theater.
+**What it threatens.** Voluntary safety regimes destabilize. Anthropic safety-as-moat positioning erodes. Bet #1 becomes harder to sell on safety differentiation if the market reads safety as theater.
 
 **What to watch.** Any public OpenAI Preparedness adjustment notice; Anthropic counter-statement; Frontier Model Forum response.
 
-**Probability × Severity × Alex Exposure.** 3/5 × 3/5 × 2/5. Likely to be invoked at some point; severity is moderate because the procurement market values process compliance, not just safety positioning.
-
-**Mitigation posture.** Sell Bet #1 on regulatory and procurement scaffolding (EU AI Act, SB 53, contractual compliance) rather than voluntary safety frameworks. Alex's playbook should be lab-agnostic.
+**Probability × Severity × Alex Exposure.** 3/5 × 3/5 × 2/5. Mitigated by selling Bet #1 on regulatory and procurement scaffolding (EU AI Act, SB 53, contractual compliance) rather than voluntary safety frameworks. The Playbook should be lab-agnostic.
 
 ### Risk 4 — Federal preemption volatility on AI rules
 
@@ -210,23 +204,19 @@ The risks below are re-checked quarterly. None are mitigatable from Alex's level
 
 **What it threatens.** The compliance-practice TAM compresses if state regimes are nullified. Bet #1 narrows from a $10B+ category to a niche advisory practice.
 
-**What to watch.** Trump December 2025 EO court rulings (likely 2026–2027); CA SB 53 lawsuits filed against the Attorney General; federal preemption case law evolution.
+**What to watch.** Trump December 2025 EO court rulings (likely 2026–2027); CA SB 53 lawsuits; federal preemption case law evolution.
 
-**Probability × Severity × Alex Exposure.** 3/5 × 3/5 × 4/5. Direct exposure to Bet #1; the Playbook still sells but to a narrower market.
-
-**Mitigation posture.** Bias Bet #1 toward EU AI Act compliance (Brussels effect, more stable) and contractual compliance (always required regardless of regime). Avoid CA-specific programs as the centerpiece.
+**Probability × Severity × Alex Exposure.** 3/5 × 3/5 × 4/5. Mitigate by biasing Bet #1 toward EU AI Act compliance (Brussels effect, more stable) and contractual compliance (always required regardless of regime). Avoid CA-specific programs as centerpiece.
 
 ### Risk 5 — Foundation labs walking up-stack into vertical apps
 
-**What triggers it.** ChatGPT Business connectors, Claude for Work, or Gemini Workspace agents ship native verticalized features (sales agent, customer-success agent, legal agent) bundled with the underlying model.
+**What triggers it.** ChatGPT Business connectors, Claude for Work, or Gemini Workspace agents ship native verticalized features bundled with the underlying model.
 
-**What it threatens.** Vertical agent companies (Sierra, Decagon, Glean, Harvey — Bet #2 targets) get compressed at the horizontal end. Bet #5 (RAG architecture) gets absorbed if foundation labs ship native long-context + memory.
+**What it threatens.** Vertical agent companies (Bet #2 targets) get compressed at the horizontal end. Bet #5 absorbed if foundation labs ship native long-context plus memory.
 
-**What to watch.** Connectors / Skills / Apps store on each platform; ChatGPT Business connector launches; Claude for Work feature releases; Gemini Workspace agent expansion.
+**What to watch.** Connectors / Skills / Apps stores on each platform; ChatGPT Business connector launches; Claude for Work releases; Gemini Workspace agent expansion.
 
-**Probability × Severity × Alex Exposure.** 4/5 × 3/5 × 4/5. Already happening at the margin; the question is pace, not direction.
-
-**Mitigation posture.** Bet #2 targeting bias toward verticals with regulatory or workflow moats (legal, healthcare, financial services) where horizontal foundations cannot easily land. Avoid horizontal CX targets where the foundation labs have shortest reach.
+**Probability × Severity × Alex Exposure.** 4/5 × 3/5 × 4/5. Already happening at the margin; the question is pace, not direction. Mitigation: bias Bet #2 toward verticals with regulatory or workflow moats (legal, healthcare, financial services) where horizontal foundations cannot easily land.
 
 ## §3.3 The 5 Cruxes
 
@@ -236,19 +226,19 @@ Cruxes are questions Alex has not answered. Each has a measurable answer-event; 
 
 **The question.** Is Anthropic's April 2026 ARR closer to the $30B figure leaked to the press or the $24B figure the OpenAI CRO disputed internally?
 
-**Why it matters.** Anthropic's ARR is the credible ceiling for enterprise-AI valuations across the whole layer. A $30B ARR justifies vertical-agent multiples (Sierra at $10B / $100M+, Decagon at $4.5B / $80M+) and validates Bet #2 timing. A $24B ARR compresses comparable multiples 20–30%.
+**Why it matters.** Anthropic's ARR is the credible ceiling for enterprise-AI valuations across the whole layer. $30B justifies vertical-agent multiples (Sierra at $10B / $100M+, Decagon at $4.5B / $80M+) and validates Bet #2 timing. $24B compresses comparable multiples 20–30%.
 
 **Decidability horizon.** Q2–Q3 2026 (audited reports or higher-quality leaks).
 
-**Answer-event to watch.** Anthropic financial disclosure; The Information leak (Stephanie Palazzolo); Stripe data leak.
+**Answer-event to watch.** Anthropic financial disclosure; The Information (Stephanie Palazzolo); Stripe data leak.
 
-**Re-rank consequence.** $30B confirmed → Bet #2 timing accelerates; Bet #1 advisory TAM widens; Bet #4 buyer pool grows. $24B confirmed → Bet #2 still valid but offer-band compresses; vertical-agent equity grants reprice.
+**Re-rank consequence.** $30B confirmed → Bet #2 timing accelerates; Bet #1 advisory TAM widens. $24B confirmed → Bet #2 still valid but offer-band compresses.
 
 ### Crux 2 — Inference compute — 10× growth or flat?
 
 **The question.** Does inference compute deployment grow 10× year-over-year through 2026, as NVIDIA and Stargate principals imply, or flatten as reasoning-model per-query economics tighten?
 
-**Why it matters.** NVIDIA's $4T market cap, Stargate's $500B commitment, and every neocloud's unit economics depend on the answer. Flat means GPU pricing softens — Bet #4's window widens but Bet #2's targets reprice down with their hyperscaler customers. 10× means Stratum II neoclouds go hot.
+**Why it matters.** NVIDIA's $4T market cap, Stargate's $500B commitment, and every neocloud's unit economics depend on the answer.
 
 **Decidability horizon.** Q4 2026 hyperscaler earnings + Stargate deploy data.
 
@@ -260,37 +250,37 @@ Cruxes are questions Alex has not answered. Each has a measurable answer-event; 
 
 **The question.** Does MCP remain a single Linux-Foundation-governed standard through 2026, or does a major vendor (OpenAI, Google) unilaterally extend it with proprietary tool-use schemas that fragment the ecosystem?
 
-**Why it matters.** Gates Bet #3 entirely. Every "build at MCP layer" thesis depends on commons. Fork = Bet #3 dies. Commons = Bet #3 accelerates.
+**Why it matters.** Gates Bet #3 entirely. Fork = Bet #3 dies. Commons = Bet #3 accelerates.
 
 **Decidability horizon.** H2 2026 — decide by Q3 2026.
 
 **Answer-event to watch.** Major-vendor proprietary tool-use schema announcements; Linux Foundation governance turbulence; Anthropic / OpenAI / Google MCP statements at major conferences.
 
-**Re-rank consequence.** Commons → Bet #3 activates and the registry-growth indicator becomes Alex's primary signal. Fork → kill Bet #3, redirect time into Bet #4 acceleration.
+**Re-rank consequence.** Commons → Bet #3 activates; registry-growth becomes the primary indicator. Fork → kill Bet #3, redirect time to Bet #4 acceleration.
 
 ### Crux 4 — EU AI Act — teeth or paper tiger?
 
 **The question.** Do the first EU AI Act enforcement actions in late 2026 establish meaningful financial penalties on GPAI providers, or does enforcement remain advisory-grade for the first 12–18 months?
 
-**Why it matters.** Determines whether Bet #1's advisory becomes a $10B+ compliance category or stays a niche but defensible practice. Brussels-effect propagation to non-EU jurisdictions hinges on enforcement credibility.
+**Why it matters.** Determines whether Bet #1's advisory becomes a $10B+ compliance category or stays a niche but defensible practice. Brussels-effect propagation hinges on enforcement credibility.
 
 **Decidability horizon.** Late 2026 (first enforcement actions).
 
-**Answer-event to watch.** European Commission guidance documents; first GPAI fines; AI Office enforcement actions.
+**Answer-event to watch.** European Commission guidance; first GPAI fines; AI Office enforcement actions.
 
-**Re-rank consequence.** Teeth → Bet #1 expands category-wide; Playbook becomes the canonical reference. Paper → Bet #1 stays niche but defensible (it still works at F500 scale because internal compliance demand exists independent of EU enforcement).
+**Re-rank consequence.** Teeth → Bet #1 expands category-wide; Playbook becomes canonical reference. Paper → Bet #1 stays niche but defensible (F500 internal compliance demand exists independent of EU enforcement).
 
 ### Crux 5 — Long-term memory — standalone or absorbed?
 
-**The question.** Does long-term memory remain a discrete sub-stratum (Mem0, Letta, Zep, Cognee as standalone vendors), or do Anthropic / OpenAI / Google ship native memory features that absorb the category?
+**The question.** Does long-term memory remain a discrete sub-stratum (Mem0, Letta, Zep, Cognee), or do Anthropic / OpenAI / Google ship native memory features that absorb the category?
 
-**Why it matters.** Absorbed → Bet #5 (RAG architecture practice) gains share because vendor selection becomes simpler and the architecture conversation shifts toward integration with native memory. Standalone → memory becomes a $1B+ category worth its own service line inside Bet #5.
+**Why it matters.** Absorbed → Bet #5 (RAG architecture) gains share; vendor selection simplifies. Standalone → memory becomes a $1B+ category worth its own service line inside Bet #5.
 
 **Decidability horizon.** 12–18 months (through end-2027).
 
 **Answer-event to watch.** Anthropic / OpenAI / Google native memory feature launches; Mem0 / Letta / Zep funding rounds (or absence thereof).
 
-**Re-rank consequence.** Absorbed → Bet #5 RAG practice consolidates and gains share. Standalone → include memory architecture as an explicit service line inside Bet #5.
+**Re-rank consequence.** Absorbed → Bet #5 RAG practice consolidates. Standalone → include memory architecture as explicit service line inside Bet #5.
 
 ## §3.4 The 6/12/18-Month Action Map
 
@@ -298,27 +288,27 @@ Three operating principles structure the sequencing. First, Bets #1 and #2 run i
 
 ### Months 0–6 (Q2–Q3 2026) — Plant flags, run cheap experiments
 
-- **Bet #1 — Procurement Playbook.** Week 1–2: outline (8 sections, 200–300 words each). Weeks 2–6: 30 expert interviews (10 buyer-side, 10 seller-side, 10 advisor-side). Weeks 7–10: draft and refine. Week 12: publish, free, email-gated. Weeks 13–24: inbound triage. Week 24 decision: scale to productized SaaS or stay as advisory practice.
-- **Bet #2 — NYC Vertical Agent Job Search.** Week 1: target list (Sierra, Decagon, Glean, Harvey, Hippocratic, Augment, Lovable, Writer, Hebbia, Cresta). Weeks 2–4: second-degree intros via Stripe/Ramp/Datadog/Snowflake alumni. Weeks 4–24: 10 hours/week outreach and interviews. Decision trigger: any offer in $300–400K base + 0.1–0.5% equity band at a named company → take it.
-- **Bet #4 — FinOps Pilots.** Months 2–4: identify 5 mid-market companies running >$50K/month on Claude/GPT through the NYC network. Free first audit in exchange for case study. Months 4–6: convert at least 2 to paid retainers ($25–50K per audit). Month 6 decision: 2+ paid retainers and 5+ inbound → productize; else fold into Bet #1.
-- **Bet #6 — Newsletter.** Week 2: first issue published. Week 4: decide cadence. Week 12: 1K-subscriber checkpoint. Week 24: 5K-subscriber kill-or-commit checkpoint.
-- **Networking ramp.** Months 1–6: RAAIS NYC, AI Tinkerers NYC, Cornell Tech AI demos, Betaworks AI Camps, FirstMark MAD events. Meet Bret Taylor (Sierra), Munjal Shah (Hippocratic), Aman Sanger (Cursor — when in NYC), Eric Glyman (Ramp), Nathan Benaich (Air Street), Nabeel Hyatt (Spark), Lee Edwards (Root), Matt Turck (FirstMark). Goal: 2 high-signal conversations/week, logged.
+- **Bet #1 — Procurement Playbook.** Week 1–2: outline (8 sections, 200–300 words each). Weeks 2–6: 30 expert interviews (10 buyer-side, 10 seller-side, 10 advisor-side). Weeks 7–10: draft and refine. Week 12: publish, free, email-gated. Week 24 decision: scale to productized SaaS or stay as advisory practice.
+- **Bet #2 — NYC Vertical Agent Job Search.** Week 1: target list (Sierra, Decagon, Glean, Harvey, Hippocratic, Augment, Lovable, Writer, Hebbia, Cresta). Weeks 2–4: second-degree intros via Stripe/Ramp/Datadog/Snowflake alumni. Weeks 4–24: 10 hours/week outreach and interviews. Decision trigger: any offer in $300–400K base + 0.1–0.5% equity at a named company → take it.
+- **Bet #4 — FinOps Pilots.** Months 2–4: identify 5 mid-market companies running >$50K/month on Claude/GPT; free first audit in exchange for case study. Months 4–6: convert at least 2 to paid retainers ($25–50K each). Month 6 decision: 2+ paid retainers and 5+ inbound → productize; else fold into Bet #1.
+- **Bet #6 — Newsletter.** Week 2: first issue. Week 4: decide cadence. Week 12: 1K-subscriber checkpoint. Week 24: 5K-subscriber kill-or-commit checkpoint.
+- **Networking ramp.** RAAIS NYC, AI Tinkerers NYC, Cornell Tech AI demos, Betaworks AI Camps, FirstMark MAD events. Meet Bret Taylor (Sierra), Munjal Shah (Hippocratic), Aman Sanger (Cursor), Eric Glyman (Ramp), Nathan Benaich (Air Street), Nabeel Hyatt (Spark), Lee Edwards (Root), Matt Turck (FirstMark). Goal: 2 high-signal conversations/week, logged.
 
 ### Months 6–12 (Q4 2026 – Q1 2027) — Commit
 
 Three paths fork at Month 6 depending on which bets landed.
 
-- **Path A — Bet #2 lands (vertical agent role).** Take the role. Default targets: Sierra / Decagon / Glean / Harvey / Hippocratic at Director / Head of GTM Strategy / Field CTO level. Continue Bet #1 Playbook and Bet #6 newsletter on personal time — the role makes the platform; the platform makes the role. Sunset Bets #4 and #5 unless they fit inside the role's scope. Re-rank quarterly.
-- **Path B — Bet #2 does not land, Bet #1 has traction.** Productize procurement-readiness SaaS. Pricing $30–80K/year. Sell to AI-native vendors in $5M–$50M ARR range. Continue advisory ($100–500K per F500 engagement) as bridge revenue. Hire one engineer (Codex / Devin / Factory-augmented, effective output of two) to build the SaaS. Continue newsletter as positioning flywheel.
-- **Path C — Neither lands by Month 12.** Activate Bet #7 (VC Operating Partner / Platform path). Outreach to 3 NYC funds where the newsletter has produced inbound. Reduce build/advisory burn; preserve runway. Reassess all 7 bets against the Cruxes — at least 2 should have resolved by Month 12 and the playbook should be re-scoped.
-- **Bet #3 (MCP) gating.** Month 6: check Crux 3. If commons holds and registry > 8K servers, begin building the SaaS-system MCP server constellation. Month 9: ship 3 production-quality MCP servers (Salesforce, HubSpot, Outreach OR Gong) to marketplaces. Month 12: decide whether to spin into a separate productized practice or fold under the active path.
+- **Path A — Bet #2 lands.** Take the role at Sierra / Decagon / Glean / Harvey / Hippocratic at Director / Head of GTM Strategy / Field CTO level. Continue Bet #1 Playbook and Bet #6 newsletter on personal time — the role makes the platform; the platform makes the role. Sunset Bets #4 and #5 unless they fit inside the role's scope.
+- **Path B — Bet #2 does not land, Bet #1 has traction.** Productize procurement-readiness SaaS at $30–80K/year, sold to AI-native vendors in $5M–$50M ARR range. Continue advisory ($100–500K per F500 engagement) as bridge revenue. Hire one engineer (Codex/Devin/Factory-augmented) to build the SaaS. Continue newsletter.
+- **Path C — Neither lands by Month 12.** Activate Bet #7 (VC Operating Partner). Outreach to 3 NYC funds where the newsletter has produced inbound. Reduce burn; preserve runway. Reassess all 7 bets against the Cruxes — at least 2 should have resolved by Month 12.
+- **Bet #3 (MCP) gating.** Month 6: check Crux 3. If commons holds and registry > 8K servers, build the SaaS-system MCP server constellation. Month 9: ship 3 production-quality MCP servers (Salesforce, HubSpot, Outreach or Gong). Month 12: spin into a separate practice or fold under the active path.
 
 ### Months 12–18 (Q2 – Q3 2027) — Compound
 
 - **Compound the platform.** Public voice (Playbook + newsletter + LinkedIn essays + 1–2 podcast appearances/quarter) reaches the threshold where inbound exceeds outbound.
-- **Memetic IP.** At least one canonical phrase or framework attributable to Alex (candidates: "the 7-gap audit" for AI sales motions; "the AI procurement decagon" for the 6-counterparty buying motion).
-- **The longer-arc decision at Month 18.** Three options. Path A continued: full-time GTM exec at a vertical agent company, compounding equity in a real platform. Path B continued: independent advisory practice + SaaS, owner-operator, higher option value at lower base. Path D (new at Month 18): C-level role at an AI-native company (CRO, CCO, Head of Customer / Head of Compliance Sales) — the Playbook + role experience + network compound to make this credible.
-- **Optional cross-cut — Sovereign AI niche.** If Meta-D opportunities (Stargate UAE, Humain KSA) show meaningful US-anchored GTM motion through 2026–27, position one quarterly trip + one essay per quarter to the Gulf market. Niche but high-margin.
+- **Memetic IP.** At least one canonical phrase attributable to Alex (candidates: "the 7-gap audit" for AI sales motions; "the AI procurement decagon" for the 6-counterparty buying motion).
+- **The longer-arc decision at Month 18.** Path A continued: full-time GTM exec at a vertical agent company, compounding equity in a real platform. Path B continued: independent advisory practice + SaaS, owner-operator. Path D (new at Month 18): C-level role at an AI-native company (CRO, CCO, Head of Customer / Head of Compliance Sales) — the Playbook + role experience + network compound to make this credible.
+- **Optional — Sovereign AI niche.** If Meta-D opportunities (Stargate UAE, Humain KSA) show meaningful US-anchored GTM motion through 2026–27, position one quarterly Gulf trip + one essay per quarter. Niche but high-margin.
 
 ## §3.5 Bet coupling and risk propagation
 
