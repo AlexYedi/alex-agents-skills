@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="567.19915pt" height="743.04pt" viewBox="0 0 567.19915 743.04" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-20T16:23:22.621559</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 743.04 
+L 567.19915 743.04 
+L 567.19915 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 392.2704 671.072 
+L 426.80556 671.072 
+L 426.80556 82.762667 
+L 392.2704 82.762667 
+z
+" clip-path="url(#p9bbf87e019)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 430.6428 671.072 
+L 465.17796 671.072 
+L 465.17796 82.762667 
+L 430.6428 82.762667 
+z
+" clip-path="url(#p9bbf87e019)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 469.0152 671.072 
+L 503.55036 671.072 
+L 503.55036 82.762667 
+L 469.0152 82.762667 
+z
+" clip-path="url(#p9bbf87e019)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 507.3876 671.072 
+L 541.92276 671.072 
+L 541.92276 82.762667 
+L 507.3876 82.762667 
+z
+" clip-path="url(#p9bbf87e019)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 7.2 140.514133 
+L 384.192 140.514133 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 7.2 198.2656 
+L 384.192 198.2656 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 7.2 256.017067 
+L 384.192 256.017067 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 7.2 313.768533 
+L 384.192 313.768533 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 7.2 371.52 
+L 384.192 371.52 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 7.2 429.271467 
+L 384.192 429.271467 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_7">
+    <path d="M 7.2 487.022933 
+L 384.192 487.022933 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_8">
+    <path d="M 7.2 544.7744 
+L 384.192 544.7744 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_9">
+    <path d="M 7.2 602.525867 
+L 384.192 602.525867 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_10">
+    <path d="M 7.2 660.277333 
+L 384.192 660.277333 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_11">
+    <path d="M 7.2 82.762667 
+L 384.192 82.762667 
+" clip-path="url(#p9bbf87e019)" style="fill: none; stroke: #000000; stroke-width: 0.7; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="35.5495" transform="rotate(-0 7.2 35.5495)">Plate 1 — The Agent Sub-Strata Column</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="49.881104" transform="rotate(-0 7.2 49.881104)">Volume III  ·  10 sub-strata + 4 meta  ·  zoomed from V1 Stratum XIII.</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d4ed8" x="7.2" y="73.789182" transform="rotate(-0 7.2 73.789182)">AGENT LAYER  (V1 Stratum XIII)</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="111.975046" transform="rotate(-0 12.5856 111.975046)">I</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="104.958513" transform="rotate(-0 61.056 104.958513)">FOUNDATION MODELS</text>
+   </g>
+   <g id="text_6">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="125.582065" transform="rotate(-0 61.056 125.582065)">Per-step reliability ceiling; OSWorld 50-55%</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="111.147233" transform="rotate(-0 378.8064 111.147233)">Custom-Built</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="169.726513" transform="rotate(-0 12.5856 169.726513)">II</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="162.709979" transform="rotate(-0 61.056 162.709979)">AGENT RUNTIMES / SDKs</text>
+   </g>
+   <g id="text_10">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="183.333531" transform="rotate(-0 61.056 183.333531)">Thin margin; switching cost &lt;1 quarter</text>
+   </g>
+   <g id="text_11">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="168.8987" transform="rotate(-0 378.8064 168.8987)">Product</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="227.477979" transform="rotate(-0 12.5856 227.477979)">III</text>
+   </g>
+   <g id="text_13">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="220.461446" transform="rotate(-0 61.056 220.461446)">TOOL USE / MCP</text>
+   </g>
+   <g id="text_14">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="241.084998" transform="rotate(-0 61.056 241.084998)">Spec held; experience forking (4 vectors)</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="226.650167" transform="rotate(-0 378.8064 226.650167)">Product</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="285.229446" transform="rotate(-0 12.5856 285.229446)">IV</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="278.212912" transform="rotate(-0 61.056 278.212912)">MEMORY &amp; STATE</text>
+   </g>
+   <g id="text_18">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="298.836465" transform="rotate(-0 61.056 298.836465)">Lab absorption; deletion auditability</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="284.401633" transform="rotate(-0 378.8064 284.401633)">Genesis/Custom</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="342.980912" transform="rotate(-0 12.5856 342.980912)">V</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="335.964379" transform="rotate(-0 61.056 335.964379)">PLANNING &amp; TEST-TIME COMPUTE</text>
+   </g>
+   <g id="text_22">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="356.587931" transform="rotate(-0 61.056 356.587931)">Thinking econ; 5-12x cost for 3-10pt gain</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="342.1531" transform="rotate(-0 378.8064 342.1531)">Product</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="400.732379" transform="rotate(-0 12.5856 400.732379)">VI</text>
+   </g>
+   <g id="text_25">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="393.715846" transform="rotate(-0 61.056 393.715846)">ACTION SURFACES</text>
+   </g>
+   <g id="text_26">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="414.339398" transform="rotate(-0 61.056 414.339398)">Computer-use OSWorld coin flip</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="399.904567" transform="rotate(-0 378.8064 399.904567)">Genesis/Custom</text>
+   </g>
+   <g id="text_28">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="458.483846" transform="rotate(-0 12.5856 458.483846)">VII</text>
+   </g>
+   <g id="text_29">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="451.467312" transform="rotate(-0 61.056 451.467312)">EVAL &amp; OBSERVABILITY</text>
+   </g>
+   <g id="text_30">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="472.090865" transform="rotate(-0 61.056 472.090865)">No turnkey signed eval reports</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="457.656033" transform="rotate(-0 378.8064 457.656033)">Custom-Built</text>
+   </g>
+   <g id="text_32">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="516.235312" transform="rotate(-0 12.5856 516.235312)">VIII</text>
+   </g>
+   <g id="text_33">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="509.218779" transform="rotate(-0 61.056 509.218779)">RUNTIME SAFETY / GUARDRAILS</text>
+   </g>
+   <g id="text_34">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="529.842331" transform="rotate(-0 61.056 529.842331)">Indirect prompt injection unsolved</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="515.4075" transform="rotate(-0 378.8064 515.4075)">Custom-Built</text>
+   </g>
+   <g id="text_36">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="573.986779" transform="rotate(-0 12.5856 573.986779)">IX</text>
+   </g>
+   <g id="text_37">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="566.970246" transform="rotate(-0 61.056 566.970246)">VERTICAL AGENT PRODUCTS</text>
+   </g>
+   <g id="text_38">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="587.593798" transform="rotate(-0 61.056 587.593798)">Foundation-lab walk-up-stack pressure</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="573.158967" transform="rotate(-0 378.8064 573.158967)">Custom-Built</text>
+   </g>
+   <g id="text_40">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="631.738246" transform="rotate(-0 12.5856 631.738246)">X</text>
+   </g>
+   <g id="text_41">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="624.721712" transform="rotate(-0 61.056 624.721712)">END-USER SURFACES</text>
+   </g>
+   <g id="text_42">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="645.345265" transform="rotate(-0 61.056 645.345265)">Form factor outranks capability for adoption</text>
+   </g>
+   <g id="text_43">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="630.910433" transform="rotate(-0 378.8064 630.910433)">Product</text>
+   </g>
+   <g id="text_44">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'" transform="translate(412.159386 425.769599) rotate(-90)">META-A  ·  SAFETY</text>
+   </g>
+   <g id="text_45">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'" transform="translate(450.531786 439.461474) rotate(-90)">META-B  ·  REGULATION</text>
+   </g>
+   <g id="text_46">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'" transform="translate(488.904186 437.585966) rotate(-90)">META-C  ·  ECONOMICS</text>
+   </g>
+   <g id="text_47">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'" transform="translate(527.276586 441.269443) rotate(-90)">META-D  ·  GEOPOLITICS</text>
+   </g>
+   <g id="text_48">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: start" x="392.2704" y="71.321217" transform="rotate(-0 392.2704 71.321217)">META-STRATA (wrap the agent stack)</text>
+   </g>
+   <g id="text_49">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="684.866828" transform="rotate(-0 7.2 684.866828)">Read top to bottom: ascending dependency. Stratum I gates everything above; Stratum X is closest to the buyer.</text>
+   </g>
+   <g id="text_50">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="701.058828" transform="rotate(-0 7.2 701.058828)">Evolution stage follows Wardley: Genesis (novel) -&gt; Custom-Built (recipe known) -&gt; Product (vendor market) -&gt; Commodity/Utility (rentable).</text>
+   </g>
+   <g id="text_51">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="717.250828" transform="rotate(-0 7.2 717.250828)">Binding constraint = what limits scaling at this sub-stratum in May 2026 (one short tag per row).</text>
+   </g>
+   <g id="text_52">
+    <text style="font-style: italic; font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="7.2" y="726.903131" transform="rotate(-0 7.2 726.903131)">Source: AI_AGENTS_MASTER Ch 1 §I-X and §Meta-A-D.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p9bbf87e019">
+   <rect x="7.2" y="7.2" width="538.56" height="728.64"/>
+  </clipPath>
+ </defs>
+</svg>
