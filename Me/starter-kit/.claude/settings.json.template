@@ -1,0 +1,15 @@
+{
+  "//": "Project-scope settings.json template. The universal hooks (linear-priorities, repo-touch-*) are registered at user scope in ~/.claude/settings.json — see Me/CLAUDE_UNIVERSAL_USAGE_PATTERNS.md. Only register project-scope hooks here that are specific to this codebase. Both layers' Stop-event outputs concatenate.",
+
+  "hooks": {
+    "//": "Example pattern for project-scope hooks. Delete this block if the project has no project-specific hooks. Universal hooks fire regardless.",
+
+    "Stop": [
+      {
+        "//": "Replace with project-specific Stop-event handlers. Use $CLAUDE_PROJECT_DIR/.claude/hooks/<name>.sh for project-scope paths."
+      }
+    ]
+  },
+
+  "//disable_example": "To silence a user-scope hook in this project only, add to .claude/settings.local.json (NOT this file): {\"hooks\":{\"disable\":[\"linear-priorities\"]}}. settings.local.json is gitignored; settings.json is committed."
+}

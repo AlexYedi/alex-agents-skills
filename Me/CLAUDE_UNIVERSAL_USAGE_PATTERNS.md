@@ -1,30 +1,10 @@
-# How I work
+# Universal usage patterns — deep reference
 
-## Roles
-I operate as CTO (architecture/strategy) and IC (building).
-"Build X" = write production-ready code and deploy it.
-"Plan X" = help me think through architecture first.
+This document is the **deep reference** for how `alex-agents-skills` (the plugin) and the user-scope discipline hooks work in practice. It complements but does not replace:
 
-## Communication
-- Lead with the decision, then reasoning
-- Flag blockers immediately, don't bury them
-- Be direct. If something won't work, say so and propose the alternative
-- Short responses for tactical work
+- **`Me/canonical-claude-md.md`** — the canonical CLAUDE.md fragment with the 6 invariant blocks (source-of-truth, build-better-not-faster, event-triggered habits, skill-bundling, communication rules, behavioral rules). Every project's CLAUDE.md should import that file via `@~/Documents/GitHub/alex-agents-skills/Me/canonical-claude-md.md`.
 
-## Code standards
-- Never put secrets in code files — keys in .env or native UI only
-- Write complete files, never partial snippets
-- Validate against the actual API contract before writing requests
-- Check the real schema before assuming column names
-
-## Workflow
-- Check the Linear issue before building
-- Update Linear status when Done
-- New n8n workflows = new files, never bolt onto existing ones
-
-## Stack I use everywhere
-n8n · Supabase · Claude API · Linear · Cursor · Gmail · Google Calendar
-Full stack details always live in STACK_README.md at the repo root.
+If you only need the rules a new project should inherit, start with the canonical fragment. This file is for the operational details — editing flows, adding new hooks, plugin internals.
 
 ## How alex-agents-skills reaches every project (YED-28)
 
@@ -37,20 +17,19 @@ This repo is a Claude Code plugin. It loads automatically in every session.
 
 ### Editing skills
 1. Edit `skills/<name>/SKILL.md` in this repo.
-2. Commit.
-3. `claude plugin update alex@alex-agents-skills` — refreshes the user-scope cache to your latest commit.
-4. For active editing without committing, run Claude Code with `--plugin-dir /path/to/alex-agents-skills`. The local copy overrides the installed cache for that session.
+2. Commit. The YED-35 post-commit hook runs `claude plugin update alex@alex-agents-skills` automatically.
+3. For active editing without committing, run Claude Code with `--plugin-dir /path/to/alex-agents-skills`. The local copy overrides the installed cache for that session.
 
 ### Adding a new skill
 1. Create `skills/<kebab-name>/SKILL.md` with frontmatter `description: <when to use it>`.
 2. Keep names unique across `skills/` — no nested subdirectories under `skills/` are discovered.
-3. Commit, run `claude plugin update alex@alex-agents-skills`.
+3. Commit; post-commit hook refreshes the user-scope cache.
 
-### MVP scope (as of YED-28)
-15 skills migrated: systems-thinking, head-of-product-engineering, cto-architect, writing-prds, shipping-products, defining-product-vision, prioritizing-roadmap, ai-product-strategy, brand-storytelling, conducting-user-interviews, writing-north-star-metrics, karpathy-coder, risk-playbooks, launch-tiering, iterative-engineering-practices. Remaining ~205 skills stay in domain folders pending follow-up migration (YED-31).
+### Plugin scope (as of YED-31, 2026-05-20)
+256 skills migrated into `skills/<name>/SKILL.md` form across 5 waves. See `CONTRIBUTING.md` for the wave-by-wave breakdown and any remaining residue.
 
 ### Plugin agents (YED-33)
-5 agents bundled with the plugin and invocable via the Task tool with `subagent_type: alex:<name>`: `cto-principal-architect`, `head-of-product`, `learning-coach-mentor`, `research-analyst`, `content-correspondent`. Each was promoted from a loose `*-prompt.md` file. See `agents/` and `CONTRIBUTING.md` "Adding agents and commands".
+5 agents bundled with the plugin and invocable via the Agent tool with `subagent_type: alex:<name>`: `cto-principal-architect`, `head-of-product`, `learning-coach-mentor`, `research-analyst`, `content-correspondent`. Each was promoted from a loose `*-prompt.md` file. See `agents/` and `CONTRIBUTING.md` "Adding agents and commands".
 
 ## Universal discipline hooks (YED-29)
 
@@ -83,3 +62,13 @@ Per-project `.claude/settings.json` can register additional hooks that fire alon
 3. Use `$HOME/.claude/hooks/<name>.sh` in the `command` field (env var expansion works).
 4. Honor both `.claude/settings.local.json` and `~/.claude/settings.local.json` `hooks.disable[]` overrides.
 5. Use relative paths (`.claude/.state/`) for per-project state so each project gets isolated bookkeeping.
+
+## Three-layer architecture (durable framing)
+
+| Layer | What it does | Where it lives |
+|---|---|---|
+| **A. Distribution** | Skills/agents/commands ship to projects | `alex-agents-skills` as a Claude Code plugin — YED-28 (MVP) + YED-31 (256 skills, shipped 2026-05-20) |
+| **B. Discipline** | Cross-project invariants (Linear source of truth, event-triggered habits) | User-scope hooks at `~/.claude/hooks/` — YED-29 |
+| **C. Workspace** | Project-specific overlays inherit canonical defaults | `Me/canonical-claude-md.md` (imported by every project's CLAUDE.md) + `Me/starter-kit/` (new-project scaffolding) — YED-30 |
+
+The whole arc ends with: starting any new project = inheriting all of Alex's accumulated discipline + skill conventions automatically.
