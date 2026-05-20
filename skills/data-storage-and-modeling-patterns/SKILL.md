@@ -539,5 +539,4 @@ sharding, CAP, replication, consensus — see the Gorton-derived skills:
 
 Source: *Fundamentals of Data Engineering* (Reis & Housley), Chapters 5-8
 (Storage, Ingestion, Transformation). For OLTP distribution and consistency,
-*Foundations of Scalable Systems* (Gorton) is distilled in
-`Software Development/references/foundations-of-scalable-systems/`.
+see *Foundations of Scalable Systems* (Gorton, O'Reilly 2022).
