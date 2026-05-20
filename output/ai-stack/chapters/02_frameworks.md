@@ -158,6 +158,8 @@ Challenge intensity clusters at Stratum III (HBM, 14/15) and Stratum I (transfor
 
 Open Questions decidable soonest cluster around H2 2026: Anthropic ARR (Stratum IX, 14/15, Decidability 4), EU AI Act enforcement (Meta-B, 15/15, Decidability 5), and long-term memory absorption (Stratum XI, 15/15, Decidability 5). Three high-asymmetry cruxes resolve in the same 6-month window. That window is the planning anchor for the bets in Chapter 3. See Plate 2 for the visual heatmap.
 
+![Plate 2 — OCQ Heatmap](plates/02_ocq_heatmap.svg)
+
 ## §2.2 Wardley Mapping the Stack
 
 ### Anchor needs
@@ -222,6 +224,8 @@ For someone in Alex's exact position: **Pioneer** computer-use agents in enterpr
 ### Pattern read
 
 The strongest cluster is the Custom-Built → Product zone in the middle of the stack: agent orchestration, vertical agents, MCP, computer-use, voice, enterprise governance. That zone is exactly where Alex's GTM judgment compounds — productizing what is currently bespoke. The trap is misplacing components everyone places wrong. Two specific errors recur in the field: (1) treating vector databases as a Product-tier moat when they are crossing into commoditization (pgvector + Turbopuffer + every cloud-platform vector feature killed the standalone tier); (2) treating LangChain / LlamaIndex as a durable Product when direct SDKs and MCP are eating them from below. See Plate 3 for the full map.
+
+![Plate 3 — Wardley Map of the AI Stack](plates/03_wardley_map.svg)
 
 ## §2.3 Helmer's 7 Powers
 
@@ -292,6 +296,8 @@ The strongest cluster is the Custom-Built → Product zone in the middle of the 
 ### Pattern read
 
 Durable power concentrates at the physical bottom (Strata I–III) and the vertical top (Stratum XIII vertical agents + Meta-B regulation). The middle — generic model providers, generic inference, generic retrieval, generic orchestration frameworks — is where margin and durability both compress. The barrens are exactly where the most VC dollars went in 2024–25: pure-play vector DBs, framework-as-company, inference resellers. Alex's addressable career zone hugs the vertical-top cluster. See Plate 4 for the full powers × layer grid.
+
+![Plate 4 — Powers × Layer Grid](plates/04_powers_layer_grid.svg)
 
 ## §2.4 Ecosystem JTBD
 

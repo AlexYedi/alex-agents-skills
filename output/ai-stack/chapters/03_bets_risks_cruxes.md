@@ -322,6 +322,8 @@ The bets are not independent. Three coupling patterns matter operationally.
 
 Plate 5 (Cross-Stratum Flows) visualizes this coupling graph: bets as nodes, risks and cruxes as edges that propagate through them.
 
+![Plate 5 — Cross-Stratum Flows](plates/05_cross_stratum_flows.svg)
+
 ## Apply
 
 Pick one bet you have not moved on this month. Write one sentence: what would have to change in the field for you to upgrade conviction by one ★? If you cannot name the specific leading indicator — the company, the number, the date — you do not actually understand why you believe in this bet. The conviction rating is a feeling, not a decision.

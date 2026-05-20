@@ -6,6 +6,8 @@ This chapter cuts the stack into fourteen primary strata plus four meta-strata t
 
 Each stratum entry follows the same four-part structure: **Position** (what it is, what it depends on, what depends on it); **What lives there** (named players, binding metrics, 2026 datapoints); **Binding constraints** (what limits scaling now); **Evolution stage** (Wardley: Genesis, Custom-Built, Product, or Commodity/Utility); **What changed in the last 12 months** (two to three dated datapoints). Read top to bottom for a full pass, or jump to a stratum to refresh one node. Plate 1 (Substrate Column) is the visual key.
 
+![Plate 1 — Substrate Column](plates/01_substrate_column.svg)
+
 ## Part I — Power and Facility
 
 ### Stratum I — Power

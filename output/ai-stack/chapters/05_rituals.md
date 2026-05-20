@@ -24,7 +24,25 @@ Three prompts, roughly 3 minutes each:
 A weekly note in your normal notes system (Notion, Obsidian, Apple Notes — doesn't matter). The format is irrelevant; the cadence is what compounds. Don't migrate weekly notes into Ch 4 unless an item escalates into a tracker-worthy event.
 
 ### What you don't do
-Don't update the tracker tables. Don't re-rate convictions. Don't re-read framework chapters. The weekly is a noticing ritual, not a maintenance ritual. If an item demands a tracker update, hold it for the monthly — or, if it's genuinely urgent (a crux resolved, a risk fired), use the trigger-based path in §10 of the spec.
+Don't update the tracker tables. Don't re-rate convictions. Don't re-read framework chapters. The weekly is a noticing ritual, not a maintenance ritual. If an item demands a tracker update, hold it for the bi-weekly (§5.1.5) — or, if it's genuinely urgent (a crux resolved, a risk fired), use the trigger-based path in §10 of the spec.
+
+## §5.1.5 Bi-weekly tracker sync (~5 min)
+
+### When
+Every other Sunday — interleaves with the weekly reflection. Calendar-block it as a recurring 5-minute slot.
+
+### What you do
+Two scans:
+
+1. **Talent moves.** Open one source (Pallet, LinkedIn alerts, The Information's funding section, your Apollo activity, or a saved search). Scan for senior-and-above moves into companies on your tracker (Sierra, Decagon, Glean, Harvey, Hippocratic, Augment, Cresta, Cursor, Lovable, Hebbia, plus anyone you've added). Log 1–3 entries to Ch 4 §4.3 with date, source, and a one-line "why this is signal."
+
+2. **Capital events.** Same source, check for $100M+ rounds, M&A, or infra commits. Log 1–3 entries to Ch 4 §4.4 if relevant.
+
+### Where it lands
+Ch 4 §4.3 and §4.4. Update the Ch 4 §4.10 log with a single-line row if you logged anything material; otherwise skip the log row.
+
+### What you don't do
+Don't write read-throughs or analysis. Don't update bet conviction. Don't re-score frameworks. The bi-weekly is a data-capture ritual, deliberately shallow. Five minutes of disciplined logging beats fifty minutes of reflective writing for tracker maintenance.
 
 ## §5.2 Monthly conviction ritual (~15 min)
 
@@ -42,7 +60,7 @@ Five steps in strict order — do not skip:
 
 4. **Update the bets status board** (Ch 4 §4.2). The conviction column reflects step 1; the "last conviction change" column reflects the date of step 1.
 
-5. **Add one new entry to Ch 4 §4.3 (talent) or §4.4 (capital)** from the last 14 days that you haven't logged yet. This is the catch-up provision for the bi-weekly cadence specified in §10 of the spec — if you've been keeping bi-weekly current, this step is a freebie; if you haven't, it's the safety net.
+5. **Catch-up provision for the bi-weekly.** If you missed either bi-weekly slot since the last monthly (§5.1.5), add one talent or capital entry now. If both bi-weeklies ran, skip this step — it's a safety net, not a redundancy.
 
 ### Where it lands
 Ch 4 §4.2 (bets status board), §4.8 (cruxes status), §4.10 (update log: add a row dated today with one-line summary of what changed).

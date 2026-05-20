@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="579.58125pt" height="743.04pt" viewBox="0 0 579.58125 743.04" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-20T15:55:44.950770</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 743.04 
+L 579.58125 743.04 
+L 579.58125 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 392.2704 692.661333 
+L 426.80556 692.661333 
+L 426.80556 77.365333 
+L 392.2704 77.365333 
+z
+" clip-path="url(#p416cd00f41)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 430.6428 692.661333 
+L 465.17796 692.661333 
+L 465.17796 77.365333 
+L 430.6428 77.365333 
+z
+" clip-path="url(#p416cd00f41)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 469.0152 692.661333 
+L 503.55036 692.661333 
+L 503.55036 77.365333 
+L 469.0152 77.365333 
+z
+" clip-path="url(#p416cd00f41)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 507.3876 692.661333 
+L 541.92276 692.661333 
+L 541.92276 77.365333 
+L 507.3876 77.365333 
+z
+" clip-path="url(#p416cd00f41)" style="fill: #ffffff; stroke: #000000; stroke-width: 0.7; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 7.2 123.035077 
+L 384.192 123.035077 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 7.2 168.704821 
+L 384.192 168.704821 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 7.2 214.374564 
+L 384.192 214.374564 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 7.2 260.044308 
+L 384.192 260.044308 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 7.2 305.714051 
+L 384.192 305.714051 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 7.2 351.383795 
+L 384.192 351.383795 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_7">
+    <path d="M 7.2 397.053538 
+L 384.192 397.053538 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_8">
+    <path d="M 7.2 442.723282 
+L 384.192 442.723282 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_9">
+    <path d="M 7.2 488.393026 
+L 384.192 488.393026 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_10">
+    <path d="M 7.2 534.062769 
+L 384.192 534.062769 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_11">
+    <path d="M 7.2 579.732513 
+L 384.192 579.732513 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_12">
+    <path d="M 7.2 625.402256 
+L 384.192 625.402256 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_13">
+    <path d="M 7.2 671.072 
+L 384.192 671.072 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #d1d5db; stroke-width: 0.4; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_14">
+    <path d="M 7.2 77.365333 
+L 384.192 77.365333 
+" clip-path="url(#p416cd00f41)" style="fill: none; stroke: #000000; stroke-width: 0.7; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="35.5495" transform="rotate(-0 7.2 35.5495)">Plate 1 — The Substrate Column</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="49.881104" transform="rotate(-0 7.2 49.881104)">14 strata + 4 meta. Read top to bottom: ascending dependency.</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="100.536851" transform="rotate(-0 12.5856 100.536851)">I</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="95.277486" transform="rotate(-0 61.056 95.277486)">POWER</text>
+   </g>
+   <g id="text_5">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="114.14387" transform="rotate(-0 61.056 114.14387)">Transformers 130wk lead, 30% deficit</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="99.709038" transform="rotate(-0 378.8064 99.709038)">Commodity/Utility</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="146.206595" transform="rotate(-0 12.5856 146.206595)">II</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="140.94723" transform="rotate(-0 61.056 140.94723)">FACILITY</text>
+   </g>
+   <g id="text_9">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="159.813613" transform="rotate(-0 61.056 159.813613)">Liquid-cooling retrofit, WUE &lt;0.20 L/kWh</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="145.378782" transform="rotate(-0 378.8064 145.378782)">Product</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="191.876338" transform="rotate(-0 12.5856 191.876338)">III</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="186.616974" transform="rotate(-0 61.056 186.616974)">COMPUTE</text>
+   </g>
+   <g id="text_13">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="205.483357" transform="rotate(-0 61.056 205.483357)">HBM4 / CoWoS-L 75-80 KWPM</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="191.048526" transform="rotate(-0 378.8064 191.048526)">Product</text>
+   </g>
+   <g id="text_15">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="237.546082" transform="rotate(-0 12.5856 237.546082)">IV</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="232.286717" transform="rotate(-0 61.056 232.286717)">FABRIC</text>
+   </g>
+   <g id="text_17">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="251.1531" transform="rotate(-0 61.056 251.1531)">Optics + UALink silicon gap</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="236.718269" transform="rotate(-0 378.8064 236.718269)">Product</text>
+   </g>
+   <g id="text_19">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="283.215825" transform="rotate(-0 12.5856 283.215825)">V</text>
+   </g>
+   <g id="text_20">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="277.956461" transform="rotate(-0 61.056 277.956461)">PARALLELISM</text>
+   </g>
+   <g id="text_21">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="296.822844" transform="rotate(-0 61.056 296.822844)">Systems-talent thin; checkpoint loss</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="282.388013" transform="rotate(-0 378.8064 282.388013)">Product</text>
+   </g>
+   <g id="text_23">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="328.885569" transform="rotate(-0 12.5856 328.885569)">VI</text>
+   </g>
+   <g id="text_24">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="323.626204" transform="rotate(-0 61.056 323.626204)">DATA</text>
+   </g>
+   <g id="text_25">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="342.492588" transform="rotate(-0 61.056 342.492588)">Copyright + Cloudflare 402 + provenance</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="328.057756" transform="rotate(-0 378.8064 328.057756)">Product</text>
+   </g>
+   <g id="text_27">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="374.555313" transform="rotate(-0 12.5856 374.555313)">VII</text>
+   </g>
+   <g id="text_28">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="369.295948" transform="rotate(-0 61.056 369.295948)">PRETRAINING</text>
+   </g>
+   <g id="text_29">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="388.162331" transform="rotate(-0 61.056 388.162331)">$1B+ run cost; 6-lab oligopoly</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="373.7275" transform="rotate(-0 378.8064 373.7275)">Custom-Built</text>
+   </g>
+   <g id="text_31">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="420.225056" transform="rotate(-0 12.5856 420.225056)">VIII</text>
+   </g>
+   <g id="text_32">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="414.965692" transform="rotate(-0 61.056 414.965692)">POST-TRAINING</text>
+   </g>
+   <g id="text_33">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="433.832075" transform="rotate(-0 61.056 433.832075)">RLVR verifier coverage limited</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="419.397244" transform="rotate(-0 378.8064 419.397244)">Custom-Built</text>
+   </g>
+   <g id="text_35">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="465.8948" transform="rotate(-0 12.5856 465.8948)">IX</text>
+   </g>
+   <g id="text_36">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="460.635435" transform="rotate(-0 61.056 460.635435)">MODEL PROVIDERS</text>
+   </g>
+   <g id="text_37">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="479.501818" transform="rotate(-0 61.056 479.501818)">Per-token 4-10x compression</text>
+   </g>
+   <g id="text_38">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="465.066987" transform="rotate(-0 378.8064 465.066987)">Product</text>
+   </g>
+   <g id="text_39">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="511.564543" transform="rotate(-0 12.5856 511.564543)">X</text>
+   </g>
+   <g id="text_40">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="506.305179" transform="rotate(-0 61.056 506.305179)">INFERENCE ENGINES</text>
+   </g>
+   <g id="text_41">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="525.171562" transform="rotate(-0 61.056 525.171562)">KV-cache / FP4 long-context</text>
+   </g>
+   <g id="text_42">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="510.736731" transform="rotate(-0 378.8064 510.736731)">Product</text>
+   </g>
+   <g id="text_43">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="557.234287" transform="rotate(-0 12.5856 557.234287)">XI-XII</text>
+   </g>
+   <g id="text_44">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="551.974922" transform="rotate(-0 61.056 551.974922)">RETRIEVAL, MEMORY, ORCHESTRATION</text>
+   </g>
+   <g id="text_45">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="570.841306" transform="rotate(-0 61.056 570.841306)">MCP commons-or-fork; memory absorption</text>
+   </g>
+   <g id="text_46">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="556.406474" transform="rotate(-0 378.8064 556.406474)">Custom-Built</text>
+   </g>
+   <g id="text_47">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="602.90403" transform="rotate(-0 12.5856 602.90403)">XIII</text>
+   </g>
+   <g id="text_48">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="597.644666" transform="rotate(-0 61.056 597.644666)">APPLICATION LAYER</text>
+   </g>
+   <g id="text_49">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="616.511049" transform="rotate(-0 61.056 616.511049)">Enterprise procurement cycle (Job 4)</text>
+   </g>
+   <g id="text_50">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="602.076218" transform="rotate(-0 378.8064 602.076218)">Custom-Built</text>
+   </g>
+   <g id="text_51">
+    <text style="font-weight: 700; font-size: 11px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: start" x="12.5856" y="648.573774" transform="rotate(-0 12.5856 648.573774)">XIV</text>
+   </g>
+   <g id="text_52">
+    <text style="font-weight: 700; font-size: 11.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="61.056" y="643.314409" transform="rotate(-0 61.056 643.314409)">THE USER</text>
+   </g>
+   <g id="text_53">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="61.056" y="662.180793" transform="rotate(-0 61.056 662.180793)">Default-distribution risk; battery/thermal</text>
+   </g>
+   <g id="text_54">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: end" x="378.8064" y="647.745962" transform="rotate(-0 378.8064 647.745962)">Product</text>
+   </g>
+   <g id="text_55">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'" transform="translate(412.159386 433.865599) rotate(-90)">META-A  ·  SAFETY</text>
+   </g>
+   <g id="text_56">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'" transform="translate(450.531786 447.557474) rotate(-90)">META-B  ·  REGULATION</text>
+   </g>
+   <g id="text_57">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'" transform="translate(488.904186 445.681966) rotate(-90)">META-C  ·  ECONOMICS</text>
+   </g>
+   <g id="text_58">
+    <text style="font-weight: 700; font-size: 9.5px; font-family: 'DejaVu Sans'" transform="translate(527.276586 449.365443) rotate(-90)">META-D  ·  GEOPOLITICS</text>
+   </g>
+   <g id="text_59">
+    <text style="font-weight: 700; font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: start" x="392.2704" y="65.986383" transform="rotate(-0 392.2704 65.986383)">META-STRATA (wrap the whole column)</text>
+   </g>
+   <g id="text_60">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="695.661495" transform="rotate(-0 7.2 695.661495)">Evolution stage notation follows Wardley: Genesis (novel) -&gt; Custom-Built (recipe known) -&gt; Product (vendor market) -&gt; Commodity/Utility (rentable).</text>
+   </g>
+   <g id="text_61">
+    <text style="font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="711.853495" transform="rotate(-0 7.2 711.853495)">Binding constraint = what limits scaling at this layer in 2026 (one short tag per row).</text>
+   </g>
+   <g id="text_62">
+    <text style="font-style: italic; font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="7.2" y="726.903131" transform="rotate(-0 7.2 726.903131)">Source: AI_STACK_MASTER Ch 1 §I–XIV and §Meta-A–D.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p416cd00f41">
+   <rect x="7.2" y="7.2" width="538.56" height="728.64"/>
+  </clipPath>
+ </defs>
+</svg>
