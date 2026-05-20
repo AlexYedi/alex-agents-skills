@@ -479,8 +479,8 @@ nothing about analytical data.
 
 ### References
 
-- `Software Development/references/software-architecture-the-hard-parts/frameworks.md#analytical-data`
-- `Software Development/references/software-architecture-the-hard-parts/complete-distillation.md` (Ch 14 section)
+- *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "Analytical Data" framework
+- *The Hard Parts*, Ch. 14 — Data Mesh primer
 - *Data Mesh: Delivering Data-Driven Value at Scale* (Dehghani, O'Reilly 2022) — full Data Mesh treatment that this chapter is a primer for
 
 ### Related skills (in `Software Development/`)

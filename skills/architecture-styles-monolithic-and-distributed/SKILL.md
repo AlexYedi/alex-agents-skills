@@ -384,7 +384,7 @@ extraction.
 - Planning a decomposition: choose Component-Based or Tactical Forking
   before extracting the first service.
 
-References:
-- `references/software-architecture-the-hard-parts/frameworks.md#architectural-quantum`
-- `references/software-architecture-the-hard-parts/frameworks.md#decomposition-patterns`
-- `references/software-architecture-the-hard-parts/complete-distillation.md` (Big Takeaway #3)
+References (bibliographic):
+- *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "Architectural Quantum" framework
+- *The Hard Parts*, "Decomposition Patterns" framework
+- *The Hard Parts*, complete distillation — Big Takeaway #3

@@ -477,7 +477,7 @@ Key concepts that augment this skill:
   contracts at boundaries you can't redeploy on demand (mobile apps,
   partners, public APIs) should lean loose. Don't pick one style globally.
 
-References:
-- `references/software-architecture-the-hard-parts/frameworks.md#contracts`
-- `references/software-architecture-the-hard-parts/frameworks.md#coupling-vocabulary` (stamp + semantic)
-- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-13-sysops-squad-saga-expert-mobile-app-contract` (worked example: strict internally, **loose** at the mobile boundary)
+References (bibliographic):
+- *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "Contracts" framework
+- *The Hard Parts*, "Coupling Vocabulary" — stamp + semantic coupling
+- *The Hard Parts*, Sysops Squad worked example, Ch. 13 (Expert Mobile App Contract — strict internally, **loose** at the mobile boundary)

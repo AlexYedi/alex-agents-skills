@@ -276,6 +276,6 @@ The book is explicit: *"we want microservices"* is **not** a driver. *"Our
 deployment cadence is blocked by a 2-hour test suite that flakes once a
 week"* is. Name the broken driver before modularizing.
 
-References:
-- `references/software-architecture-the-hard-parts/frameworks.md#modularity-drivers`
-- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-3-sysops-squad-saga-creating-a-business-case` (the case study makes the modularity-driver business case)
+References (bibliographic):
+- *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "Modularity Drivers" framework
+- *The Hard Parts*, Sysops Squad worked example, Ch. 3 (Creating a Business Case) — the case study makes the modularity-driver business case

@@ -26,9 +26,7 @@ You walk architects through choosing and executing a **decomposition approach** 
 
 This is a **workflow** skill. Phase 1 picks the approach; Phase 2 (Component-Based) or 2' (Tactical Forking) executes it. Each pattern application produces an ADR.
 
-Pattern definitions live at:
-- `references/software-architecture-the-hard-parts/frameworks.md#decomposition-patterns`
-- `references/software-architecture-the-hard-parts/frameworks.md#component-based-decomposition`
+Pattern definitions are in *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021): "Decomposition Patterns" and "Component-Based Decomposition" frameworks.
 
 ---
 
@@ -40,9 +38,9 @@ Pattern definitions live at:
   - `service-granularity-forces` — the "how big" question, applied per emerging service
   - `software-modularity-principles` — internal-to-service organization once services exist
 - **Related references**
-  - `references/software-architecture-the-hard-parts/frameworks.md#decomposition-patterns`
-  - `references/software-architecture-the-hard-parts/frameworks.md#component-based-decomposition`
-  - `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-4-sysops-squad-saga-choosing-a-decomposition-approach`
+  - *The Hard Parts*, "Decomposition Patterns" framework
+  - *The Hard Parts*, "Component-Based Decomposition" framework
+  - *The Hard Parts*, Sysops Squad worked example, Ch. 4 (Choosing a Decomposition Approach)
 
 ---
 
@@ -314,4 +312,4 @@ The Sysops Squad case study walks the full 6-pattern Component-Based Decompositi
 - A dependency graph with extraction order
 - ADRs for sizing decisions, shared-code dispositions, domain assignments
 
-See `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-5-sysops-squad-saga-multiple-segments-one-per-pattern` for the full walkthrough.
+See *The Hard Parts*, Sysops Squad worked example, Ch. 5 (Multiple Segments — One Per Pattern), for the full walkthrough.

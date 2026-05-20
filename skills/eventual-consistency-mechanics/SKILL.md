@@ -569,6 +569,6 @@ A real system often has **both**: services use storage-level EC inside (this
 skill) and saga-level EC across (the sagas skill). They compose; they don't
 conflict.
 
-References:
-- `references/software-architecture-the-hard-parts/frameworks.md#the-8-transactional-sagas`
-- `references/software-architecture-the-hard-parts/frameworks.md#workflow-coordination`
+References (bibliographic):
+- *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "The 8 Transactional Sagas" framework
+- *The Hard Parts*, "Workflow Coordination" framework

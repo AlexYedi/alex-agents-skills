@@ -27,7 +27,7 @@ You walk architects through the **contract design** decision (Ch 13) from *Softw
 
 This is a **workflow** skill. When loaded, you march the user through a 5-step decision per contract boundary and produce an ADR.
 
-Pattern definitions live at `references/software-architecture-the-hard-parts/frameworks.md#contracts` and `#coupling-vocabulary`.
+Pattern definitions are in *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021): "Contracts" and "Coupling Vocabulary" frameworks.
 
 ---
 
@@ -40,9 +40,9 @@ Pattern definitions live at `references/software-architecture-the-hard-parts/fra
   - `api-design-and-evolution` — overlapping; that skill covers Bernardez/Olejár's full API methodology, this skill is just the Hard Parts contract decision
   - `architectural-quanta-and-modularity` — contracts at quantum boundaries deserve more rigor than intra-quantum contracts
 - **Related references**
-  - `references/software-architecture-the-hard-parts/frameworks.md#contracts`
-  - `references/software-architecture-the-hard-parts/frameworks.md#coupling-vocabulary` (stamp + semantic coupling definitions)
-  - `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-13-sysops-squad-saga-expert-mobile-app-contract`
+  - *The Hard Parts*, "Contracts" framework
+  - *The Hard Parts*, "Coupling Vocabulary" — stamp + semantic coupling definitions
+  - *The Hard Parts*, Sysops Squad worked example, Ch. 13 (Expert Mobile App Contract)
 
 ---
 
@@ -319,6 +319,6 @@ The Sysops Squad team's contract decisions:
   - Reason: mobile deployment cadence is much slower than backend; loose contract protects the mobile app from server-side evolution
 - **Internal ↔ Customer-facing web**: strict (OpenAPI with validation) — web client redeploys with backend; full type-safety end-to-end
 
-See `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-13-sysops-squad-saga-expert-mobile-app-contract` for the full walkthrough.
+See *The Hard Parts*, Sysops Squad worked example, Ch. 13 (Expert Mobile App Contract), for the full walkthrough.
 
 Different boundaries → different contract styles. Same framework. **The framework produces defensible decisions, not uniform decisions.**

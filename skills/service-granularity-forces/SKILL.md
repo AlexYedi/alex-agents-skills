@@ -26,7 +26,7 @@ You walk architects through the **"how big should this service be?"** decision u
 
 This is a **workflow** skill. When loaded, you march the user through identifying disintegrators and integrators, weighing them, and writing an ADR.
 
-Pattern definitions live at `references/software-architecture-the-hard-parts/frameworks.md#granularity-forces`.
+Pattern definitions are in *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "Granularity Forces" framework (Ch. 7).
 
 ---
 
@@ -38,8 +38,8 @@ Pattern definitions live at `references/software-architecture-the-hard-parts/fra
   - `trade-off-analysis-method` — for high-impact granularity decisions
   - `data-ownership-and-distributed-data` — data integrators are a strong signal here
 - **Related references**
-  - `references/software-architecture-the-hard-parts/frameworks.md#granularity-forces`
-  - `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-7-sysops-squad-saga-ticket-assignment-granularity`
+  - *The Hard Parts*, "Granularity Forces" framework
+  - *The Hard Parts*, Sysops Squad worked example, Ch. 7 (Ticket Assignment Granularity)
 
 ---
 
@@ -260,4 +260,4 @@ ADR ratified in Ch 7: *"Consolidated Service for Ticket Assignment and Routing"*
 
 **Same framework, different forces, different answers.** That's the point of the method — it produces defensible decisions, not uniform ones.
 
-See `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-7-sysops-squad-saga-ticket-assignment-granularity` and `#ch-7-sysops-squad-saga-customer-registration-granularity`.
+See *The Hard Parts*, Sysops Squad worked example, Ch. 7 (Ticket Assignment Granularity) and Ch. 7 (Customer Registration Granularity).

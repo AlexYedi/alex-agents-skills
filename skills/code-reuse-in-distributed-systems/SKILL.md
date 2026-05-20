@@ -24,7 +24,7 @@ You walk architects through picking a **named reuse pattern** from *Software Arc
 
 This is a **workflow** skill. When loaded, you march the user through a 4-step decision and produce an ADR.
 
-Pattern definitions live at `references/software-architecture-the-hard-parts/frameworks.md#reuse-patterns`.
+Pattern definitions are in *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "Reuse Patterns" framework.
 
 ---
 
@@ -36,8 +36,8 @@ Pattern definitions live at `references/software-architecture-the-hard-parts/fra
   - `service-contracts-and-coupling` — if Shared Service is being considered, the contract becomes important
   - `distributed-system-patterns` — Sidecar / Service Mesh overview (this skill drills into when to pick)
 - **Related references**
-  - `references/software-architecture-the-hard-parts/frameworks.md#reuse-patterns`
-  - `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-8-sysops-squad-saga-common-infrastructure-logic`
+  - *The Hard Parts*, "Reuse Patterns" framework
+  - *The Hard Parts*, Sysops Squad worked example, Ch. 8 (Common Infrastructure Logic)
 
 ---
 
@@ -322,4 +322,4 @@ The Sysops Squad team (Ch 8) makes several reuse decisions:
 
 Different code, different patterns. **The framework is the constant; the answer varies.**
 
-See `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-8-sysops-squad-saga-common-infrastructure-logic` and `#ch-8-sysops-squad-saga-shared-domain-functionality`.
+See *The Hard Parts*, Sysops Squad worked example, Ch. 8 (Common Infrastructure Logic) and Ch. 8 (Shared Domain Functionality).

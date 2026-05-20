@@ -595,8 +595,8 @@ Key concepts from Hard Parts Ch 6 (Pulling Apart Operational Data):
   servers. Each step produces an ADR; the DBA team must be in the room
   from step 1.
 
-References:
-- `references/software-architecture-the-hard-parts/frameworks.md#data-decomposition`
-- `references/software-architecture-the-hard-parts/frameworks.md#data-ownership-patterns`
-- `references/software-architecture-the-hard-parts/frameworks.md#data-access-patterns`
-- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-6-sysops-squad-saga-justifying-database-decomposition` (the case study's clearest lesson: bring the DBA in early)
+References (bibliographic):
+- *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "Data Decomposition" framework
+- *The Hard Parts*, "Data Ownership Patterns" framework
+- *The Hard Parts*, "Data Access Patterns" framework
+- *The Hard Parts*, Sysops Squad worked example, Ch. 6 (Justifying Database Decomposition) — the case study's clearest lesson: bring the DBA in early

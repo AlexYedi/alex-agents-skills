@@ -26,7 +26,7 @@ You walk architects through the **3-step trade-off analysis method** that is the
 
 The book's framing: most architecture decisions have no best practice. The architect's job is the **method**, not the answer. The method is the discipline that lets future engineers tell intentional decisions from incidental ones.
 
-The canonical method definition lives at `references/software-architecture-the-hard-parts/frameworks.md#trade-off-analysis-3-step`.
+The canonical method is described in *Software Architecture: The Hard Parts* (Ford, Richards, Sadalage, Dehghani — O'Reilly, 2021), Ch. 1 under "Trade-Off Analysis 3-Step". The steps below are the operational distillation.
 
 ---
 
@@ -38,10 +38,10 @@ The canonical method definition lives at `references/software-architecture-the-h
   - `service-contracts-and-coupling` — pattern-selection workflow that uses this method
   - `architecture-characteristics-and-tradeoffs` — defines the *characteristics* this method scores against (load this if the characteristics for the system aren't yet defined)
   - `cto-architect` — loads this skill as part of CTO-level decisions
-- **Related references**
-  - `references/software-architecture-the-hard-parts/frameworks.md#trade-off-analysis-3-step` — the canonical method
-  - `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` — every ADR in the case study uses this method
-  - `references/fundamentals-of-software-architecture/frameworks.md` — for the characteristics catalog ("ilities")
+- **Related references** (bibliographic — for human/maintainer use)
+  - *Software Architecture: The Hard Parts* (Ford, Richards, Sadalage, Dehghani — O'Reilly, 2021), "Trade-Off Analysis 3-Step" framework — the canonical method
+  - *The Hard Parts*, Sysops Squad worked example — every ADR in the case study uses this method
+  - *Fundamentals of Software Architecture* (Richards & Ford — O'Reilly, 2020), characteristics catalog ("ilities")
 
 ---
 
@@ -313,7 +313,7 @@ The Sysops Squad case study is 15 chapters of this method applied repeatedly. Sp
 | Ch 12 — Parallel Saga for ticket workflow | Saga selection with explicit axis scoring |
 | Ch 13 — Loose Contract for Mobile App | Strict-vs-loose contract decision with explicit trade-off |
 
-See `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` for the full walkthrough.
+See *The Hard Parts*, Sysops Squad worked example, for the full walkthrough.
 
 ---
 

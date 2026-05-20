@@ -28,10 +28,7 @@ You walk architects through the **data ownership** decision (Ch 9) and the **dat
 
 This is a **workflow** skill. When loaded, you march the user through two phases: ownership assignment first, then access pattern per cross-service read path.
 
-Pattern definitions live at:
-- `references/software-architecture-the-hard-parts/frameworks.md#data-ownership-patterns`
-- `references/software-architecture-the-hard-parts/frameworks.md#data-access-patterns`
-- `references/software-architecture-the-hard-parts/frameworks.md#data-decomposition`
+Pattern definitions are in *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021): "Data Ownership Patterns", "Data Access Patterns", "Data Decomposition" frameworks.
 
 ---
 
@@ -44,9 +41,9 @@ Pattern definitions live at:
   - `eventual-consistency-mechanics` — load alongside if Replicated Cache or Column Schema Replication is on the table (their EC is different from storage-level EC)
   - `distributed-workflows-and-sagas` — load alongside if cross-service writes need transactional coordination
 - **Related references**
-  - `references/software-architecture-the-hard-parts/frameworks.md#data-ownership-patterns`
-  - `references/software-architecture-the-hard-parts/frameworks.md#data-access-patterns`
-  - `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` — Ch 9 (Single Table Ownership ADR), Ch 10 (Replicated Cache for Expert Profile ADR)
+  - *The Hard Parts*, "Data Ownership Patterns" framework
+  - *The Hard Parts*, "Data Access Patterns" framework
+  - *The Hard Parts*, Sysops Squad worked example — Ch. 9 (Single Table Ownership ADR), Ch. 10 (Replicated Cache for Expert Profile ADR)
 
 ---
 
@@ -354,4 +351,4 @@ The Sysops Squad team's data ownership journey:
 - **Ch 10** — Expert Profile read path: **Replicated Cache** (Apache Ignite) because hundreds of services read it, data is small, microsecond reads required
 - **Ch 13** — Contract design for the cross-service reads (load `service-contracts-and-coupling` skill for that phase)
 
-See `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-9-sysops-squad-saga-data-ownership` and `#ch-10-sysops-squad-saga-expert-profile-data-access`.
+See *The Hard Parts*, Sysops Squad worked example, Ch. 9 (Data Ownership) and Ch. 10 (Expert Profile Data Access).

@@ -271,6 +271,6 @@ end-to-end and produces an ADR.
 The two skills compose: this skill establishes the characteristics; the
 trade-off-analysis-method skill applies them to a specific decision.
 
-References:
-- `references/software-architecture-the-hard-parts/frameworks.md#trade-off-analysis-3-step`
-- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` (every ADR in the case study uses this method)
+References (bibliographic):
+- *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "Trade-Off Analysis 3-Step" framework
+- *The Hard Parts*, Sysops Squad worked example (every ADR in the case study uses this method)

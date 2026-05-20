@@ -22,7 +22,7 @@ description: >
 
 You guide architects through picking a **named saga pattern** from the 8-pattern taxonomy in *Software Architecture: The Hard Parts* (Ford, Richards, Sadalage, Dehghani — 2021, Ch 11–12). This is a **workflow** skill, not a knowledge dump — when loaded, you march the user through a 5-step decision and produce an ADR at the end.
 
-The taxonomy and matrix definitions live at `references/software-architecture-the-hard-parts/frameworks.md#the-8-transactional-sagas` and `#saga-selection-matrix`. Don't restate them here — link to them when needed.
+The taxonomy and matrix are the "8 Transactional Sagas" and "Saga Selection Matrix" frameworks in *The Hard Parts*, Ch. 11–12. Don't restate them here — reference them by name when needed.
 
 ---
 
@@ -35,10 +35,10 @@ The taxonomy and matrix definitions live at `references/software-architecture-th
   - `eventual-consistency-mechanics` — orthogonal: business-level EC (here) ≠ storage-level EC (that skill)
   - `microservices-resilience-patterns` — orthogonal: failure handling at the call level, not the workflow level
 - **Related references**
-  - `references/software-architecture-the-hard-parts/frameworks.md#the-8-transactional-sagas` — the catalog
-  - `references/software-architecture-the-hard-parts/frameworks.md#saga-selection-matrix` — the matrix this skill walks
-  - `references/software-architecture-the-hard-parts/frameworks.md#workflow-coordination` — orchestration vs choreography deep dive
-  - `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` — the worked example landed on **Parallel Saga (aeo)**
+  - *The Hard Parts*, "The 8 Transactional Sagas" — the catalog
+  - *The Hard Parts*, "Saga Selection Matrix" — the matrix this skill walks
+  - *The Hard Parts*, "Workflow Coordination" — orchestration vs choreography deep dive
+  - *The Hard Parts*, Sysops Squad worked example — the worked example landed on **Parallel Saga (aeo)**
 
 ---
 
@@ -126,7 +126,7 @@ Use the 3-bit address as an index. The 8 cells:
 | (a, e, o) | **Parallel Saga** | low |
 | (a, e, c) | **Anthology Saga** | very low |
 
-State the named pattern to the user. Link to its detail in `references/software-architecture-the-hard-parts/frameworks.md#the-8-transactional-sagas`.
+State the named pattern to the user. The detail of each pattern is in the "8 Transactional Sagas" framework in *The Hard Parts*, Ch. 12.
 
 ### One-line shape of each (for fast recognition)
 
@@ -244,6 +244,6 @@ That's the choreography tax. Either add explicit workflow-state observation (que
 
 ## Worked example reference
 
-The Sysops Squad team (in the book's case study) landed on **Parallel Saga (aeo)** for ticket management. Six participants, sync was wrong (mobile app could be offline), atomic was wrong (notification timing not critical), choreographed was wrong (too many participants). See `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-12-transactional-sagas-the-big-pick` for the full walkthrough.
+The Sysops Squad team (in the book's case study) landed on **Parallel Saga (aeo)** for ticket management. Six participants, sync was wrong (mobile app could be offline), atomic was wrong (notification timing not critical), choreographed was wrong (too many participants). See *The Hard Parts*, Sysops Squad worked example, Ch. 12 (Transactional Sagas — The Big Pick) for the full walkthrough.
 
 If your workflow shape resembles theirs (multi-step, multi-service, customer-facing, with notifications and audits), the same axis answers usually apply. Re-derive, don't copy.

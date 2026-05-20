@@ -323,7 +323,7 @@ For real saga selection, **load `distributed-workflows-and-sagas` skill** — it
 walks the full selection procedure and produces an ADR. Don't pick a saga
 pattern from this skill's overview section without going through that workflow.
 
-References:
-- `references/software-architecture-the-hard-parts/frameworks.md#the-8-transactional-sagas`
-- `references/software-architecture-the-hard-parts/frameworks.md#saga-selection-matrix`
-- `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md` (the case study lands on Parallel Saga)
+References (bibliographic):
+- *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), "The 8 Transactional Sagas" framework
+- *The Hard Parts*, "Saga Selection Matrix"
+- *The Hard Parts*, Sysops Squad worked example (the case study lands on Parallel Saga)

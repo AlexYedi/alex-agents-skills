@@ -26,10 +26,7 @@ You walk architects through the **foundational vocabulary** of *Software Archite
 
 This is a **workflow** skill. When loaded, you march the user through a quantum inventory and a modularity-driver assessment. Output: a quantum map of the current system + a decision on whether decomposition is justified.
 
-Pattern definitions live at:
-- `references/software-architecture-the-hard-parts/frameworks.md#architectural-quantum`
-- `references/software-architecture-the-hard-parts/frameworks.md#coupling-vocabulary`
-- `references/software-architecture-the-hard-parts/frameworks.md#modularity-drivers`
+The canonical definitions ("Architectural Quantum", "Coupling Vocabulary", "Modularity Drivers") are in *Software Architecture: The Hard Parts* (Ford et al., O'Reilly 2021), Ch. 1–3. The operational vocabulary below is the working subset.
 
 ---
 
@@ -40,10 +37,10 @@ Pattern definitions live at:
   - `data-ownership-and-distributed-data` — the data-layer companion to quantum identification
   - `architecture-styles-monolithic-and-distributed` — augmented to use this skill's quantum vocabulary
   - `software-modularity-principles` — augmented to use this skill's modularity-driver framework
-- **Related references**
-  - `references/software-architecture-the-hard-parts/frameworks.md#architectural-quantum`
-  - `references/software-architecture-the-hard-parts/frameworks.md#modularity-drivers`
-  - `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-2-sysops-squad-saga-understanding-quanta`
+- **Related references** (bibliographic)
+  - *The Hard Parts* — "Architectural Quantum" framework (Ch. 2)
+  - *The Hard Parts* — "Modularity Drivers" framework (Ch. 3)
+  - *The Hard Parts*, Sysops Squad worked example, Ch. 2 (Understanding Quanta)
 
 ---
 
@@ -281,4 +278,4 @@ Sometimes true; often not. Decomposition cost grows superlinearly with the size 
 
 The Sysops Squad team (Ch 2) discovers they have **one quantum** at the start: the ticketing monolith. By Ch 3, they assess modularity drivers and find **all six are critically broken**. By Ch 4, they begin decomposition. By Ch 15, they have ~10 quanta with healthy modularity-driver scores.
 
-The whole arc is a worked example of this skill. See `references/software-architecture-the-hard-parts/sysops-squad-worked-example.md#ch-2-sysops-squad-saga-understanding-quanta` and `#ch-3-sysops-squad-saga-creating-a-business-case`.
+The whole arc is a worked example of this skill. See *The Hard Parts*, Sysops Squad worked example, Ch. 2 (Understanding Quanta) and Ch. 3 (Creating a Business Case).
