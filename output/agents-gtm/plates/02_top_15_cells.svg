@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="612.958962pt" height="772.687969pt" viewBox="0 0 612.958962 772.687969" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-05-20T16:48:56.740304</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.10.9, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 772.687969 
+L 612.958962 772.687969 
+L 612.958962 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 114.174247 143.655214 
+L 362.663014 143.655214 
+L 362.663014 118.4655 
+L 114.174247 118.4655 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #1d4ed8; stroke: #1d4ed8; stroke-width: 2.2; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 114.174247 184.283786 
+L 349.584658 184.283786 
+L 349.584658 159.094071 
+L 114.174247 159.094071 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #3460dc; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 114.174247 224.912357 
+L 336.506301 224.912357 
+L 336.506301 199.722643 
+L 114.174247 199.722643 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #3f69de; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 114.174247 265.540929 
+L 323.427945 265.540929 
+L 323.427945 240.351214 
+L 114.174247 240.351214 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #4a71e0; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 114.174247 306.1695 
+L 323.427945 306.1695 
+L 323.427945 280.979786 
+L 114.174247 280.979786 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #4a71e0; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 114.174247 346.798071 
+L 323.427945 346.798071 
+L 323.427945 321.608357 
+L 114.174247 321.608357 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #4a71e0; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 114.174247 387.426643 
+L 310.349589 387.426643 
+L 310.349589 362.236929 
+L 114.174247 362.236929 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #567ae2; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 114.174247 428.055214 
+L 310.349589 428.055214 
+L 310.349589 402.8655 
+L 114.174247 402.8655 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #567ae2; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 114.174247 468.683786 
+L 310.349589 468.683786 
+L 310.349589 443.494071 
+L 114.174247 443.494071 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #567ae2; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 114.174247 509.312357 
+L 310.349589 509.312357 
+L 310.349589 484.122643 
+L 114.174247 484.122643 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #567ae2; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 114.174247 549.940929 
+L 297.271233 549.940929 
+L 297.271233 524.751214 
+L 114.174247 524.751214 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #6183e4; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 114.174247 590.5695 
+L 297.271233 590.5695 
+L 297.271233 565.379786 
+L 114.174247 565.379786 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #6183e4; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_14">
+    <path d="M 114.174247 631.198071 
+L 297.271233 631.198071 
+L 297.271233 606.008357 
+L 114.174247 606.008357 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #6183e4; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_15">
+    <path d="M 114.174247 671.826643 
+L 297.271233 671.826643 
+L 297.271233 646.636929 
+L 114.174247 646.636929 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #6183e4; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_16">
+    <path d="M 114.174247 712.455214 
+L 297.271233 712.455214 
+L 297.271233 687.2655 
+L 114.174247 687.2655 
+z
+" clip-path="url(#p7c57426eec)" style="fill: #6183e4; stroke: #000000; stroke-width: 0.5; stroke-linejoin: miter"/>
+   </g>
+   <g id="line2d_1">
+    <path d="M 114.174247 110.746071 
+L 114.174247 102.620357 
+" clip-path="url(#p7c57426eec)" style="fill: none; stroke: #000000; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_2">
+    <path d="M 179.566027 110.746071 
+L 179.566027 102.620357 
+" clip-path="url(#p7c57426eec)" style="fill: none; stroke: #000000; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_3">
+    <path d="M 244.957808 110.746071 
+L 244.957808 102.620357 
+" clip-path="url(#p7c57426eec)" style="fill: none; stroke: #000000; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_4">
+    <path d="M 310.349589 110.746071 
+L 310.349589 102.620357 
+" clip-path="url(#p7c57426eec)" style="fill: none; stroke: #000000; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_5">
+    <path d="M 375.74137 110.746071 
+L 375.74137 102.620357 
+" clip-path="url(#p7c57426eec)" style="fill: none; stroke: #000000; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="line2d_6">
+    <path d="M 114.174247 110.746071 
+L 375.74137 110.746071 
+" clip-path="url(#p7c57426eec)" style="fill: none; stroke: #000000; stroke-width: 0.5; stroke-linecap: square"/>
+   </g>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="133.819732" transform="rotate(-0 108.942904 133.819732)">(9, G)</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="358.739507" y="133.543795" transform="rotate(-0 358.739507 133.543795)">19/20</text>
+   </g>
+   <g id="text_3">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="127.035603" transform="rotate(-0 380.972712 127.035603)">Loopio/Vanta/Ironclad/Vendr</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="140.979665" transform="rotate(-0 380.972712 140.979665)">Zero of seven sources ship unified bilateral evidence pack.</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #1d4ed8" x="69.707836" y="133.405826" transform="rotate(-0 69.707836 133.405826)">#1</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="174.448304" transform="rotate(-0 108.942904 174.448304)">(5, F)</text>
+   </g>
+   <g id="text_7">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="345.661151" y="174.172366" transform="rotate(-0 345.661151 174.172366)">18/20</text>
+   </g>
+   <g id="text_8">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="167.664174" transform="rotate(-0 380.972712 167.664174)">no incumbent owner</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="181.608237" transform="rotate(-0 380.972712 181.608237)">Dynamic 9-person buying-committee map, weekly refresh — unbuilt.</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="174.034397" transform="rotate(-0 69.707836 174.034397)">#2</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="215.076875" transform="rotate(-0 108.942904 215.076875)">(6, E)</text>
+   </g>
+   <g id="text_12">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="332.582795" y="214.800938" transform="rotate(-0 332.582795 214.800938)">17/20</text>
+   </g>
+   <g id="text_13">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="208.292746" transform="rotate(-0 380.972712 208.292746)">Gong/Chorus/Aircover</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="222.236808" transform="rotate(-0 380.972712 222.236808)">Causation @ 73% confidence — no vendor ships it.</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="214.662969" transform="rotate(-0 69.707836 214.662969)">#3</text>
+   </g>
+   <g id="text_16">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="255.705446" transform="rotate(-0 108.942904 255.705446)">(4, A)</text>
+   </g>
+   <g id="text_17">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="319.504438" y="255.429509" transform="rotate(-0 319.504438 255.429509)">16/20</text>
+   </g>
+   <g id="text_18">
+    <!-- Clay ($100M / $1.5B) -->
+    <g transform="translate(380.972712 248.914286)">
+     <text>
+      <tspan x="0" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">C</tspan>
+      <tspan x="5.236816" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">l</tspan>
+      <tspan x="7.320557" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">a</tspan>
+      <tspan x="11.916504" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">y</tspan>
+      <tspan x="16.35498" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'"> </tspan>
+      <tspan x="18.739014" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">(</tspan>
+      <tspan x="35.980225" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">M</tspan>
+      <tspan x="44.978027" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">1</tspan>
+      <tspan x="49.749756" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">.</tspan>
+      <tspan x="52.133789" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">5</tspan>
+      <tspan x="56.905518" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">B</tspan>
+      <tspan x="62.050781" y="-0.921875" style="font-style: oblique; font-size: 7.5px; font-family: 'DejaVu Sans'">)</tspan>
+      <tspan x="21.665039" y="-0.921875" style="font-size: 7.5px; font-family: 'DejaVu Sans'">1</tspan>
+      <tspan x="26.436768" y="-0.921875" style="font-size: 7.5px; font-family: 'DejaVu Sans'">0</tspan>
+      <tspan x="31.208496" y="-0.921875" style="font-size: 7.5px; font-family: 'DejaVu Sans'">0</tspan>
+      <tspan x="42.451172" y="-0.921875" style="font-size: 7.5px; font-family: 'DejaVu Sans'">/</tspan>
+     </text>
+    </g>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="262.865379" transform="rotate(-0 380.972712 262.865379)">Winner-eats-most; commoditizing; low Alex claimability.</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="255.29154" transform="rotate(-0 69.707836 255.29154)">#4</text>
+   </g>
+   <g id="text_21">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="296.334018" transform="rotate(-0 108.942904 296.334018)">(6, L)</text>
+   </g>
+   <g id="text_22">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="319.504438" y="296.05808" transform="rotate(-0 319.504438 296.05808)">16/20</text>
+   </g>
+   <g id="text_23">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="289.549888" transform="rotate(-0 380.972712 289.549888)">Mem0/Letta/Zep (dev-side only)</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="303.493951" transform="rotate(-0 380.972712 303.493951)">6-9 month AE deal-cycle memory — no AE-shape product exists.</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="295.920112" transform="rotate(-0 69.707836 295.920112)">#5</text>
+   </g>
+   <g id="text_26">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="336.962589" transform="rotate(-0 108.942904 336.962589)">(9, I)</text>
+   </g>
+   <g id="text_27">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="319.504438" y="336.686652" transform="rotate(-0 319.504438 336.686652)">16/20</text>
+   </g>
+   <g id="text_28">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="330.17846" transform="rotate(-0 380.972712 330.17846)">Ironclad AI / LinkSquares</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="344.122522" transform="rotate(-0 380.972712 344.122522)">12-15 AI-specific MSA clauses still unbuilt.</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="336.548683" transform="rotate(-0 69.707836 336.548683)">#6</text>
+   </g>
+   <g id="text_31">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="377.591161" transform="rotate(-0 108.942904 377.591161)">(8, G)</text>
+   </g>
+   <g id="text_32">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="306.426082" y="377.315223" transform="rotate(-0 306.426082 377.315223)">15/20</text>
+   </g>
+   <g id="text_33">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="370.807031" transform="rotate(-0 380.972712 370.807031)">Clari/BoostUp/Aviso/Tomo</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="384.751094" transform="rotate(-0 380.972712 384.751094)">Pieces ship; nobody closes the RevOps loop end-to-end.</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="377.177254" transform="rotate(-0 69.707836 377.177254)">#7</text>
+   </g>
+   <g id="text_36">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="418.219732" transform="rotate(-0 108.942904 418.219732)">(4, K)</text>
+   </g>
+   <g id="text_37">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="306.426082" y="417.943795" transform="rotate(-0 306.426082 417.943795)">15/20</text>
+   </g>
+   <g id="text_38">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="411.435603" transform="rotate(-0 380.972712 411.435603)">Anthropic CU / Operator / Mariner</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="425.379665" transform="rotate(-0 380.972712 425.379665)">OSWorld 65% pending; LinkedIn TOS structural moat-killer.</text>
+   </g>
+   <g id="text_40">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="417.805826" transform="rotate(-0 69.707836 417.805826)">#8</text>
+   </g>
+   <g id="text_41">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="458.848304" transform="rotate(-0 108.942904 458.848304)">(12, F)</text>
+   </g>
+   <g id="text_42">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="306.426082" y="458.572366" transform="rotate(-0 306.426082 458.572366)">15/20</text>
+   </g>
+   <g id="text_43">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="452.064174" transform="rotate(-0 380.972712 452.064174)">Gong / Clari / Glean</text>
+   </g>
+   <g id="text_44">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="466.008237" transform="rotate(-0 380.972712 466.008237)">Mature; Deal Stories widely adopted.</text>
+   </g>
+   <g id="text_45">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="458.434397" transform="rotate(-0 69.707836 458.434397)">#9</text>
+   </g>
+   <g id="text_46">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="499.476875" transform="rotate(-0 108.942904 499.476875)">(12, H)</text>
+   </g>
+   <g id="text_47">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="306.426082" y="499.200937" transform="rotate(-0 306.426082 499.200937)">15/20</text>
+   </g>
+   <g id="text_48">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="492.692746" transform="rotate(-0 380.972712 492.692746)">Clari/BoostUp/Aviso/Einstein</text>
+   </g>
+   <g id="text_49">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="506.636808" transform="rotate(-0 380.972712 506.636808)">$1.5B saturated; honest 5-15% MAPE lift; accountability cap.</text>
+   </g>
+   <g id="text_50">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="499.062969" transform="rotate(-0 69.707836 499.062969)">#10</text>
+   </g>
+   <g id="text_51">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="540.105446" transform="rotate(-0 108.942904 540.105446)">(4, M)</text>
+   </g>
+   <g id="text_52">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="293.347726" y="539.829509" transform="rotate(-0 293.347726 539.829509)">14/20</text>
+   </g>
+   <g id="text_53">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="533.321317" transform="rotate(-0 380.972712 533.321317)">LangSmith/Galileo (eng-shape)</text>
+   </g>
+   <g id="text_54">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="547.265379" transform="rotate(-0 380.972712 547.265379)">TCPA/CAN-SPAM mandatory &lt;=18 mo; no SDR-shape vendor.</text>
+   </g>
+   <g id="text_55">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="539.69154" transform="rotate(-0 69.707836 539.69154)">#11</text>
+   </g>
+   <g id="text_56">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="580.734018" transform="rotate(-0 108.942904 580.734018)">(9, M)</text>
+   </g>
+   <g id="text_57">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="293.347726" y="580.45808" transform="rotate(-0 293.347726 580.45808)">14/20</text>
+   </g>
+   <g id="text_58">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="573.949888" transform="rotate(-0 380.972712 573.949888)">Galileo/Arize/Langfuse (eng-shape)</text>
+   </g>
+   <g id="text_59">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="587.893951" transform="rotate(-0 380.972712 587.893951)">Deal-desk trajectory evidence pack — nobody ships turnkey.</text>
+   </g>
+   <g id="text_60">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="580.320112" transform="rotate(-0 69.707836 580.320112)">#12</text>
+   </g>
+   <g id="text_61">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="621.362589" transform="rotate(-0 108.942904 621.362589)">(11, L)</text>
+   </g>
+   <g id="text_62">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="293.347726" y="621.086652" transform="rotate(-0 293.347726 621.086652)">14/20</text>
+   </g>
+   <g id="text_63">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="614.57846" transform="rotate(-0 380.972712 614.57846)">Sierra/Gainsight (shallow)</text>
+   </g>
+   <g id="text_64">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="628.522522" transform="rotate(-0 380.972712 628.522522)">Cross-quarter renewal memory — no production CS agent has it.</text>
+   </g>
+   <g id="text_65">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="620.948683" transform="rotate(-0 69.707836 620.948683)">#13</text>
+   </g>
+   <g id="text_66">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="661.991161" transform="rotate(-0 108.942904 661.991161)">(3, A+L+F)</text>
+   </g>
+   <g id="text_67">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="293.347726" y="661.715223" transform="rotate(-0 293.347726 661.715223)">14/20</text>
+   </g>
+   <g id="text_68">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="655.207031" transform="rotate(-0 380.972712 655.207031)">Common Room ($30M ARR)</text>
+   </g>
+   <g id="text_69">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="669.151094" transform="rotate(-0 380.972712 669.151094)">PLG signal-fusion; multi-source product one step away.</text>
+   </g>
+   <g id="text_70">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="661.577254" transform="rotate(-0 69.707836 661.577254)">#14</text>
+   </g>
+   <g id="text_71">
+    <text style="font-weight: 700; font-size: 10px; font-family: 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', 'Computer Modern Typewriter', 'Andale Mono', 'Nimbus Mono L', 'Courier New', 'Courier', 'Fixed', 'Terminal', monospace; text-anchor: end" x="108.942904" y="702.619732" transform="rotate(-0 108.942904 702.619732)">(6, K)</text>
+   </g>
+   <g id="text_72">
+    <text style="font-weight: 700; font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: end; fill: #ffffff" x="293.347726" y="702.343795" transform="rotate(-0 293.347726 702.343795)">14/20</text>
+   </g>
+   <g id="text_73">
+    <text style="font-style: italic; font-size: 7.5px; font-family: 'DejaVu Sans'; text-anchor: start" x="380.972712" y="695.835603" transform="rotate(-0 380.972712 695.835603)">Anthropic CU / MS Sales Copilot</text>
+   </g>
+   <g id="text_74">
+    <text style="font-size: 6.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="380.972712" y="709.779665" transform="rotate(-0 380.972712 709.779665)">AE motion GUI driving; non-MS-shop cell open.</text>
+   </g>
+   <g id="text_75">
+    <text style="font-size: 8.5px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="69.707836" y="702.205826" transform="rotate(-0 69.707836 702.205826)">#15</text>
+   </g>
+   <g id="text_76">
+    <text style="font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: middle" x="114.174247" y="95.07029" transform="rotate(-0 114.174247 95.07029)">0</text>
+   </g>
+   <g id="text_77">
+    <text style="font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: middle" x="179.566027" y="95.07029" transform="rotate(-0 179.566027 95.07029)">5</text>
+   </g>
+   <g id="text_78">
+    <text style="font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: middle" x="244.957808" y="95.07029" transform="rotate(-0 244.957808 95.07029)">10</text>
+   </g>
+   <g id="text_79">
+    <text style="font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: middle" x="310.349589" y="95.07029" transform="rotate(-0 310.349589 95.07029)">15</text>
+   </g>
+   <g id="text_80">
+    <text style="font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: middle" x="375.74137" y="95.07029" transform="rotate(-0 375.74137 95.07029)">20</text>
+   </g>
+   <g id="text_81">
+    <text style="font-size: 8px; font-family: 'DejaVu Sans'; text-anchor: middle" x="244.957808" y="86.736607" transform="rotate(-0 244.957808 86.736607)">OCQ score /20</text>
+   </g>
+  </g>
+  <g id="text_82">
+   <text style="font-weight: 700; font-size: 16px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="19.3575" transform="rotate(-0 7.2 19.3575)">Plate 2 — Top-15 Cells by OCQ</text>
+  </g>
+  <g id="text_83">
+   <text style="font-size: 10px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="39.1575" transform="rotate(-0 7.2 39.1575)">Volume IV  ·  ranked by 4-dimension aggregate OCQ score /20.</text>
+  </g>
+  <g id="text_84">
+   <text style="font-size: 9px; font-family: 'DejaVu Sans'; text-anchor: start" x="7.2" y="54.9975" transform="rotate(-0 7.2 54.9975)">(9, G) — agent procurement gauntlet — at the top with 19/20 (cell of record).</text>
+  </g>
+  <g id="text_85">
+   <text style="font-style: italic; font-size: 7px; font-family: 'DejaVu Sans'; text-anchor: start; fill: #6b7280" x="7.2" y="763.8375" transform="rotate(-0 7.2 763.8375)">Source: AGENTS_GTM_MASTER Ch 1 §1.4 (top-15 ranked) cross-checked with Ch 2 §2.1.</text>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="p7c57426eec">
+   <rect x="68.4" y="98.5575" width="477.36" height="625.68"/>
+  </clipPath>
+ </defs>
+</svg>
