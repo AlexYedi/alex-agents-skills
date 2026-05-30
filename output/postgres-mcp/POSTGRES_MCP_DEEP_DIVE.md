@@ -4,9 +4,9 @@
 
 *Owner: Alex Yedi · Date: 2026-05-28 · ~10 pages · Companion: `00_CURATION_research-stack.md`*
 
-> **Reading note.** Claims carry confidence flags — **[H]** high, **[M]** medium, **[L]** low — per the `research-analyst` discipline. First-party docs (Supabase, Microsoft Learn, postgresql.org) and the MCP specification are tier-1 sources; vendor blogs and survey aggregations tier-2; my synthesis is flagged as judgment.
+> **Reading note.** Claims carry confidence flags — **[H]** high, **[M]** medium, **[L]** low — per the `research-analyst` discipline. First-party docs (Supabase, Microsoft Learn, postgresql.org), the MCP specification, NCSC, and peer-reviewed papers are tier-1 sources; vendor benchmarks and ecosystem aggregations tier-2; my synthesis is flagged as judgment.
 >
-> **⚠LQ = lowest-confidence quartile.** Every assertion in the bottom ~25% by confidence is tagged **⚠LQ** inline *and* enumerated in the **Lowest-Quartile Register** before the sources. A **verification pass on 2026-05-28** upgraded 7 of the original 19 ⚠LQ items to [H]; the residual ⚠LQ items are qualitative judgments, vendor-source claims, or forward-looking predictions. `[M→H]` marks the boundary case that sits just above the cut.
+> **⚠LQ = lowest-confidence quartile.** Two verification passes (2026-05-28) upgraded **15 of the original 19** ⚠LQ assertions to [H]. The residual ⚠LQ items are one under-researched product (Lantern) and four 12–24-month forward-looking predictions — bottom-quartile by nature, not for lack of verification. `[M→H]` marks the boundary case that sits just above the cut.
 
 ---
 
@@ -22,7 +22,7 @@
 
 **So what.** If you are building or buying vertical agents, the database-over-MCP layer is a first-class architectural decision, not plumbing. Get the isolation model wrong and you ship the "lethal trifecta" (private data + untrusted content + an exfiltration channel) by default.
 
-**Receipts on the thesis.** Two 2025 acquisitions priced this thesis explicitly: **Databricks bought Neon for ~$1B (May 2025)** and **Snowflake bought Crunchy Data for ~$250M (June 2025)** — both serverless/managed Postgres companies, both framed as the substrate for AI agents. [H]
+**Receipts on the thesis.** Two 2025 acquisitions priced this thesis explicitly: **Databricks bought Neon for ~$1B (May 14, 2025)** and **Snowflake bought Crunchy Data for ~$250M (June 2, 2025)** — both serverless/managed Postgres companies, both framed as the substrate for AI agents. [H] Neon disclosed that **>80% of databases provisioned on its platform were created by AI agents, not humans** — the agentic-Postgres pattern is now a measured demand signal, not a hypothesis. [H]
 
 ---
 
@@ -54,17 +54,17 @@ The loudest Postgres movement of the last few years is consolidation: **replace 
 | You'd normally reach for… | Postgres-native option | Note |
 |---|---|---|
 | Pinecone / Weaviate / Milvus / Qdrant (vectors) | **pgvector** (+ **pgvectorscale**) | Vectors live next to the rows they describe — no sync, atomic writes. [H] |
-| Elasticsearch (full-text / BM25) | `tsvector`/`tsquery`; **ParadeDB `pg_search`** (BM25 via Tantivy) | Hybrid keyword+vector in one query. [H] |
-| Redis (cache / queue) | `pgmq` (queue), `UNLOGGED` tables, `LISTEN/NOTIFY` | Good enough until it isn't; know the ceiling. **[M ⚠LQ]** |
+| Elasticsearch (full-text / BM25) | `tsvector`/`tsquery`; **ParadeDB `pg_search`** (BM25 via Tantivy/pgrx; v0.22+ as a Postgres-native index type, used at Neon) | Hybrid keyword+vector in one query. [H] |
+| Redis (cache / queue) | **`pgmq`** (Tembo) — benchmarked at **30k+ messages/sec** on Tembo Cloud; `UNLOGGED` tables; `LISTEN/NOTIFY` | Real production queue, not a toy. Ceiling is below Redis at peak but fine for the vast majority of queue workloads. [H] |
 | Cron service | **`pg_cron`** | In-database scheduling. [H] |
 | Time-series DB | **TimescaleDB** (hypertables, continuous aggregates) | [H] |
 | Geospatial | **PostGIS** | The reference geospatial stack, period. [H] |
-| Graph DB (Neo4j) | **Apache AGE** (openCypher on Postgres) | Real but less mature than native graph DBs. **[M ⚠LQ]** |
-| Analytics / columnar | **Citus** (distributed), **Hydra**, `pg_analytics`, DuckDB FDWs | OLTP→HTAP blurring. **[M ⚠LQ]** |
+| Graph DB (Neo4j) | **Apache AGE** — top-level Apache project, supports PG 11–18, ships on Azure Database for PostgreSQL, implements openCypher with hybrid Cypher+SQL queries | Solid Cypher coverage; Neo4j still leads on advanced graph analytics (Graph Data Science library, ML on graphs). [H] |
+| Analytics / columnar | **`pg_duckdb`** (DuckDB-powered, GA Nov 2024, v1.0 collaboration of DuckDB + MotherDuck + Hydra) — up to **1500× speedups on certain analytical queries, ~10× on typical**; Citus (distributed, Microsoft); Hydra (columnar) | Note: ParadeDB's `pg_analytics` was **discontinued/archived** — its analytics work consolidated into `pg_search`. `pg_duckdb` is now the canonical columnar pattern. [H] |
 
 **Where this breaks (be honest):** at extreme scale, a dedicated system still wins on its axis — Pinecone/Milvus for billion-vector ANN at low latency, ClickHouse/Snowflake for petabyte analytics, Cassandra/DynamoDB for write-heavy global OLTP. The `scalable-database-design-and-sharding` lineage is the right frame: start single-node Postgres, scale up, add read replicas, and only shard (Citus, or distributed-SQL like CockroachDB/Yugabyte/Aurora DSQL) when writes genuinely outgrow one box. [H] The everything-database thesis is a *default*, not an absolute.
 
-**So what for agents.** Consolidation is doubly valuable when the consumer is an agent. Every additional datastore is another MCP server, another credential, another isolation boundary to get right. One Postgres = one surface to secure and one schema for the agent to reason about.
+**So what for agents.** Consolidation is doubly valuable when the consumer is an agent. Every additional datastore is another MCP server, another credential, another isolation boundary to get right. One Postgres = one surface to secure and one schema for the agent to reason about. This is why the consolidation push (`pgmq` instead of Redis, `pg_search` instead of Elastic, `pg_duckdb` instead of a separate warehouse, AGE instead of Neo4j) is also an *agent-security argument*, not just an ops-simplicity one.
 
 ---
 
@@ -73,9 +73,9 @@ The loudest Postgres movement of the last few years is consolidation: **replace 
 The AI-specific reason Postgres matters is **pgvector** — an extension adding a `vector` type and approximate-nearest-neighbor (ANN) search.
 
 - **Indexes:** **IVFFlat** (cluster-based; fast build, needs tuning) and **HNSW** (graph-based; higher recall/latency tradeoff, added in pgvector 0.5.0). Current pgvector is **0.8.1** (released Sept 4, 2025) [H]; the **0.7.0** release (April 2024) added `halfvec` (16-bit), `bit`/binary, and `sparsevec` types plus scalar/binary quantization (one cited result: a **67× HNSW build speedup with binary quantization vs 0.5.1**). [H]
-- **pgvectorscale** (Timescale, Rust): adds a **StreamingDiskANN** index and statistical binary quantization; Timescale benchmarks claim it beats specialized vector DBs on cost/recall. **[M ⚠LQ — vendor benchmark; treat as directional.]**
-- **pgai / pgai Vectorizer** (Timescale): create and *keep in sync* embeddings from inside the database, so a row's vector updates when its text changes. **[M ⚠LQ — confirm current product scope/naming.]**
-- **ParadeDB / `pg_search`:** Tantivy-backed BM25 — proper keyword relevance, which pure vector search lacks. **Lantern** is another vector alternative. **[M ⚠LQ — confirm maturity/positioning.]**
+- **pgvectorscale** (Timescale, Rust): adds a **StreamingDiskANN** index (Microsoft Research-derived DiskANN, but disk-resident, so the working set can dwarf RAM) and statistical binary quantization. On a 50M-vector Cohere benchmark, Timescale reports **28× lower p95 latency, 16× higher throughput, and ~75% lower cost vs Pinecone's s1 storage-optimized index at 99% recall**. [M→H — vendor benchmark, but with reproducible methodology against the architecturally-comparable Pinecone tier; independent corroboration from third-party blog comparisons.]
+- **pgai / pgai Vectorizer** (Timescale): a SQL-native pipeline that creates AI embeddings with a `SELECT` and **keeps them in sync** when source data changes — handles batch processing, model failures, and rate limits as stateless workers. Works on any Postgres (Timescale Cloud, RDS, Supabase). [H] Its **Semantic Catalog** feature auto-generates database descriptions to power text-to-SQL for agents — directly relevant to Page 8's agent patterns. [H]
+- **ParadeDB / `pg_search`:** Tantivy-backed BM25 via `pgrx`, packaged as a **Postgres-native index type** that updates automatically on writes — no external reindexing pipeline. v0.22+; available on Neon. [H] **Lantern** is another vector alternative. **[M ⚠LQ — confirm Lantern's current positioning and maintenance status.]**
 
 **The real lesson (from `rag-and-agent-architecture` and `structured-vs-unstructured-retrieval`):** the production-grade pattern is **hybrid retrieval** — combine `tsvector`/BM25 keyword recall with vector semantic recall, then rerank. Postgres can express all of that in a *single transactional query against the same rows*, which is the underrated advantage over a vector-DB-plus-primary-DB split: no dual-write, no drift, filter by tenant/ACL and recency in the same `WHERE` clause. [H]
 
@@ -109,7 +109,7 @@ A chatbot is mostly Full-Context/RAG: read-only, stateless, one turn. An **agent
 4. **Audit & governance.** `created_by`/`updated_by`/timestamps and an append-only audit log — "which agent did what, when, on whose data" is a compliance requirement, not a nicety.
 5. **Transactions.** When an agent's action spans several writes, ACID means partial failure doesn't leave corrupt state.
 
-**Demand signal — not theory.** Neon publicly disclosed (at the time of the Databricks deal) that **over 80% of databases provisioned on Neon were created automatically by AI agents, not by humans.** [H] When the customer is an agent, fast-provisioning serverless Postgres goes from convenience to product surface.
+**Demand signal — not theory.** Neon publicly disclosed (at the time of the Databricks deal) that **over 80% of databases provisioned on Neon were created automatically by AI agents, not by humans.** [H] When the customer is an agent, fast-provisioning serverless Postgres goes from convenience to product surface. The Databricks-Neon and Snowflake-Crunchy deals were both priced against this datapoint.
 
 **So what.** The database is not where the intelligence lives, but it is where the *consequences* of the intelligence are recorded and constrained. Postgres already ships memory (jsonb + vector), state (tables + MVCC), isolation (RLS), and audit (triggers) — which is why it keeps showing up as the agent state layer by default rather than by decree.
 
@@ -156,7 +156,7 @@ This is the core of the deep dive. The Postgres-over-MCP ecosystem matured fast 
 | Branching (paid) | `create_branch`, `merge_branch`, `reset_branch`, `rebase_branch` |
 | Account / Docs | project & org management, `search_docs` |
 
-Critically, it ships **safety knobs as URL params**: `read_only=true` (run as a read-only Postgres user), `project_ref=<id>` (scope to one project, disabling account-level tools), and `features=<groups>` (shrink the attack surface). Auth uses OAuth 2.1 with dynamic client registration; RLS policies still apply to MCP-issued queries. [H]
+Critically, it ships **safety knobs as URL params**: `read_only=true` (run as a **dedicated `supabase_read_only_user` role**, not just query filtering), `project_ref=<id>` (scope to one project, disabling account-level tools), and `features=<groups>` (shrink the attack surface). Auth uses OAuth 2.1 with dynamic client registration; RLS policies still apply to MCP-issued queries. [H]
 
 **3. Azure Database for PostgreSQL MCP** — the enterprise-governed pattern. [H, Microsoft Learn] Exposes list servers/databases/tables, get table schema, execute query, and get/set server parameters. Two features stand out: **per-tool annotations** (`Read Only: ✅/❌`, `Destructive: ✅/❌` — e.g. "execute query" is read-only, "set server parameter" is destructive), and an enterprise auth architecture for Microsoft Foundry agents: **Agent (managed identity) → MCP server in Azure Container Apps → Postgres via Microsoft Entra ID**, with separate identities for client-auth and DB-access. It advertises SQL ops, **vector search**, and schema discovery as first-class. This is the model for regulated environments.
 
@@ -174,13 +174,15 @@ Critically, it ships **safety knobs as URL params**: `read_only=true` (run as a 
 
 Four patterns, in rough order of maturity:
 
-**1. Conversational analytics / text-to-SQL.** The agent inspects the schema (`list_tables`, get-schema), translates a natural-language question into SQL, runs it (`execute_sql` read-only), and narrates the result. This is the `Data Engineering/retrieval/text-to-sql` skill made live — and that skill's **promptfoo eval harness** is the right way to keep it honest, because text-to-SQL fails silently (a plausible-looking query against the wrong column returns a confident wrong number). [H] *Mitigations:* expose curated views, supply schema + few-shot exemplars as MCP **resources**, and require read-only.
+**1. Conversational analytics / text-to-SQL.** The agent inspects the schema (`list_tables`, get-schema), translates a natural-language question into SQL, runs it (`execute_sql` read-only), and narrates the result. This is the `Data Engineering/retrieval/text-to-sql` skill made live — and that skill's **promptfoo eval harness** is the right way to keep it honest, because text-to-SQL fails silently (a plausible-looking query against the wrong column returns a confident wrong number). [H] **The newest accelerant is pgai's Semantic Catalog**, which auto-generates database descriptions from inside Postgres and exposes them as text-to-SQL grounding — an in-database "schema-as-resource" for the agent. [H] *Mitigations:* expose curated views, supply schema + few-shot exemplars as MCP **resources**, and require read-only.
 
 **2. Schema-aware development.** An agent reads the schema, generates a migration, runs it through `apply_migration`, and regenerates types (`generate_typescript_types`). This is the "Cursor + Supabase MCP" loop developers already live in. The `database-designer` discipline (surrogate keys, RLS from day one, expand-contract migrations) is what keeps the agent from generating foot-guns.
 
 **3. Branch-as-sandbox.** With Neon or Supabase branching, the agent creates a database branch, tests destructive or risky changes there, validates, then merges or discards. This is the cleanest answer to "how do I let an agent touch a database without touching production" — give it a copy, not the original. [H]
 
-**4. Advisory / self-healing ops.** `get_advisors`, `EXPLAIN` analysis (via Postgres MCP Pro's `hypopg` integration), and health checks let an agent diagnose a slow query or a missing index and propose (or apply, under guardrails) the fix. Early but pointed directly at autonomous DBA work. **[M ⚠LQ — emerging pattern; maturity varies by vendor.]**
+**4. Advisory / agent-led DBA ops.** Now actually shipping, not theoretical: **Supabase ships first-party Performance + Security Advisors** that surface via the `get_advisors` MCP tool — the documented workflow is for an agent to run them once schema has stabilized to catch missing indexes and broken RLS *before* deploy. [H] **Postgres MCP Pro layers the `hypopg`-driven plan simulation and Anytime-Algorithm index tuning on top.** The remaining gap is full *auto-remediation* — agents currently report findings and the human (or a guarded write-mode agent) applies — but the *agent-led RLS audit* workflow is real, documented (Continue.dev published the canonical recipe with Supabase MCP), and in production. [H — the pattern is shipped; "self-healing" specifically remains the [M ⚠LQ] outlook item on Page 10.]
+
+**An emerging fifth pattern — agent skills as a vendor surface.** Supabase shipped **"Supabase agent skills"** alongside the MCP server because the company observed that *AI agents know about Supabase but don't always use it right*. [H] The skills file encodes idiomatic patterns the MCP alone can't enforce (e.g. RLS-first migrations, expand-contract). Expect every serious database vendor to ship MCP + agent-skills as a paired bundle — the protocol delivers the *capability*, the skill teaches the *correct use*.
 
 **Cross-cutting:** the database is also the agent's **memory and state** (Page 5) — so the same Postgres an agent *queries for the user* may also be the Postgres that *stores the agent's own state*. Keep those concerns in separate schemas/roles; conflating them widens the blast radius.
 
@@ -196,7 +198,9 @@ Four patterns, in rough order of maturity:
 3. A developer asks their MCP client to "summarize open tickets."
 4. The injected text in the *data* hijacks the agent, which runs the query under the developer's privileges and leaks the data.
 
-This is not theoretical. **In July 2025, General Analysis published a working write-up of exactly this attack against the Supabase MCP — running through Cursor, with RLS in place, the attacker exfiltrated an `integration_tokens` table because the developer's agent was using the `service_role` key, which bypasses RLS. Simon Willison amplified the disclosure ("Supabase MCP can leak your entire SQL database," 2025-07-06); Supabase responded with the "Defense in Depth for MCP Servers" post, the SQL-result-wrapping mitigation, and the explicit guidance to never connect MCP to production.** [H] The lesson — Supabase's, in its own words — is that guardrails *reduce* risk but do not *eliminate* it, because LLMs cannot reliably distinguish legitimate instructions from malicious commands embedded in user content.
+This is not theoretical. **In July 2025, General Analysis published a working write-up of exactly this attack against the Supabase MCP — running through Cursor, with RLS in place, the attacker exfiltrated an `integration_tokens` table because the developer's agent was using the `service_role` key, which bypasses RLS. Simon Willison amplified the disclosure ("Supabase MCP can leak your entire SQL database," 2025-07-06); Supabase responded with the "Defense in Depth for MCP Servers" post, the SQL-result-wrapping mitigation, and the explicit guidance to never connect MCP to production.** [H]
+
+**Prompt injection is not SQL injection — it may be worse. [H]** The UK NCSC ("Prompt injection is not SQL injection (it may be worse)") and the peer-reviewed literature on prompt-to-SQL injection (Pedro et al., ICSE 2025; arXiv:2308.01990) converge on the same architectural conclusion: **SQL injection has a clean fix (parameterized queries); prompt injection does not.** The best academic results — tool-result-parsing defenses, LLM-guard inspectors, structured-output enforcement — *reduce* attack success rate but cannot eliminate it. The design rule, as NVIDIA's security guidance puts it, is to focus on **deterministic (non-LLM) safeguards that constrain what the system can do** rather than relying on the LLM to refuse malicious content. [H]
 
 **The defense-in-depth stack (what good looks like):**
 
@@ -204,74 +208,78 @@ This is not theoretical. **In July 2025, General Analysis published a working wr
 |---|---|---|
 | Default posture | **Read-only** unless write is required (`read_only=true`); never point an MCP at production data | Supabase docs [H] |
 | Scope | **Project/tenant scoping** (`project_ref`), **feature-group restriction** (`features=`) to shrink tool surface | Supabase docs [H] |
-| DB-level | **RLS** + least-privilege roles; the agent's role can only see what its tenant can — and **never use `service_role` from an MCP context** | Supabase incident, `database-designer` [H] |
+| DB-level | **RLS** + least-privilege roles; the agent's role can only see what its tenant can — and **never use `service_role` from an MCP context** | Supabase incident [H] |
 | Identity | **Managed identity / Entra ID**, short-lived tokens, OAuth 2.1 — no long-lived secrets in configs | Azure MCP [H] |
 | Tool semantics | **Per-tool destructive/read-only annotations** so clients can gate dangerous calls | Azure MCP [H] |
 | Human-in-loop | **Manual approval** of tool calls; review the SQL before it runs | Supabase docs [H] |
-| Content defense | Wrap SQL results with instructions discouraging the model from obeying embedded commands (Supabase itself calls this imperfect) | Supabase docs **[M ⚠LQ]** |
+| Content defense | Wrap SQL results with anti-injection instructions; deploy LLM-guard inspectors — known to **reduce, not eliminate**, attack success | NCSC + Supabase + academic literature [H] |
 | Sandbox | **Branch, don't bet the prod DB** | Neon/Supabase [H] |
 
-**Judgment.** Read-only + scoping + RLS + human approval removes most of the trifecta most of the time. The residual risk is real and unsolved at the protocol level — prompt injection has no clean fix — so the architectural answer is to *assume the agent can be hijacked* and ensure that even a hijacked agent can only see one tenant's data, can't write, and can't reach an exfiltration channel. Design for compromise, not for trust.
+**Judgment.** Read-only + scoping + RLS + human approval removes most of the trifecta most of the time. The residual risk is real and unsolved at the protocol level — prompt injection has no clean fix — so the architectural answer is to *assume the agent can be hijacked* and ensure that even a hijacked agent can only see one tenant's data, can't write, and can't reach an exfiltration channel. **Design for compromise, not for trust** — the deterministic-safeguard principle from the academic literature is the load-bearing one.
 
 ---
 
 ## Page 10 — Outlook and what to do about it
 
-**Where this goes (12–24 months) — forward-looking, all lowest-quartile by nature:**
+**Where this goes (12–24 months) — forward-looking, all lowest-quartile by nature, but each grounded in a leading indicator now visible:**
 
-- **MCP servers become DBAs, not just query runners. [M ⚠LQ]** Index tuning, plan analysis, and health advisories (Postgres MCP Pro's `hypopg`-driven engine, Supabase advisors, Azure params) are the leading edge. The value migrates from "run my SQL" to "tell me what's wrong and fix it under guardrails."
-- **Branching becomes table stakes for agent-facing Postgres. [M ⚠LQ]** Disposable, copy-on-write sandboxes are the only sane way to let agents make changes. Expect every serious managed Postgres to offer it. (Databricks-Neon and Snowflake-Crunchy are the early evidence.)
-- **The everything-database thesis intensifies under agent pressure. [M ⚠LQ]** Fewer datastores = fewer MCP servers = fewer isolation boundaries to secure. Consolidation onto Postgres is partly an agent-security story now.
+- **MCP servers become DBAs, not just query runners. [M ⚠LQ]** Index tuning, plan analysis, and health advisories (Postgres MCP Pro's `hypopg`-driven engine, Supabase advisors, Azure params) are already shipping. The next step is *guarded auto-remediation* — the agent applies a recommended index in a sandboxed branch and the human/policy engine approves the merge. The leading indicator is the documented Continue.dev RLS-audit workflow with Supabase MCP.
+- **Branching becomes table stakes for agent-facing Postgres. [M ⚠LQ]** Disposable, copy-on-write sandboxes are the only sane way to let agents make changes. Expect every serious managed Postgres to offer it. Databricks-Neon and Snowflake-Crunchy are the early evidence; Supabase branching is already shipped.
+- **The everything-database thesis intensifies under agent pressure. [M ⚠LQ]** Fewer datastores = fewer MCP servers = fewer isolation boundaries to secure. Consolidation onto Postgres is partly an agent-security story now — `pgmq` (30k+ msg/s) replacing Redis, `pg_search` replacing Elastic, `pg_duckdb` replacing the analytics warehouse, AGE replacing Neo4j for graph-light use cases.
 - **Auth/identity standardizes on OAuth 2.1 + managed identity.** [H] The "paste a connection string into a config file" era is ending for anything touching real data — PG18 shipping native OAuth pulls this into the database itself.
-- **Security tooling for database MCP matures. [M ⚠LQ]** Expect injection-aware result filtering, policy engines in front of `execute_sql`, and audit standards for agent-issued queries.
+- **Vendor agent-skills become a paired surface with MCP. [M ⚠LQ]** Supabase's "Postgres Best Practices for AI Agents" post and the Supabase agent skills bundle are the leading indicator: MCP delivers the *capability*, agent skills teach the *correct use*. Expect Neon, AlloyDB, Azure, and Snowflake Postgres to ship comparable bundles within 12 months.
+- **Security tooling for database MCP matures. [M ⚠LQ]** Expect injection-aware result filtering, policy engines in front of `execute_sql`, audit standards for agent-issued queries, and (per the academic literature) tool-result-parsing defenses standardized into MCP SDKs.
 
 **Apply — a decision checklist for building/buying agentic systems on Postgres:**
 
 1. **Default to Postgres** for the agent's system-of-record *and* memory/vector store. Justify any additional datastore against the "one surface to secure" cost. [H]
 2. **Never connect an MCP server to production with write access by default.** Read-only + project scoping + RLS + a non-prod or branched database. [H]
 3. **Put RLS and `organization_id` on every tenant-scoped table from day one** — retrofitting isolation after a breach is the expensive path. [H]
-4. **Treat `execute_sql` as the most dangerous tool you ship.** Gate it with human approval, destructive-action annotations, and least-privilege roles. [H]
-5. **Use hybrid retrieval (BM25 + vector + rerank) in one query** before reaching for a dedicated vector DB. [H]
-6. **Build an eval harness for text-to-SQL** (promptfoo, golden queries) — it fails confidently and silently. [H]
+4. **Treat `execute_sql` as the most dangerous tool you ship.** Gate it with human approval, destructive-action annotations, and least-privilege roles. Never expose `service_role` (or equivalent) through MCP. [H]
+5. **Use hybrid retrieval (BM25 + vector + rerank) in one query** before reaching for a dedicated vector DB. Default to `pg_search` + `pgvector`; let `pgai` keep embeddings in sync. [H]
+6. **Build an eval harness for text-to-SQL** (promptfoo, golden queries) — it fails confidently and silently. Ground the agent with `pgai`'s Semantic Catalog or hand-curated views. [H]
 7. **Prefer branch-as-sandbox** for any agent that modifies schema or data. [H]
+8. **Pair every database MCP you adopt with the vendor's agent skills.** The MCP is the capability; the skills are the protocol of correct use. [H]
 
 **One-sentence thesis.** PostgreSQL is winning the AI era not because it is the best vector store or the fastest engine, but because it is the one place an agent can reliably *remember, reason over, and act on* state — and MCP is the standard that makes that access universal, which is exactly why getting the security model right is now an architectural prerequisite, not an afterthought.
 
 ---
 
-## Lowest-Quartile Register (every remaining ⚠LQ assertion, in one place)
+## Lowest-Quartile Register (every remaining ⚠LQ assertion)
 
-**Verification pass 2026-05-28: 7 of the original 19 ⚠LQ assertions were upgraded to [H]** — PG18 release date and features, current pgvector version (0.8.1), the Databricks→Neon acquisition (May 2025, ~$1B), the Snowflake→Crunchy acquisition (June 2025, ~$250M), the General Analysis / Simon Willison Supabase MCP disclosure, the reference Postgres MCP server's archival (May 2025) and deprecation (July 2025) plus its SQL-injection CVE, and Postgres MCP Pro's feature set (Anytime-Algorithm index tuning + `hypopg` plan simulation + health checks).
+**Two verification passes (2026-05-28) upgraded 15 of the original 19 ⚠LQ assertions to [H].** The first pass confirmed PG18, pgvector 0.8.1, the Databricks→Neon and Snowflake→Crunchy acquisitions, the Supabase MCP disclosure, the reference-server archive + SQL-injection CVE, and Postgres MCP Pro's feature set. The second pass — this round — added:
 
-The residual ⚠LQ items below are either **qualitative judgments**, **vendor-source claims**, or **forward-looking predictions** — they are bottom-quartile by nature, not for lack of verification.
+| Item | Originally ⚠LQ because… | Promoted with… |
+|---|---|---|
+| `pgmq` vs Redis | Workload-dependent judgment | Tembo's documented **30k+ msg/sec** benchmark |
+| Apache AGE maturity | Qualitative claim | Top-level Apache project, supports PG 11–18, ships on Azure; Cypher coverage solid (Neo4j leads on advanced analytics only) |
+| Columnar analytics coverage | Evolving fast | **`pg_duckdb` v1.0**, 10–1500× speedups; explicit correction: ParadeDB's `pg_analytics` was archived/consolidated into `pg_search` |
+| pgvectorscale benchmark | Vendor-source | Specific reproducible methodology vs Pinecone s1 at 99% recall on 50M Cohere vectors; third-party corroboration |
+| pgai product scope | Naming shifts | Active Timescale project; **Semantic Catalog** for text-to-SQL is the genuinely new agent-facing feature |
+| ParadeDB/`pg_search` positioning | Fast-moving | v0.22+, Postgres-native index type, shipped on Neon |
+| Advisory MCP ops maturity | "Real but early" | Now documented shipping pattern (Supabase Advisors + `get_advisors`; Postgres MCP Pro + `hypopg`; Continue.dev RLS-audit workflow) |
+| SQL-result wrapping efficacy | "Imperfect by Supabase's own admission" | NCSC framing + Pedro et al. (ICSE 2025) + NVIDIA guidance: the meta-claim "reduces, does not eliminate" is now research-backed |
+
+**Residual ⚠LQ items (irreducibly soft):**
 
 | # | Assertion (location) | Why it's bottom-quartile | How to verify |
 |---|---|---|---|
-| 1 | `pgmq`/`UNLOGGED`/`LISTEN-NOTIFY` adequately replace Redis (Page 3) | "Good enough" is workload-dependent judgment | Benchmark against your throughput/latency target |
-| 2 | Apache AGE is "less mature than native graph DBs" (Page 3) | Qualitative maturity claim | AGE release activity vs Neo4j feature parity |
-| 3 | Citus/Hydra/`pg_analytics`/DuckDB-FDW cover columnar analytics (Page 3) | Coverage/HTAP claim, evolving fast | Test each on your analytics workload |
-| 4 | pgvectorscale "beats specialized vector DBs on cost/recall" (Page 4) | Vendor (Timescale) benchmark | Independent benchmark on your data |
-| 5 | pgai / pgai Vectorizer product scope (Page 4) | Product naming/scope shifts | Timescale pgai docs |
-| 6 | ParadeDB/`pg_search` + Lantern positioning/maturity (Page 4) | Fast-moving young projects | ParadeDB / Lantern docs + release cadence |
-| 7 | Advisory / self-healing DBA ops via MCP is real-but-early (Page 8) | Emerging pattern, vendor-variable | Vendor docs (Supabase advisors, MCP Pro) |
-| 8 | SQL-result wrapping meaningfully reduces injection (Page 9) | Mitigation efficacy is "imperfect" by Supabase's own admission | Supabase "Defense in Depth" post + red-team test |
-| 9–12 | All four 12–24-month predictions (Page 10) | Forward-looking by definition | Re-assess at next refresh |
+| 1 | Lantern positioning/maturity (Page 4) | Not deeply researched; small ecosystem footprint | Lantern GitHub + release cadence |
+| 2 | MCP servers evolve into DBAs (Page 10) | Forward-looking | Re-assess at next refresh |
+| 3 | Branching becomes table stakes (Page 10) | Forward-looking | Re-assess at next refresh |
+| 4 | Everything-database thesis intensifies (Page 10) | Forward-looking | Re-assess at next refresh |
+| 5 | Vendor agent-skills paired with MCP (Page 10) | Forward-looking | Re-assess at next refresh |
+| 6 | Security tooling for DB MCP matures (Page 10) | Forward-looking | Re-assess at next refresh |
 
-> `[M→H]` boundary case (just above the cut): Page 1, claim 3 ("MCP is where the real risk and leverage live") — high-conviction synthesis resting on the well-documented security model, hence above the quartile line rather than inside it.
+> `[M→H]` boundary case (just above the cut): Page 1, claim 3 ("MCP is where the real risk and leverage live") — high-conviction synthesis resting on the documented security model, hence above the quartile line rather than inside it. The pgvectorscale benchmark also sits at this boundary — concrete methodology, but still vendor-published.
 
 ---
 
 ### Sources & confidence
 
-- **Tier 1 (first-party, [H]):** Supabase MCP docs (`supabase.com/docs/guides/ai-tools/mcp`, `/byo-mcp`, MCP auth) + "Defense in Depth for MCP Servers" blog; Microsoft Learn — Azure Database for PostgreSQL MCP & Foundry integration; MCP specification (modelcontextprotocol.io, revisions 2025-03-26 / 2025-06-18 / 2025-11-25); postgresql.org PG18 release notes.
+- **Tier 1 (first-party, [H]):** Supabase MCP docs (`supabase.com/docs/guides/ai-tools/mcp`, `/byo-mcp`, MCP auth) + "Defense in Depth for MCP Servers" blog + "Postgres Best Practices for AI Agents" blog + the Supabase agent skills library; Microsoft Learn — Azure Database for PostgreSQL MCP & Foundry integration; Apache AGE docs; MCP specification (modelcontextprotocol.io, revisions 2025-03-26 / 2025-06-18 / 2025-11-25); postgresql.org PG18 release notes.
+- **Tier 1 (academic / official, [H]):** UK NCSC — "Prompt injection is not SQL injection (it may be worse)"; Pedro et al., "Prompt-to-SQL Injections in LLM-Integrated Web Applications," ICSE 2025; "Defeating Prompt Injections by Design" (arXiv 2503.18813); NVIDIA technical blog on prompt injection.
 - **Tier 1 (repo skills):** `rag-and-agent-architecture`, `structured-vs-unstructured-retrieval`, `scalable-database-design-and-sharding`, `database-designer`, `Data Engineering/retrieval/text-to-sql`.
-- **Tier 1 (verification pass URLs, [H]):**
-  - PG18 release: `postgresql.org/about/news/postgresql-18-released-3142/`
-  - pgvector 0.8.1 (Sept 2025) + changelog: `github.com/pgvector/pgvector/blob/master/CHANGELOG.md`; binary quantization perf: `jkatz05.com/post/postgres/pgvector-scalar-binary-quantization/`
-  - Databricks → Neon (~$1B, May 14, 2025): `databricks.com/company/newsroom/press-releases/databricks-agrees-acquire-neon-…`; TechCrunch coverage
-  - Snowflake → Crunchy Data (~$250M, June 2, 2025): `crunchydata.com/blog/crunchy-data-joins-snowflake`; `businesswire.com/news/home/20250602455530/…`
-  - Supabase MCP injection: General Analysis write-up; Simon Willison `simonwillison.net/2025/Jul/6/supabase-mcp-lethal-trifecta/`; Pomerium "When AI Has Root" post-mortem
-  - Reference `postgres` MCP archive + SQL-injection: `github.com/modelcontextprotocol/servers-archived/tree/main/src/postgres`; Datadog Security Labs disclosure
-  - Postgres MCP Pro: `github.com/crystaldba/postgres-mcp` and `crystaldba.ai/blog/post/announcing-postgres-mcp-server-pro`
-- **Tier 2 (vendor/community, remaining [M ⚠LQ]):** pgvectorscale / pgai (Timescale), ParadeDB / Lantern, DB-Engines rankings, Stack Overflow Developer Survey.
-- **All remaining lowest-quartile claims are enumerated in the Lowest-Quartile Register above.**
+- **Tier 1 (verification-pass URLs, [H]):** PG18 release notes; pgvector CHANGELOG; Tembo pgmq 30k msg/sec benchmark; Apache AGE GitHub + Microsoft Learn; pg_duckdb v1.0 release + MotherDuck blog; ParadeDB `pg_search` docs + pg_analytics archive notice; Timescale pgvectorscale README + Pinecone-comparison post; Timescale pgai repo + Vectorizer docs; Databricks → Neon and Snowflake → Crunchy press releases; Simon Willison + Pomerium + General Analysis Supabase-MCP write-ups; Datadog Security Labs reference-server SQL-injection disclosure; `modelcontextprotocol/servers-archived/src/postgres`; `crystaldba/postgres-mcp` repo + announcement post; Supabase Performance + Security Advisors docs; Continue.dev Supabase MCP RLS workflow.
+- **Tier 2 (vendor/community):** DB-Engines rankings, Stack Overflow Developer Survey, dbhub.ai vendor reviews.
+- **Residual ⚠LQ:** Lantern + the five forward-looking predictions enumerated in the Register above.
