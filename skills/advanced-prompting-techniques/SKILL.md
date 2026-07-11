@@ -220,3 +220,24 @@ answer, specifies format precisely, gives the model the relevant context.
 - **Prompt versions matter.** Two prompts that look "the same" can score 10% apart. Always A/B test prompt changes against a fixed eval set.
 
 Source: *Hands-On Large Language Models* by Jay Alammar and Maarten Grootendorst, prompt engineering chapters.
+
+---
+
+## Extension — the in-context learning ladder & prompt structure
+*Source: Roberto Infante, AI Agents and Applications (Manning), Ch. 2. Paraphrased.*
+
+Climb this ladder only as far as the task forces you — each rung costs tokens and complexity:
+
+| Rung | What it is | Reach for it when | Watch out for |
+|---|---|---|---|
+| Zero-shot | Instructions only | The task is common and the model knows it | Fails on novel/intricate reasoning |
+| One-shot | One worked example | You need to pin the output *shape* | One example rarely *teaches a concept* |
+| Two-shot | Two examples (a contrast) | One didn't generalize | May still under-specify a rule |
+| Few-shot | Several examples, delimiter-structured fields | The model must *induce a rule* from patterns | Every example burns tokens; keep examples out of the template |
+| Chain-of-Thought | Examples/instructions spelling out reasoning steps | Multi-step/deterministic reasoning where order matters | Modern reasoning models often self-decompose — re-test if you still need it |
+| Tree of Thought | Explore multiple branches, evaluate, backtrack | Strategic tasks needing lookahead (planning, puzzles) | Much more expensive; overkill for simple tasks |
+| Thread of Thought | Systematically parse noisy/huge context, filter distractions | Chaotic contexts that derail the model | A *focus* aid, not a reasoning-depth booster |
+
+**8-part prompt structure (checklist, not a form):** Persona · Context · Instruction · Input · Steps · Tone · Output format · Examples. You rarely need all eight and needn't label them (models infer purpose). Two high-leverage habits: **force the output format** (JSON/CSV/table with named fields when output feeds code) and **condition role + tone + length caps** (models pad without them).
+
+**Durability note:** a prompting weakness you carefully patch today often disappears when the base model improves — periodically re-test whether your scaffolding still earns its keep.

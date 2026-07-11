@@ -323,3 +323,7 @@ The RAG (Retrieval-Augmented Generation) Architect skill provides comprehensive 
 Building effective RAG systems requires careful consideration of each component in the pipeline. The key to success is understanding the tradeoffs between different approaches and choosing the right combination of techniques for your specific use case. Start with simple approaches and gradually add sophistication based on evaluation results and production requirements.
 
 This skill provides the foundation for making informed decisions throughout the RAG development lifecycle, from initial design to production deployment and ongoing maintenance.
+---
+
+## See also — advanced retrieval decision layer
+For the **failure → technique** decision layer (parent/child & multi-vector indexing, rewrite / multi-query / step-back / HyDE, routing across vector·SQL·graph, hybrid search + RRF, retrieval post-processing), use **[[advanced-rag-retrieval]]** — distilled from Infante, *AI Agents and Applications* (Manning), Ch. 8–10. This skill owns pipeline/chunking/embedding/eval design; that one owns "my retrieval is failing *this specific way* — which technique fixes it."

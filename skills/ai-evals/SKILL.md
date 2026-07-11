@@ -51,3 +51,10 @@ For all 2 insights from 2 guests, see `references/guest-insights.md`
 - Building with LLMs
 - AI Product Strategy
 - Evaluating New Technology
+
+---
+
+## Extension — evaluating agents in production
+*Source: Infante, AI Agents and Applications (Manning), Ch. 14. Paraphrased.*
+
+Four test types over a labeled set of **100+ query/answer pairs including adversarial cases** (prompt injections, out-of-scope): **functional** (correct/complete), **behavioral** (policy/safety/tone), **performance** (latency + cost under load), **regression** (stable against a fixed ground-truth set as prompts/tools/models change). Score accuracy/precision/recall/F1 across runs. See **[[agent-memory-and-guardrails]]** for how eval sits alongside guardrails and HITL in the production stack.

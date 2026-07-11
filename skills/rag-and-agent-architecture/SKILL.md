@@ -254,3 +254,8 @@ with what it retrieved. Categorizing read vs write keeps the agent safe.
 - **PEFT confusion.** PEFT (LoRA, adapters) is finetuning territory, not RAG. Don't mix the patterns.
 
 Source: *AI Engineering: Building Applications with Foundation Models* by Chip Huyen, Chapters 6 (RAG and Agents) and 7 (Finetuning).
+
+---
+
+## See also — dedicated build skills
+Distilled from Infante, *AI Agents and Applications* (Manning): **[[advanced-rag-retrieval]]** (Ch. 8–10 retrieval failure→fix), **[[building-agents-with-langgraph]]** (Ch. 5/11), **[[multi-agent-orchestration]]** (Ch. 12), **[[building-mcp-servers]]** (Ch. 13), **[[agent-memory-and-guardrails]]** (Ch. 14).

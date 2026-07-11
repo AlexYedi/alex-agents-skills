@@ -201,3 +201,12 @@ each one before building.
   reliability metrics.
 
 Source: *Building AI-Powered Products: The Essential Guide to AI and GenAI Product Management*, Chapter 7.
+
+---
+
+## See also — concrete build skills (LangGraph / MCP / multi-agent / production)
+This skill covers agent *patterns* in the abstract. For concrete, framework-grounded build guidance distilled from Infante, *AI Agents and Applications* (Manning):
+- **[[building-agents-with-langgraph]]** — StateGraph, typed state, conditional loops, ReAct, `create_react_agent`.
+- **[[multi-agent-orchestration]]** — single vs router vs supervisor (one-way vs return-ticket).
+- **[[building-mcp-servers]]** — expose/consume tools via MCP.
+- **[[agent-memory-and-guardrails]]** — checkpointed memory, layered guardrails, HITL, eval, deployment.

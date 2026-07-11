@@ -121,3 +121,20 @@ For all 110 insights from 60 guests, see `references/guest-insights.md`
 - AI Evals
 - Vibe Coding
 - Evaluating New Technology
+
+---
+
+## Extension — LCEL composition, summarization at scale, and model routing
+*Source: Roberto Infante, AI Agents and Applications (Manning), Ch. 1–4. Paraphrased.*
+
+**LCEL / Runnable composition.** Compose components with the pipe: `prompt | llm | StrOutputParser()`. Everything implements the `Runnable` interface, so chains read left-to-right and every step is traceable. Primitives: `RunnablePassthrough()` (forward input untouched — lets you optimize a retrieval query while keeping the original question for synthesis), `RunnableParallel({...})` (concurrent sub-chains on the same input), `RunnableLambda(fn)` (arbitrary Python in a chain), `.map()` (fan a sub-chain across a list — output is a list of dicts, so the next stage must reduce).
+
+**Summarizing past the context window — MapReduce vs. Refine:**
+- **MapReduce** — split → summarize chunks in parallel → summarize the summaries. Fast/cheap; loses cross-chunk connections. Use for breadth (e.g., a weekly roundup).
+- **Refine** — walk chunks sequentially, feeding the running summary + each new chunk. Preserves per-part essence; higher latency/cost, can't parallelize. Use where nuance matters (e.g., a per-speaker recap).
+
+**Adapt-an-LLM ladder (cheapest first):** prompt engineering → RAG → fine-tuning. RAG usually beats fine-tuning (freshness, no retraining); reserve fine-tuning for deep-specialist domains.
+
+**Model routing.** The best system often uses *several* models — a nano model for fast summarization, a mid model for synthesis, a top model for hard routing/abstraction. LangChain's standardized interface makes swapping near-zero-code, so design to keep the swap cheap.
+
+See also: [[advanced-rag-retrieval]], [[building-agents-with-langgraph]].
