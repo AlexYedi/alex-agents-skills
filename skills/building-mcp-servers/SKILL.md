@@ -20,14 +20,14 @@ MCP solves **"context integration at scale."** Without it, every agent↔tool in
 
 1. `from fastmcp import FastMCP`; `mcp = FastMCP("name")`.
 2. Decorate each capability: `@mcp.tool(description=...)` on a (usually async) function. **The description is what the consuming LLM reads to decide when to call it** — write it like a prompt, not a code comment.
-3. Run it on a transport (below): `mcp.run(transport=..., host=..., port=..., path=...)`.
+3. Run it on a transport (below): `mcp.run(transport="http", host=..., port=..., path=...)`. **(FastMCP 3.x, current 2026): the network kwargs `host`/`port`/`path` go on `run()`, not the `FastMCP()` constructor — passing them to the constructor raises `TypeError`.)**
 
 ### Transport choice
 
 | Transport | Use when |
 |---|---|
-| **STDIO** | The server runs **locally**, co-located with the client (dev, a local tool, a CLI-launched server). |
-| **Streamable HTTP** | The server is **remote** / networked / shared across clients (a hosted tool, a vendor API wrapper, anything another machine calls). |
+| **STDIO** (`transport="stdio"`) | The server runs **locally**, co-located with the client (dev, a local tool, a CLI-launched server). Default. |
+| **Streamable HTTP** (`transport="http"`) | The server is **remote** / networked / shared across clients (a hosted tool, a vendor API wrapper, anything another machine calls). *Note: `"streamable-http"` is a still-accepted deprecated alias; `"http"` is canonical in FastMCP 2.3+. `"sse"` is legacy.* |
 
 ## Validate standalone *before* wiring into an agent
 
@@ -38,7 +38,7 @@ Use the **MCP Inspector** (`npx @modelcontextprotocol/inspector`) to call the se
 1. `client = MultiServerMCPClient({ "myserver": {"url": "...", "transport": "streamable_http"} })`.
 2. `remote_tools = await client.get_tools()`.
 3. Combine with local tools: `tools = [local_tool, *remote_tools]`.
-4. Feed into `create_react_agent(model=..., tools=tools, ...)` (see [[building-agents-with-langgraph]]).
+4. Feed into your agent — `create_agent(model=..., tools=tools, ...)` in current LangChain 1.0 (`create_react_agent` still works, deprecated). See [[building-agents-with-langgraph]].
 
 **Consuming remote tools makes the loop async** — your chat loop and `main()` become `await agent.ainvoke(...)` / `asyncio.run(main())`. Local and remote tools coexist in the same agent; you can swap a local mock tool for a real remote MCP tool without changing the agent's structure.
 
@@ -47,14 +47,15 @@ Use the **MCP Inspector** (`npx @modelcontextprotocol/inspector`) to call the se
 - The **tool `description`** is load-bearing — a vague description means the model won't call the tool at the right time.
 - Mixing local (STDIO) and remote (HTTP) tools is fine, but remote consumption forces **async** through the whole call path.
 - Validate in **Inspector first**; don't debug transport/schema issues through the agent.
+- **Transport-string footgun (verified 2026):** the FastMCP *server* uses `transport="http"` (hyphenated `"streamable-http"` is a deprecated alias), but the `MultiServerMCPClient` *client* config requires the underscore `"transport": "streamable_http"` — the hyphenated form is **rejected** client-side. Opposite conventions on the two sides.
 - Don't confuse *building* an MCP server (this skill) with the harness's *connected* MCP servers — those are consumed, not built here.
 
 ## Map to the Empire State pipeline
 
 Stand up a FastMCP server exposing read tools over the Notion/Supabase spine — `get_event(name)`, `list_recent_events(days)`, `find_person(name)` — validate each in MCP Inspector, then register the server into the event-content agent so drafting pulls **live** event context through one standard interface instead of ad-hoc Notion calls. This is the cleanest way to make your data agent-consumable.
 
-## Key APIs (verify against current FastMCP/langchain-mcp docs)
+## Key APIs (verified against FastMCP 3.x / langchain-mcp-adapters docs, 2026)
 
-`from fastmcp import FastMCP` · `FastMCP("name")` · `@mcp.tool(description=...)` · `mcp.run(transport="streamable-http"|"stdio", host, port, path)` · `MultiServerMCPClient({name: {url, transport}})` · `await client.get_tools()` · MCP Inspector: `npx @modelcontextprotocol/inspector` · `CallToolResult`.
+`from fastmcp import FastMCP` · `FastMCP("name")` · `@mcp.tool(description=...)` (or bare `@mcp.tool`; docstring is the default description) · `mcp.run(transport="http"|"stdio", host=, port=, path=)` (network kwargs on `run()`, not the constructor, in v3) · client: `from langchain_mcp_adapters.client import MultiServerMCPClient` → `MultiServerMCPClient({name: {"url": ..., "transport": "streamable_http"}})` (underscore; STDIO uses `{"command", "args", "transport": "stdio"}`) · `await client.get_tools()` · MCP Inspector: `npx @modelcontextprotocol/inspector` · `CallToolResult` (snake_case fields: `is_error`, `structured_content`).
 
-_Source: Infante, *AI Agents and Applications* (Manning), Ch. 13._
+_Source: Infante, *AI Agents and Applications* (Manning), Ch. 13; identifiers verified against current FastMCP 3.x / langchain-mcp-adapters docs (2026)._

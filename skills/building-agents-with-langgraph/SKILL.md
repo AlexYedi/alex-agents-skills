@@ -21,7 +21,7 @@ The tell: if you catch yourself wanting the pipeline to *look at its own interme
 
 A **typed state object flows through nodes (Python functions) connected by edges (some conditional).** That's the whole thing. It's a state machine, not a pipeline.
 
-- **State** — a `TypedDict` whose fields thread through the graph. Node functions receive state and return a **partial update** (`return {"queries": qs}`), never a full replacement. For fields that *accumulate* (a message list), annotate with a reducer: `messages: Annotated[Sequence[BaseMessage], operator.add]`.
+- **State** — a `TypedDict` whose fields thread through the graph. Node functions receive state and return a **partial update** (`return {"queries": qs}`), never a full replacement. For fields that *accumulate* (a message list), annotate with a reducer: `messages: Annotated[list, add_messages]` (`from langgraph.graph.message import add_messages` — handles append + update-by-id/de-dupe; prefer it over a bare `operator.add`). The prebuilt `MessagesState` gives you this field for free.
 - **Nodes** — `graph.add_node("name", fn)`. A node is just `def fn(state) -> dict`.
 - **Edges** — `add_edge("a", "b")` for a fixed hop; `add_conditional_edges("node", router_fn, {"opt": "nodeX"})` where `router_fn` reads state and returns a branch key.
 - **Entry / end** — `set_entry_point("first")` and the built-in `END`.
@@ -38,7 +38,7 @@ As a graph: `START → llm_node → (conditional: tool calls?) → ToolNode → 
 ### Hand-built vs. prebuilt
 
 - **Hand-build the graph** when you need custom nodes, guardrail hooks, or non-standard control flow.
-- **Prebuilt** — `create_react_agent(model, tools, state_schema, prompt, pre_model_hook=...)` collapses the standard loop into one call. Start here; drop to a hand-built graph only when you hit its limits.
+- **Prebuilt** — collapses the standard loop into one call. **As of LangChain 1.0 (Oct 2025) the canonical form is `from langchain.agents import create_agent`** (`model`, `tools`, `state_schema`, `system_prompt=`, and guardrail logic via `middleware`). The older `from langgraph.prebuilt import create_react_agent(model, tools, state_schema, prompt, pre_model_hook=...)` still runs but is deprecated (note `prompt` → `system_prompt`, and `pre_model_hook` → middleware). Start here; drop to a hand-built graph only when you hit its limits.
 
 ## Playbook: convert a linear chain into an adaptive agent
 
@@ -62,8 +62,8 @@ That evaluator + conditional-edge + iteration-cap trio is the difference between
 
 `event-deep-research` is today an *engine with fan-out* — reliable precisely because it's mostly linear. The upgrade this skill unlocks: rebuild it as a LangGraph with a **Relevance Evaluator** node and a conditional edge that regenerates queries when a thin-signal event returns mostly-irrelevant results (cap 3), so it self-corrects instead of shipping a weak brief. Pairs with [[multi-agent-orchestration]] (router/supervisor shape) and [[agent-memory-and-guardrails]] (checkpoints + scope guardrail).
 
-## Key APIs (correct against current LangGraph docs before relying on them)
+## Key APIs (verified against current LangGraph/LangChain docs, 2026 — v1.x)
 
-`from langgraph.graph import StateGraph, START, END` · `StateGraph(MyState)` · `add_node` / `add_edge` / `add_conditional_edges(node, router_fn, {key: dest})` / `set_entry_point` · `compile(checkpointer=...)` · `invoke(state)` · `@tool` · `llm.bind_tools(TOOLS)` · `ToolNode(TOOLS)` · `tools_condition` · `create_react_agent(model, tools, state_schema, prompt, pre_model_hook)`.
+`from langgraph.graph import StateGraph, START, END` · `StateGraph(MyState)` · `add_node` / `add_edge` / `add_conditional_edges(node, router_fn, {key: dest})` · entry point via `add_edge(START, "first")` (idiomatic) or `set_entry_point("first")` (still works) · `compile(checkpointer=...)` · `invoke(state)` · `@tool` (`langchain_core.tools`) · `llm.bind_tools(TOOLS)` · `ToolNode(TOOLS)` / `tools_condition` (`langgraph.prebuilt`) · `Command(update=…, goto="node")` (`langgraph.types`) · agent constructor: **`from langchain.agents import create_agent`** (canonical, v1) — legacy `from langgraph.prebuilt import create_react_agent` still runs (deprecated). Message-state reducer: prefer `Annotated[list, add_messages]` (`langgraph.graph.message`) over `operator.add`.
 
-_Source: Infante, *AI Agents and Applications* (Manning), Ch. 5, 11._
+_Source: Infante, *AI Agents and Applications* (Manning), Ch. 5, 11; identifiers verified against current LangGraph/LangChain docs (2026)._

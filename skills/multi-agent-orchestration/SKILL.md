@@ -31,7 +31,7 @@ Before routing, run a cheap classifier LLM. If the request is out of scope, emit
 
 ## Building a supervisor
 
-Build it like a ReAct agent, but pass it a **list of agents as tools** and a **high-grade model** (the coordination decisions are the hard part). The supervisor invokes agents, receives their returns, decides whether to call another or re-query, and synthesizes the final answer.
+Build it like a ReAct agent, but pass it a **list of agents as tools** and a **high-grade model** (the coordination decisions are the hard part). The supervisor invokes agents, receives their returns, decides whether to call another or re-query, and synthesizes the final answer. In current LangChain (1.0), build the agent with `from langchain.agents import create_agent`; there's also a dedicated `langgraph-supervisor` package (`create_supervisor`) if you want the pattern prebuilt.
 
 ## Gotchas
 
@@ -43,8 +43,8 @@ Build it like a ReAct agent, but pass it a **list of agents as tools** and a **h
 
 The four research specialists (`company-researcher`, `person-researcher`, `topic-landscape-analyst`, `competitive-signal-scanner`) are today a **parallel fan-out** — a supervisor's fan-out *without* the return-ticket loop. Two upgrade paths: (a) formalize as a **router** if each request cleanly belongs to one specialist, with a scope guardrail rejecting non-event asks before any specialist spend; (b) go **supervisor** if you want the hub to receive each return, decide whether to re-query, then call the synthesizer. Note the SDK constraint recorded in the project: subagents can't spawn subagents, so any fan-out runs from the parent thread — a router/supervisor graph is the clean way to express that from one place.
 
-## Key APIs (verify against current LangGraph docs)
+## Key APIs (verified against current LangGraph/LangChain docs, 2026 — v1.x)
 
-`StateGraph(AgentState)` · `class AgentType(str, Enum)` · `llm.with_structured_output(AgentTypeOutput)` · node returns `Command(update=state, goto=agent_name)` · `add_edge(agent, END)` · `set_entry_point("router_agent")` · supervisor = `create_react_agent` given agents-as-tools + a strong model.
+`StateGraph(AgentState)` · `class AgentType(str, Enum)` · `llm.with_structured_output(AgentTypeOutput)` · router node returns `Command(update=state, goto=agent_name)` (`from langgraph.types import Command`) · `add_edge(agent, END)` · entry via `add_edge(START, "router_agent")` (idiomatic) or `set_entry_point("router_agent")` (still works) · supervisor agent = **`from langchain.agents import create_agent`** (v1 canonical; legacy `langgraph.prebuilt.create_react_agent` still runs) given agents-as-tools + a strong model, or the prebuilt `create_supervisor` from `langgraph-supervisor`.
 
-_Source: Infante, *AI Agents and Applications* (Manning), Ch. 12._
+_Source: Infante, *AI Agents and Applications* (Manning), Ch. 12; identifiers verified against current LangGraph/LangChain docs (2026)._

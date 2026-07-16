@@ -50,7 +50,7 @@ Diagnose which stage owns the failure first, then pick from that column.
 All share one shape: **transform the question, keep the original for synthesis** (`RunnablePassthrough()` forwards the original).
 
 - **Rewrite-Retrieve-Read** — clean a casually-worded question before retrieval.
-- **Multi-query** — 3–5 phrasings → retrieve each → merge with RRF/dedup. Cost: N× retrieval.
+- **Multi-query** — 3–5 phrasings → retrieve each → return the **unique union (dedup)** of the results. (LangChain's `MultiQueryRetriever` does a plain set-union, *not* rank fusion — RRF is the separate **RAG-fusion** technique below.) Cost: N× retrieval.
 - **Step-back** — generate a *more abstract* question for broader context; synthesize on detailed + abstract context. Needs a capable model.
 - **HyDE** — LLM writes a *fake answer*; retrieve using its embedding (closer to real answer-chunks than the question). Retrieval-only, never shown to the user; can hallucinate off-target.
 - **Decomposition** — single-step (independent sub-questions, parallel) or multi-step (dependent chain; LangChain has no built-in multi-step class — see LlamaIndex's `MultiStepQueryEngine`).
@@ -59,20 +59,22 @@ All share one shape: **transform the question, keep the original for synthesis**
 
 - **Routing** — an LLM classifies the question and dispatches to vector store (semantic), **text-to-SQL** (structured facts/aggregations), or **knowledge-graph / Cypher-SPARQL** (relationships). Give it few-shot examples + a fallback; **misrouting is silent** — trace it.
 - **Self-querying** — infer a metadata filter from the NL question ("festivals in Newquay" → `venue=Newquay` + semantic search). Options: explicit `search_kwargs` filter, `SelfQueryRetriever.from_llm` (+ `AttributeInfo`, needs `lark`), or a typed function-call (`StructuredQuery` → `ChromaTranslator`).
-- **Hybrid search** — dense (embeddings) + sparse (BM25), merged by **Reciprocal Rank Fusion (RRF)**: `Σ 1/(rank + k)` across ranked lists, then rerank. Caveat: LangChain's `BM25Retriever` is in-memory and doesn't scale to millions of docs.
+- **Hybrid search** — dense (embeddings) + sparse (BM25), merged either by **Reciprocal Rank Fusion (RRF)** — `Σ 1/(rank + k)`, `k≈60`, rank-based, then rerank (this is what LangChain's `EnsembleRetriever` uses) — or by a **weighted linear blend** of normalized dense+sparse scores (common in Weaviate/Qdrant/pgvector). Caveat: LangChain's `BM25Retriever` is in-memory (`rank_bm25`) and doesn't scale to millions of docs.
 - **Post-processing** — **similarity-score threshold** (`search_type="similarity_score_threshold"`, `score_threshold`), **keyword include/exclude** (filter in Python — no built-in), **time-weighting** (`TimeWeightedVectorStoreRetriever(decay_rate=...)`; `adjusted = similarity + (1 - decay_rate)**hours_passed`; store `last_accessed_at`).
 
 ## Text-to-SQL & KG-RAG gotchas
 
-- Text-to-SQL: `create_sql_query_chain(llm, db)` + `QuerySQLDataBaseTool`; reduce hallucinated tables/columns with few-shot prompts embedding the `CREATE TABLE` schema + sample rows; **add a "clean-SQL" pass** to strip the markdown fences models wrap SQL in (they break execution).
+- Text-to-SQL: `create_sql_query_chain(llm, db)` + `QuerySQLDatabaseTool` (note the casing — the capital-B `QuerySQLDataBaseTool` is deprecated); reduce hallucinated tables/columns with few-shot prompts embedding the `CREATE TABLE` schema + sample rows; **add a "clean-SQL" pass** to strip the markdown fences models wrap SQL in (they break execution).
 - KG-RAG: NL → Cypher/SPARQL → graph DB → prose. Same skeleton, generator swapped for the retriever. Needs a high-accuracy model + curated few-shot examples.
 
 ## Map to the Empire State pipeline
 
 Concrete builds over your Notion/Supabase corpus: (1) **parent/child indexing** — 500-char child chunks for precise recall ("exact quote on RAG cost at Ray Dev Day"), large parents returned for context; (2) **self-query over event metadata** (`event_name`, `date`, `venue`, `speaker`, `company`, `topic`) so "what did Anthropic folks say in June?" auto-infers filters; (3) **router** between a vector branch (transcripts/briefs) and a text-to-SQL branch (Content Drafts + outcomes / CRM export); (4) **time-weighted retrieval** so a funding round from last week outranks a similar note from six months ago. Always ground generation with the "answer only from context, else say you don't know" fence to kill fabricated quotes.
 
-## Key APIs (verify against current LangChain docs)
+## Key APIs (verified against current LangChain docs, 2026 — v1.x)
 
-`ParentDocumentRetriever(vectorstore, docstore, child_splitter, parent_splitter)` · `MultiVectorRetriever(vectorstore, byte_store)` · splitters from `langchain_text_splitters` · `SemanticChunker` (`langchain_experimental`) · `ChatOpenAI(...).with_structured_output(Model)` · `SelfQueryRetriever.from_llm(...)` (+ `lark`) · `create_sql_query_chain` + `QuerySQLDataBaseTool` · `as_retriever(search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.6})` · `TimeWeightedVectorStoreRetriever(decay_rate=...)`.
+**Import-path note (LangChain 1.0, Oct 2025):** the legacy retrievers, `create_sql_query_chain`, and `hub` moved to the **`langchain-classic`** package (`pip install langchain-classic`; security-fix-only through Dec 2026 — plan a real migration). Core/splitters/community/experimental were **not** reorganized.
 
-_Source: Infante, *AI Agents and Applications* (Manning), Ch. 8–10._
+`from langchain_classic.retrievers import ParentDocumentRetriever, MultiVectorRetriever, SelfQueryRetriever, TimeWeightedVectorStoreRetriever, MultiQueryRetriever` (needs `lark` for self-query) · `AttributeInfo` from `langchain_classic.chains.query_constructor.schema` · `from langchain_classic.chains import create_sql_query_chain` + `QuerySQLDatabaseTool` (from `langchain_community.tools` — **not** the deprecated `QuerySQLDataBaseTool`) · `hub.pull("rlm/rag-prompt")` via `from langchain_classic import hub` · **unchanged:** splitters (`langchain_text_splitters`), `SemanticChunker` (`langchain_experimental.text_splitter`), `BM25Retriever` (`langchain_community.retrievers`, needs `rank_bm25`), `RunnablePassthrough`/`RunnableParallel`/`RunnableLambda` (`langchain_core.runnables`), `.with_structured_output(Model)`, `.as_retriever(search_type="similarity_score_threshold", search_kwargs={"score_threshold": 0.6})`, `TimeWeightedVectorStoreRetriever(decay_rate=...)`.
+
+_Source: Infante, *AI Agents and Applications* (Manning), Ch. 8–10; identifiers verified against current LangChain docs (2026)._
