@@ -182,7 +182,7 @@ If Notion and Linear MCPs are available in the current session:
 
 - **Markdown TOC syntax does NOT work via the Notion MCP.** Tested and rejected: `[[toc]]`, `[TOC]`, `+++`, `<toc/>`, `<table_of_contents/>` — all land as escaped literal text. Only workaround is the static page-index callout above plus the `/toc` slash command in the Notion UI (one-time per page, then auto-updates).
 - **Toggle/collapsible sections use `<details><summary>...</summary>...</details>` HTML.** Notion-specific `+++ title ... +++` syntax does NOT work. The `<details>` tag is the only allowlisted HTML form for toggles.
-- **Multi-select properties take a JSON-array-string, not a comma-string or native array.** See CLAUDE.md "Notion create-pages gotchas" for full list.
+- **Multi-select properties take a JSON-array-string, not a comma-string or native array.** See `../cto-architect/references/notion-mcp-write-conventions.md` for the full list (property formats + markdown-flavor rules).
 - **Tables**: write as standard markdown `|`-table; Notion auto-converts to native `<table header-row="true">` block on write. Rendered tables sort/filter/resize natively in Notion.
 - **Auto-escaping of `<`**: `<5min` becomes `\<5min` in the stored markdown but renders correctly. Cosmetic only.
 
