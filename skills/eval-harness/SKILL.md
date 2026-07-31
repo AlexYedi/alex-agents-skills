@@ -268,3 +268,9 @@ Recommended thresholds:
 - `.claude/evals/<feature>.md` definition
 - `.claude/evals/<feature>.log` run history
 - `docs/releases/<version>/eval-summary.md` release snapshot
+
+## References
+
+- `references/cross-provider-judge.md` — designing an LLM-as-judge that resists self-preference: a
+  two-provider quorum (house-aware + independent), competence-weighted voting, escalate/fail-safe on
+  disagreement (never a correlated-model tiebreak), and the Gemini API gotchas for the independent seat.
