@@ -76,6 +76,10 @@ requiring live web data with citations.
 | **PostHog** | Product analytics | Event tracking, funnels, retention, session recording, feature flags |
 | **Google Sheets** | Data analysis | Metrics dashboards, financial models |
 
+> **Wiring PostHog + Vercel?** See `references/posthog-vercel-integration.md` for the `phx_`/`phc_`/`phs_`
+> key model (read vs capture), the read-path 403 (project-access, not scope) gotcha, and the Vercel
+> preview-env pitfalls (data vars must be replicated to Preview; use the REST API, not the CLI).
+
 ### Design & Content
 
 | Tool | Role | When to Use |
