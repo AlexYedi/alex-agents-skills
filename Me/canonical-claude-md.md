@@ -26,6 +26,7 @@ Discipline rules:
 - If you find yourself copying state between systems, you're creating drift. Replace with a pointer.
 - "Last updated 2026-MM-DD" blocks in CLAUDE.md are transitional, not permanent — they should be replaced by live hook pulls (see `<event_triggered_habits>` below).
 - Before answering a "what's the status of X" question from memory, verify against the source-of-truth system.
+- **Branch-first for non-trivial builds.** A build that adds/changes a skill, agent, command, hook, or reference; alters a schema or data contract; comes from an approved plan; or is otherwise hard to reverse → work on a **branch → PR → merge**. Trivial churn (typo, single-line fix, config tweak, doc edit) → commit to **main** directly. The enforcement mechanism (a `.git/hooks/pre-commit` guard) is project-local; this convention is universal. Plugin / canonical-file changes always land via PR for review — never auto-merge, since they propagate to every project.
 </source_of_truth_discipline>
 
 <build_better_not_faster>
@@ -53,7 +54,7 @@ User-scope hooks fire automatically in every Claude Code session, in every proje
 
 Disable per-project: add `"hooks": {"disable": ["<hook-name>"]}` to `.claude/settings.local.json`. Disable globally: same key in `~/.claude/settings.local.json`. Hook names: `linear-priorities`, `repo-touch-nudge`.
 
-Per-project `.claude/settings.json` can register additional project-scope hooks that fire alongside the universal ones (e.g., Empire State's `v2-trigger-detect.sh` for pipeline-specific signals). Both layers' Stop-event `additionalContext` outputs concatenate.
+Per-project `.claude/settings.json` can register additional project-scope hooks that fire alongside the universal ones (e.g., Empire State's `v2-trigger-detect.sh` for pipeline-specific signals). Both layers' Stop-event `systemMessage` outputs concatenate — Stop hooks use the top-level `systemMessage` field, **not** `additionalContext` (which the schema rejects on Stop). See `Me/hook-schema-reference.md`.
 
 See `Me/CLAUDE_UNIVERSAL_USAGE_PATTERNS.md` for the full reference (adding a new universal hook, env-var conventions, state-dir patterns).
 </event_triggered_habits>
