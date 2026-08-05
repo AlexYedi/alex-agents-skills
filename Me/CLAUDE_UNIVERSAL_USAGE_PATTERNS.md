@@ -53,9 +53,11 @@ Hook names: `linear-priorities`, `repo-touch-nudge`.
 
 ### Project-scope hooks coexist
 
-Per-project `.claude/settings.json` can register additional hooks that fire alongside the universal ones. Empire State keeps `v2-trigger-detect.sh` + `v2-trigger-log.sh` at project scope because the v2 triggers are pipeline-specific. Stop-event hooks from both layers fire; their `additionalContext` outputs concatenate.
+Per-project `.claude/settings.json` can register additional hooks that fire alongside the universal ones. Empire State keeps `v2-trigger-detect.sh` + `v2-trigger-log.sh` at project scope because the v2 triggers are pipeline-specific. Stop-event hooks from both layers fire; their top-level `systemMessage` outputs concatenate — Stop hooks use `systemMessage`, **not** `additionalContext` (which the schema rejects on Stop). See `Me/hook-schema-reference.md`.
 
 ### Adding a new universal hook
+
+> **Read `Me/hook-schema-reference.md` BEFORE writing a hook.** The output schema is event-specific — a Stop hook uses top-level `systemMessage`; only `SessionStart`/`UserPromptSubmit`/`PostToolUse`/`PostToolBatch` support `hookSpecificOutput.additionalContext`. Copying one event's example to another silently breaks.
 
 1. Drop script into `~/.claude/hooks/`, chmod +x.
 2. Register in `~/.claude/settings.json` under the relevant event.
