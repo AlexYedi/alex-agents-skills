@@ -111,6 +111,10 @@ Migration is happening in waves under YED-31.
 
 **Total plugin skills after wave 2e:** 256.
 
+- **Consulting suite (v0.4.0)** — 14 skills added under the `consulting-` name prefix: a single cross-linked AI/automation transformation engagement in four phases. Phase A (discovery): `boundary-setting` (SIPOC + VSM), `process-recovery` (process mining), `cost-time-baseline` (TDABC), `tacit-work-elicitation` (CIT + contextual inquiry). Phase B (diagnosis): `task-decomposition` (Autor-Levy-Murnane), `ai-suitability-scoring` (SML rubric), `automation-design` (levels of automation), `constraint-analysis` (Theory of Constraints). Phase C (plan & justify): `roadmap-sequencing` (WSJF), `benefits-case` (benefits realization + Amdahl). Phase D (specify & build safely): `behaviour-specification` (Given-When-Then + ISO 29148), `agent-contract` (Design by Contract + Hoare logic), `failure-design` (FMEA + pre-mortem), `acceptance-bar` (SLOs & error budgets). The prefix is the grouping mechanism (flat discovery means a `consulting/` subfolder would not load). Each skill cites its academic source and cross-links to the neighbouring suite steps plus existing library skills.
+
+**Total plugin skills after the consulting suite:** 270.
+
 **Still under domain folders after YED-31:**
 - `Product/references/` (Decision_Intelligence, Jobs_to_be_Done, building-ai-powered-products), `Software Development/references/` (book distillations), `Data Engineering/references/` — shared source material; SKILL.md bodies cite these paths, but the citations don't resolve relative to the SKILL.md's location now and didn't before the migration either. Consolidation is follow-up.
 - All `agents/` and `commands/` subdirs across umbrellas — YED-34.
