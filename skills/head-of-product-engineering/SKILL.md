@@ -42,6 +42,19 @@ Before any workflow, do these three steps in order:
 
 **Note on specialist count:** the library has **10 product specialists**, but `systems-thinking` is hard-invoked twice — once in Workflow 1 (Discovery, stakeholder map) and once in Workflow 4 (Prioritization, Three-Horizon lens). The two invocations apply different lenses from the same skill; treat them as distinct passes.
 
+### Systems-thinking lenses per invocation
+
+The systems-thinking skill has eight reference files, each addressing a different facet (see `../systems-thinking/references/`). Use the right one at each invocation:
+
+- **Workflow 1 (Discovery, stakeholder map):** load `feedback-loops-stocks-flows.md`, `system-archetypes.md`, and `diagnostic-questions.md`. The Discovery pass should produce a CLD sketch (stocks, flows, dominant R/B loops) and a check against the 8 archetypes for the problem space. Apply the eight-phase analysis from `diagnostic-questions.md` — at minimum phases 1-4. Output: stakeholder map + named loops + suspected archetype + bounded-rationality view of each player's incentives.
+- **Workflow 4 (Prioritization, Three-Horizon lens):** load `leverage-points.md` and the Three-Horizon section of `../systems-thinking/SKILL.md`. Score each candidate item on:
+  - Which leverage point it acts on (#12 parameters → #1 transcending paradigms)
+  - Which horizon it serves (H1 / H2 / H3)
+  - Whether it strengthens or weakens system properties (resilience, self-organization, hierarchy — see `system-properties.md`)
+  A roadmap that's all #12-level work will feel productive and produce no strategic shift; flag this in the prioritization output.
+
+For ad-hoc systems analysis during any workflow (e.g., a stakeholder asks "what could go wrong post-launch?"), pull `dancing-with-systems.md` and `applications-to-product-and-engineering.md` for posture and worked examples.
+
 ## Hard-invocation protocol
 
 For each workflow, do **not** paraphrase, shortcut, or merge specialists. Invoke as follows:
@@ -177,6 +190,12 @@ If Notion and Linear MCPs are available in the current session:
     Update strategy: use `replace_content` only on first turn or when the page body is scaffolding-only. On n+1, prefer `update_content` with anchored swaps so existing content is preserved unless explicitly superseded. Per-property updates (e.g., Architecture Summary) use `update_properties`.
 
 2. **Linear:** emit one issue per PRD user story, labeled `cycle-{n}` and `project-{slug}`. Wire `blockedBy` from the PRD's "Depends on" lines so the dependency graph is queryable in Linear's view layer. Create labels as workspace-scoped if they don't already exist.
+
+    Filing mechanics:
+    - **Resolve the project first.** Fuzzy-match the project name against existing Linear projects (`list_projects`). On a clear match, pass it on every issue; on several candidates, show the top 3 and ask; on no match, leave `project` unset and surface that in delivery. Never create a Linear project unilaterally.
+    - **File in dependency order.** No story is filed before its blockers. Keep an in-memory map of story title → returned issue ID and look blockers up in it; wait for the blocker's `save_issue` response before firing a dependent. A dependency on an issue outside this PRD uses the supplied ID; one that can't be resolved is surfaced in delivery, never silently dropped.
+    - **Labels** are auto-created by name when passed in `labels`; no separate label call. Default priority Medium unless the PRD states one.
+    - **Auth error:** report it immediately (reconnect via `/mcp`); do not silently fall back to text-only output.
 
 ### Notion delivery gotchas (verified 2026-04-26)
 

@@ -104,5 +104,5 @@ What the system is *actually* trying to do, deduced from behavior. Usually diffe
 
 - For diagnosing *why* a system isn't responding to interventions, see `system-archetypes.md` — most chronic system problems are one of 8 named patterns.
 - For the foundational vocabulary (stocks, flows, R/B loops, CLD notation), see `feedback-loops-stocks-flows.md`.
-- For applying this list to product/software/GTM work, see `applications-to-software-and-product.md`.
+- For applying this list to product/software/GTM work, see `applications-to-product-and-engineering.md`.
 - For the practitioner conduct that lets you actually use these without wrecking things, see `dancing-with-systems.md`.

@@ -15,9 +15,7 @@ Companion pieces in the same plugin:
 
 The skill's `references/` directory holds the canonical Meadows-derived source files. The agent reads from these.
 
-**Drift policy:** the `alex` plugin is the single source of truth. Project-local overrides at `<project>/.claude/skills/systems-thinking/` take precedence over the plugin version inside that project only (e.g., Empire State keeps its own H1/H2/H3 horizon framework and pipeline-specific applications file locally). Updates to the canonical version go in this plugin and propagate to all projects automatically via `claude plugin update alex@alex-agents-skills` (or the post-commit hook if installed). Project overrides need to be kept in sync manually.
-
-Replaces the YED-25 "bootstrap by copying" pattern — copying was the pre-plugin distribution method. Today the plugin handles distribution; only the project-specific overlay (horizon framework + applications-to-<project>.md) is copy-and-customize.
+**Drift policy:** the `alex` plugin is the single source of truth, including the Three-Horizon Iteration Framework below. Projects should not keep a local copy of this skill; a project that needs project-specific material (e.g., a worked diagnostic of its own system) keeps it in its own reference docs and points here for the canonical frameworks. Updates go in this plugin and propagate via `claude plugin update alex@alex-agents-skills` (or the post-commit hook if installed).
 
 
 
@@ -97,6 +95,110 @@ Six insights from product-leader interviews that are useful as concrete handles 
 
 Full versions in `references/guest-insights.md`.
 
+## Three-Horizon Iteration Framework
+
+*Use to frame every build across MVP → Scaling → Enterprise-Prod horizons so polish decisions are explicit per iteration and future states are deliberately deferred, not accidentally forgotten.*
+
+Every product — portfolio projects, internal tooling, hypothetical SaaS — benefits from being scoped against three horizons simultaneously. The horizons aren't sequential phases you'll definitely reach; they're lenses. Most builds land at H1 permanently. A few graduate to H2. Very few need H3. But *thinking* about all three at intake forces honest trade-off decisions and prevents the worst failure modes: over-engineering at H1, under-building at H2 when scale hits, never shipping because H3 polish was mistaken for minimum viable.
+
+### Horizon 1 — MVP
+
+The smallest thing that proves the core loop works. "Would a user use / pay for / recommend this?" level.
+
+**Characteristics:**
+- Single-user or tight-loop testing (N=1 is acceptable)
+- Manual fallbacks acceptable
+- Hardcoded values acceptable
+- One happy path, happy-path-only error handling
+- Deployed somewhere a link can be shared (Replit / Vercel preview)
+- Documented in a README, not a KB
+
+**Polish bar:** works, not beautiful. Any UX friction you notice personally, fix. Anything you don't notice, ship.
+
+### Horizon 2 — Scaling
+
+What breaks when usage goes from 1 to 50 to 500. The "a bunch of people like this and are using it" stage.
+
+**Characteristics:**
+- Rate limits, caching, pagination mandatory
+- DB indexes on hot paths
+- Structured logging + error tracking (Sentry or equivalent)
+- Retry logic with exponential backoff on external calls
+- Auth with real session management, not just magic links
+- Multi-user data isolation
+- Onboarding flow that doesn't require hand-holding
+- Feature flags for risky launches
+- CI that runs tests on every PR
+
+**Polish bar:** reliable + debuggable. UX friction that 5%+ of users hit, fix. Edge cases shared by <1%, log and defer.
+
+### Horizon 3 — Enterprise-Prod
+
+The bar required for a paying enterprise customer to deploy this into production. The "would this survive a security review" stage.
+
+**Characteristics:**
+- SOC2 Type I posture minimum
+- SSO / SAML auth (not just email/password)
+- RBAC with audit logs
+- Data residency options
+- Tenancy isolation (logical or physical)
+- Observability: metrics, traces, alerts, runbooks for common failures
+- SLA defined with error budgets
+- Incident response process + postmortem template
+- Vendor risk artifacts (DPA, security questionnaire ready)
+- Pen-test readiness
+- Full documentation: API docs, admin guides, end-user guides
+- Dedicated support channel
+
+**Polish bar:** mandatory everywhere. Every surface is a potential enterprise deal-breaker.
+
+### Trade-off matrix
+
+For every feature/build decision, ask: which horizon am I solving for right now?
+
+| Decision | H1 default | H2 default | H3 default |
+|----------|------------|------------|------------|
+| Error handling | Happy path only | Retry + log + user-visible error | Retry + log + alert + runbook entry |
+| Auth | Magic link / email-only | Session-based + password reset | SSO / SAML + RBAC |
+| Observability | Console logs | Sentry + basic dashboards | Full metrics/traces/alerts + incident runbooks |
+| Documentation | README | README + API docs | + admin guide + end-user guide + runbooks |
+| Data model | Permissive | Migrations + backfills tested | + RLS + audit log + soft deletes |
+| Performance | "Fast enough on my laptop" | p95 budgets defined + monitored | SLA-backed + capacity planning |
+| Testing | Smoke test by hand | CI + critical path automation | + load tests + chaos testing |
+| Security | No secrets in repo | + secrets manager + dependency scanning | + pen test + SOC2 audit + bug bounty |
+
+Use this table to make polish decisions explicit, not implicit. "Skipping CI at H1 is fine — it becomes mandatory at H2 trigger."
+
+### Horizons mapped to Meadows' framework
+
+The three horizons aren't just polish levels; they correspond to which system properties (`references/system-properties.md`) are being managed for:
+
+- **H1 — manage for evidence.** The dominant question is: does the core loop produce value? Resilience, self-organization, and hierarchy are mostly nice-to-have at H1; the productive loop has to exist before it can be made resilient.
+- **H2 — manage for resilience.** Multiple users, multi-region, varying load. Now the system needs balancing loops that can absorb shocks. Most of the H2 features in the matrix above are resilience investments.
+- **H3 — manage for resilience + self-organization + hierarchy.** Audit logs, tenancy isolation, RBAC, SOC2 — these aren't just compliance. They're the substrate that lets the system operate at scale across many sub-systems (customer orgs) that need to be largely self-managing under thin coordination.
+
+This is why H3 work feels qualitatively different from H2. It's not "more H2"; it's a different set of systemic properties being engineered for.
+
+### Deferred Items table (part of the Future-State Register)
+
+Every build that ships at H1 or H2 gets a **Deferred Items** table written into that project's Future-State Register (see `../head-of-product-engineering/SKILL.md` for the full Register schema). Three columns:
+
+| Deferred Item | Trigger to Address | Effort Estimate |
+|---------------|--------------------|-----------------|
+| SSO auth | First enterprise inbound | 2-3 days |
+| Rate limiting | >10 concurrent users | 4 hours |
+| Audit log | SOC2 evidence gathering | 1 week |
+
+This makes deferrals explicit and revisitable. At each horizon transition, the table becomes the work backlog for that horizon. Reviewed at every `head-of-product-engineering` invocation for the same product.
+
+### How this threads into other skills
+
+- **`shipping-products`** — the "ship to learn, then polish" principle applies *within a horizon*, not across them. Don't use it as a reason to never reach H2.
+- **`prioritizing-roadmap`** — when comparing builds, horizon tier is part of the comparison. A Tier-0 launch for an H1 tool ≠ Tier-1 launch for an H2 product.
+- **`launch-tiering`** — launch tier should correspond to product horizon. Most H1 work warrants Tier-0 launch effort. Tier-2+ launches imply H2 or H3 product readiness.
+- **`ai-product-strategy`** — the "build for the slope, not the snapshot" principle applies across horizons. H1 model choice should be replaceable at H2.
+- **`risk-playbooks`** — risk categories intensify per horizon. A Product & Reliability risk at H1 is "it works on my laptop"; at H3 it's "five nines with documented failover."
+
 ## Reference files
 
 | File | When to use |
@@ -126,13 +228,12 @@ Full versions in `references/guest-insights.md`.
 
 ## Project-specific extensions
 
-This skill is the canonical foundation. Project repos that depend on it (e.g., personal pipelines, specific product builds) often add project-specific layers on top:
+This skill is the canonical foundation, horizon framework included. Project repos that depend on it often add a project-specific layer on top:
 
-- A *horizon framework* (e.g., MVP / Scaling / Enterprise-Prod) that ties polish decisions to system-property design choices.
-- An *applications-to-<project>.md* reference file with stocks, flows, and loops sketched for that specific project.
-- A *systems-analyst* sub-agent definition that performs the eight-phase analysis as a delegated task.
+- An *applications-to-<project>.md* reference (in the project's own docs) with stocks, flows, and loops sketched for that specific project.
+- The `alex:systems-analyst` agent performs the eight-phase analysis as a delegated task; no project copy is needed.
 
-Look in the project's own `.claude/skills/systems-thinking/` for these extensions; they should reference (not duplicate) the canonical content here.
+Those extensions should reference (not duplicate) the canonical content here.
 
 ## Related skills
 

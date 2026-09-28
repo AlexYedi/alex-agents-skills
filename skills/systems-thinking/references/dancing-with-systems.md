@@ -156,4 +156,4 @@ The dance has prerequisites. It needs full humanity — rationality, intuition, 
 - `system-archetypes.md` — what patterns to recognize
 - `feedback-loops-stocks-flows.md` — vocabulary for sketching the system
 - `system-properties.md` — qualities to design for (resilience, self-organization, hierarchy)
-- `applications-to-software-and-product.md` — how all of this lands in product/software/GTM contexts
+- `applications-to-product-and-engineering.md` — how all of this lands in product/software/GTM contexts

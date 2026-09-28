@@ -193,5 +193,5 @@ When you spot one archetype, look for its common partners.
 
 - For why each archetype is hard to escape (the leverage points where the escape lives), see `leverage-points.md`.
 - For the underlying mechanics of the feedback loops involved, see `feedback-loops-stocks-flows.md`.
-- For applying these archetypes to product, software, and GTM contexts, see `applications-to-software-and-product.md`.
+- For applying these archetypes to product, software, and GTM contexts, see `applications-to-product-and-engineering.md`.
 - For the conduct that lets a practitioner notice these traps before getting fully captured by them, see `dancing-with-systems.md`.

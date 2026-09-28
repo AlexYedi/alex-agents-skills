@@ -167,4 +167,4 @@ If you only have 10 minutes: do steps 1, 2, 3, and 4. If you have 30 minutes: ad
 - `leverage-points.md` — interventions for phase 6
 - `dancing-with-systems.md` — conduct for phase 8
 - `system-properties.md` — qualities to design for / preserve
-- `applications-to-software-and-product.md` — worked examples in product/software/GTM
+- `applications-to-product-and-engineering.md` — worked examples in product/software/GTM

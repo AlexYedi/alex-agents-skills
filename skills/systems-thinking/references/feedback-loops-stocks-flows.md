@@ -288,7 +288,7 @@ Imagine a team whose velocity is degrading and nobody can quite say why.
 
 That's the move from "everyone is exhausted" to "here's the structural fix."
 
-See `applications-to-software-and-product.md` for more worked examples in product/software/GTM contexts.
+See `applications-to-product-and-engineering.md` for more worked examples in product/software/GTM contexts.
 
 ---
 
