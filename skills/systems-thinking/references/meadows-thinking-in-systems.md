@@ -86,7 +86,7 @@ Use this primer for *vocabulary, frameworks, and conduct*. Use the formal-modeli
 
 Meadows wrote with global-scale problems in mind (population, environment, economy). The frameworks port directly to product, software, and organizational systems with one caveat: **time scales compress**. Her examples often involve multi-decade feedback delays; product systems run in days-to-quarters cycles. The hierarchy of leverage points is unchanged — paradigms still beat parameters — but the cost of pushing higher leverage is much lower in a product context, which is why software cultures get to iterate paradigms in months rather than generations.
 
-See `applications-to-software-and-product.md` for the translation.
+See `applications-to-product-and-engineering.md` for the translation.
 
 ## Citation conventions used in the other reference files
 

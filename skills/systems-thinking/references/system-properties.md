@@ -174,4 +174,4 @@ If three or more boxes are unchecked across the three properties, you're looking
 - For the structural mechanics that produce these properties (loops, stocks, flows), see `feedback-loops-stocks-flows.md`.
 - For *interventions* that target these properties, see `leverage-points.md` (especially #4 self-organization, #8 balancing loops, #6 information flows).
 - For the *failure modes* that erode these properties, see `system-archetypes.md` (especially Drift to Low Performance, Shifting the Burden, Tragedy of the Commons).
-- For application to product/software systems, see `applications-to-software-and-product.md`.
+- For application to product/software systems, see `applications-to-product-and-engineering.md`.
