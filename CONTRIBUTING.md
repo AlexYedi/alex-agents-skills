@@ -45,7 +45,8 @@ Only `skills/<name>/SKILL.md` files are auto-discovered by Claude Code. Anything
 
 1. Edit `skills/<name>/SKILL.md` directly.
 2. Commit.
-3. (Automatic if `scripts/install-git-hooks.sh` has been run — see [One-time setup](#one-time-setup).) Otherwise: run `claude plugin update alex@alex-agents-skills` to refresh the user-scope cache.
+3. (Automatic if `scripts/install-git-hooks.sh` has been run — see [One-time setup](#one-time-setup).) Otherwise reinstall to refresh the user-scope cache: `claude plugin uninstall alex@alex-agents-skills --keep-data && claude plugin install alex@alex-agents-skills`. **`claude plugin update` is not enough** — it does nothing unless the version in `plugin.json` changes, so edits without a version bump never propagate through it.
+4. Restart Claude Code sessions. Running sessions keep the skill list they started with.
 4. To preview changes without committing, run Claude Code with `--plugin-dir /Users/<you>/Documents/GitHub/alex-agents-skills` — the local copy overrides the installed cache for that session.
 
 ## One-time setup
@@ -56,9 +57,9 @@ Run once per clone of this repo:
 bash scripts/install-git-hooks.sh
 ```
 
-Installs a `post-commit` hook in `.git/hooks/` (local, not tracked) that runs `claude plugin update alex@alex-agents-skills` in the background after every commit. Output goes to `${TMPDIR:-/tmp}/alex-agents-skills-plugin-update.log` — check it if a commit doesn't seem to have propagated.
+Installs `post-commit`, `post-merge`, and `post-rewrite` hooks in `.git/hooks/` (local, not tracked), so the plugin follows this repo whether HEAD moves by a local commit, a `git pull` of a PR merged on GitHub, or a rebase/amend. Each runs in the background, skips if the installed plugin is already at HEAD, and otherwise reinstalls it (uninstall `--keep-data` + install) — a reinstall copies the repo's current state regardless of version. Output goes to `${TMPDIR:-/tmp}/alex-agents-skills-plugin-update.log` — check it if a change doesn't seem to have propagated. Re-run the installer to upgrade existing hooks.
 
-To remove: `rm .git/hooks/post-commit`. If you don't run the installer, the manual `claude plugin update` step in step 3 above is required.
+To remove: `rm .git/hooks/{post-commit,post-merge,post-rewrite}`. If you don't run the installer, the manual reinstall in step 3 above is required.
 
 ## Naming conventions
 
@@ -101,7 +102,7 @@ The script copies the project's committed `.claude/{skills,commands,agents,refer
 1. Edit `.claude-plugin/plugin.json` and `.claude-plugin/marketplace.json` — bump `version`.
 2. Commit.
 3. (Optional) `claude plugin tag` to create a `alex--v<version>` git tag.
-4. Anyone with the plugin installed runs `claude plugin update alex@alex-agents-skills`.
+4. Anyone with the plugin installed runs `claude plugin update alex@alex-agents-skills` (a version bump is exactly what `update` detects).
 
 ## What does NOT belong in `skills/`
 
