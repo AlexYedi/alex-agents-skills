@@ -19,6 +19,7 @@ alex-agents-skills/
 ├── Data Engineering/        # Archive
 ├── ...                      # Other archive domains
 ├── Me/                      # Personal context and usage patterns
+├── My Projects Skills/      # Archived project kits (not plugin-loaded) — see below
 └── output/                  # Generated artifacts (gitignored where relevant)
 ```
 
@@ -83,6 +84,17 @@ The "frozen forks" pattern from YED-25 — copying skills into individual projec
 3. **Project-local overrides allowed**: each project can keep skills in its own `.claude/skills/` that take precedence over the plugin version for that project only.
 
 When porting a skill that lives both here and in a project repo, treat this repo as canonical. If a project version has diverged in ways that should be universal, port the changes back here and remove the project-local copy.
+
+## Archiving project kits
+
+Project-specific skills stay in their project's `.claude/` so they only fire there. To keep this repo a complete, portable copy of everything, each project's committed kit is also archived under `My Projects Skills/<project>/` — **stored, not loaded**. Only `skills/` at the repo root is auto-discovered, so nothing in the archive adds to dispatch or context.
+
+```bash
+scripts/snapshot-project-kit.sh ~/Documents/GitHub/Empire_State_Events_Pipeline_Take_3 empire-state-events
+scripts/snapshot-project-kit.sh ~/Documents/GitHub/gtm-os gtm-os
+```
+
+The script copies the project's committed `.claude/{skills,commands,agents,references,hooks,scripts}` at HEAD (untracked files are never included) and writes a README recording the source commit. The project repo stays the source of truth — re-run the script after meaningful changes there so the archive doesn't drift. `My Projects Skills/_legacy/` holds earlier hand-copied snapshots, kept verbatim.
 
 ## Releasing a new version
 

@@ -1,0 +1,143 @@
+# Output destinations — Notion / HubSpot / Apollo schema
+
+Canonical schema reference for the Event Research pipeline's write destinations. Extracted from
+CLAUDE.md 2026-06-02 to keep always-loaded context lean — content is unchanged. Database IDs live
+in CLAUDE.md ("Notion Database IDs"). Live schema in Notion is the ultimate source of truth; verify
+with `notion-fetch` on the data_source URL before any batch create (see
+`notion-write-gotchas.md` rule e).
+
+## Notion (Content + Research Hub) — 6 interconnected databases (verified via MCP, 2026-04-09)
+
+- **Events** (9 props): Event Name (title), Event Date (date), Location (text), Event Description (text),
+  Event Status (select: intake/researched/content_drafted/attended/post_complete),
+  Google Calendar Event ID (text — added 2026-05-21 for `/post-event-content` Granola join key),
+  relations to People/Companies/Topics/Content Drafts
+  Note: Event Description stores the raw pasted invite text. No Calendar Source property —
+  the pipeline generates value for events Alex attends AND events he doesn't (content + outreach
+  aren't gated by physical attendance).
+  Google Calendar Event ID is the raw `event.id` from the GCal MCP response (NOT iCalUID).
+  Equals Granola's `calendar_event.calendar_event_id` field — deterministic join for transcript pulls.
+  Populated automatically by `/check-new-events` → `/event-deep-research` Step 4 (inline Notion write).
+  Empty for events created before 2026-05-21 — `/post-event-content` falls back to title+date match
+  when the property is empty (dual-path resolution).
+- **People** (11 props): Name (title), Current Title (text), Email (email), Phone Number (phone),
+  LinkedIn URL (url), Known POV / Bio (text), Notes (text), Role Context (multi-select:
+  speaker/host/organizer/attendee/contact), Last Researched (date),
+  relations to Events/Company/Content Drafts
+- **Companies** (9 props): Company Name (title), Description (text — `Value prop: …` once the record has a
+  Value Frame; the frame itself is the first `## Value Frame` body section, YED-233; no separate property), Website (url), Industry / Space
+  (multi-select: AI/ML, Enterprise Software, Developer Tools, VC/Investment, Data Infrastructure),
+  Funding Stage (select: Seed, Series A, Series B, Series C, Series D, Series E, Series F, Series G,
+  Series H, Series I, Public — NO "Pre-IPO" option; use latest Series letter for late-stage private cos),
+  Recent Funding ($) (number), Recent Developments (text), Last Researched (date),
+  relations to Events/People
+- **Topics** (9 props): Topic (title), Current Events (text), Opportunities (text), Challenges (text),
+  Use Cases & Practical Applications (text), Top Questions (text), Last Updated (date),
+  relations to Events/People/Content Drafts (renamed from `Linkedin Post Drafts` 2026-05-20 via YED-38
+  for cross-DB property-name consistency)
+- **Content Drafts** (14 props): Title (title), Content Type (select: research_brief/linkedin_dm_speaker/
+  linkedin_dm_host/linkedin_post_pre/linkedin_post_post/prepared_questions/linkedin_post_synthesis/
+  post_event_brief), Event Phase (select: pre_event/during_event/post_event), Content Status (select:
+  needs_review/approved/scheduled/published/archived), Platform (select: linkedin/slack/notion_only),
+  Goal (select: reach/engagement/connection/meeting/hybrid/internal — added 2026-06-26, YED-90),
+  Target (text — the concrete target for the Goal),
+  Outcome (select: hit/partial/miss/pending/na — added 2026-06-26, YED-91), Outcome Value (text),
+  Outcome Date (date), Published URL (url),
+  Themes (multi-select — added 2026-09-28, YED-208: the back-catalog index for prior-post callbacks; fixed list in
+  `content-style-guide.md` → Variants and prior-post callbacks; post drafts only, roundups untagged),
+  Format (select — documented 2026-09-28, voice v2: `clip` / `photo` / `motion` / `audio` / `poll` for
+  field-media and non-text posts, per `visual-briefs.md` 1/1/1 options; docs-first: `notion-fetch` the live
+  DB and add or confirm the property/values before the first write that sets it),
+  relations to Event/People/Topics/Project Ideas
+  Note: Goal + Target are the **assigned-goal** (set at creation); Outcome/Outcome Value/Outcome Date are the
+  **realized outcome** (set post-publish by `/tag-outcome`). Together = the acted-on-value north-star.
+  See `.claude/skills/content-patterns/goal-tagging.md` + `.claude/skills/tag-outcome/SKILL.md`.
+  Note: linkedin_post_synthesis (added 2026-04-19) is used by the pattern-synthesis skill for
+  two-thesis posts that relate to 2+ Events. Multi-Event relations are the tell for this type.
+  Note: post_event_brief (added 2026-05-28, color: brown) is the post-event mirror of research_brief —
+  produced by `/post-event-content` as the FIRST-CLASS artifact before content-correspondent drafts.
+  Comprehensive Notion page = data store + short-term memory of the event (Quick Take, the Thesis,
+  Pre→Post Gap, ranked Insights, Gotchas & Practitioner Playbook, Tools Mentioned, conditioned Quote
+  Bank with confidence tags, Stat Bank with caveats, Slides Catalog, People & Outreach State, Content
+  Assets Produced, Documentarian Angles, Conditioning Notes, Verification Flags, Open Loops). All
+  downstream post-event content (Tier 1 comment, Tier 2 posts, outreach DMs) references it as their
+  canonical source. Event Phase = post_event, Platform = notion_only (internal data store, not
+  published). First synthesized 2026-05-28 from "Agents and MCP for Postgres" (NYC Postgres @ Google).
+  **v2 (2026-06-27, YED-96):** expanded to the full enhanced brief — adds a content-derived **Speaker Map**
+  (diarization is never 1:1), a **whole-quote** Quote Bank (entirety, not snippets), and the **learnings tier**
+  (Pro-Tips · Best-Practices · Pitfalls · Hot-Takes · Anecdotes · enriched Concept Glossary · Enrichment
+  Resolutions). The brief is written as the **canonical Content Draft**; the **Event page** gets only the
+  **head / pointer** under `## Post-Event Brief` — **NOT a full mirror of the body (ADR-6, 2026-09-11)**.
+  ⚠️ ADR-6 **supersedes the earlier full dual-write** (the deep body was previously duplicated onto the Event
+  page, mirroring the pre-event research-brief duplication): discrete-canonical wins on graph (Content Drafts
+  support **multi-Event relations**, which a page body cannot), on measurement (Goal/Target/Outcome properties
+  don't exist on body text), and on RAG provenance. Event-page append stays append-only under its own `##`
+  heading + a `post_event_processed` idempotency marker so re-runs don't double-write. No backfill required —
+  existing mirrored bodies stay; the rule binds new runs. Post-event also writes the **knowledge graph back**: People / Companies / Topics rows
+  created or enriched with **search-before-create dedup** (rules #10/#11) and relinked to the Event.
+  Views (added 2026-04-18): 🎯 Active Kanban (Board, grouped by Content Status, filter:
+  Status ≠ archived) — daily workspace. 🗄 Archive (Table, filter: Status = archived) —
+  terminal state, preserves relation graph for future knowledge base synthesis.
+  Status flow: needs_review → approved → scheduled → published. archived is reachable from
+  any state and is terminal. Archived content stays in the same DB (relations intact) —
+  deliberately not a separate archive table, to keep the graph whole for Phase 3-6 knowledge base mining.
+- **Project Ideas** (17 props): Project Name (title), Status (select: needs_review/active/shipped/
+  archived/deleted), Proposal Type (select: feasible/stretch), Complexity Band (select:
+  prototype/small_tool/MVP/full_project), Stack Coverage % (number), Relevance (number 1-10),
+  Creativity & Uniqueness (number 1-10), Tool Coverage (number 1-10), Conversation Starter
+  (number 1-10), Demonstrability (number 1-10), Content Moments (number 1-10),
+  Composite Score (number), Architecture Summary (text), Created (created_time),
+  Last Updated (last_edited_time), relations to Events/Topics/Content Drafts
+  Active projects tracked via Status select. No hard cap — Alex manages bandwidth manually (cap removed 2026-04-20).
+
+## HubSpot (CRM — Contacts & Companies)
+
+- Standard contact fields: firstname, lastname, email, phone, company, jobtitle
+- Company records with standard fields
+- Notes attached to contacts with just the event title as body text (primary event-tracking mechanism)
+- Event association via Notes: each Note body = event name, searchable for "all contacts from Event X"
+- Do NOT set industry on company records — generic categories are unhelpful
+- Static Lists NOT available via MCP (OBJECT_LIST write = NOT_AVAILABLE) — Notes approach is the MVP workaround
+- Fresh account (created April 5, 2026), full read/write on Contacts, Companies, Notes, Deals
+- HubSpot owner ID: 90413044
+
+## Write order (moved from CLAUDE.md 2026-09-28)
+
+Relations are bidirectional: setting one side auto-populates the other. Relation fields need page URLs from
+pages created earlier, so order matters. `notion-create-pages` returns page URLs; those URLs ARE the IDs for
+relation fields.
+
+```
+Notion
+  1. Companies (no dependencies)             → capture page URLs   ┐ 1 and 2 can
+  2. Topics (no dependencies)                → capture page URLs   ┘ run in parallel
+  3. People (Company relation ← step 1)      → capture page URLs
+  4. Event (People / Companies / Topics relations ← steps 1–3)
+  5. Content Draft (Event / People / Topics relations); Event.Content Drafts auto-populates
+
+HubSpot (post-event, gated, create-once; search name + company first)
+  1. Company records (standard fields)
+  2. Contact records + association to the Company
+  3. Note on each Contact (event name + role + talking points in the body)
+```
+
+**Step 4 routing (folded from the retired `notion-writer` agent, 2026-09-28).** Writes run inline in the parent
+thread; formatting rules are in `notion-write-gotchas.md`.
+- Per triage path: **NEW** → `create-pages` with the full schema · **REFRESH-light / REFRESH-full** → `update-page`
+  with event-research SKILL Step 4b–4d refresh semantics · **SKIP** → no write, but pass the URL through to the
+  Event's relations · **APPEND-CURRENT-EVENTS-ONLY** (Topics) → touch Current Events + Last Updated only.
+  Triage missing → stop and re-run Step 1.5; never fall back to "create always."
+- **Re-run of an existing Event** → update the existing `research_brief` draft and the Event page
+  `## Research Brief` section in place (with a `> Re-researched [date] — corrections: …` line); never a second draft.
+- **Prior-Context Pack** (if Step 1.7c created one) → after the Event row exists, append a `## Prior-Context Pack`
+  section to the Event body (append-only, never `replace_content`) and relink the pack draft's Event / People /
+  Topics relations to the new rows. Never create a second `prior_context_pack` draft.
+- Every Content Draft gets `Goal` + `Target` at creation (defaults by Content Type in `.claude/skills/content-patterns/goal-tagging.md`;
+  `internal` for research_brief / post_event_brief / prepared_questions).
+
+## Apollo (Not integrated — separate evaluation)
+
+- Not part of the event research pipeline. Alex evaluates Apollo independently via web UI
+  on high-value contacts to determine if paid plan (900 credits) justifies integration.
+- API blocked on free plan (`API_INACCESSIBLE` on people endpoints). If upgraded, integration
+  becomes a separate decision.

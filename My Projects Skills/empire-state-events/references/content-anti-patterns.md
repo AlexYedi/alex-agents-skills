@@ -1,0 +1,109 @@
+# Content Anti-Patterns
+
+> Words, phrases, patterns, and structural choices to avoid in all generated content.
+> This list grows over time as Alex identifies what doesn't work.
+> Updated via the `update-voice-and-style` skill.
+
+---
+
+## Off-Limits Words & Phrases
+
+> Starting sparse. Alex will flag additions as content gets produced and reviewed.
+
+| Category | Examples | Why |
+|---|---|---|
+| Omnipresent buzzwords | "leverage", "unlock", "synergy", "ecosystem", "disrupt" | Overused to the point of meaninglessness |
+| Jargon stacking | "AI-powered digital transformation leveraging cutting-edge solutions" | Says nothing. Signals you have nothing specific to say. |
+| Super salesy | "game-changer", "revolutionary", "I'm excited to announce" | LinkedIn cringe. Breaks the documentarian tone. |
+| Thought leader cosplay | "thought leader", "visionary", "industry leader" | Self-applied titles signal insecurity, not authority |
+| Empty validation | "Love your work!", "Great post!", "This is amazing!" | Zero information content. Especially in DMs. |
+| Faux casual fillers | "I'm curious", "I'd love to hear", "I'm wondering" | Overused, dehumanized, lazy. Not how people talk in real conversations. |
+| Observer framing | "Saw you were...", "Noticed you're..." | Implies you're watching from outside, not participating. State your involvement. |
+| Citing studies in DMs | "Gartner found that 81%...", "A NAACL 2025 study shows..." | Performing research, not having a conversation. Save stats for posts. |
+| Leading with company/product name | "Snowflake is...", "Datadog just..." | Reads like an ad within the first 10 characters. Lead with the insight, introduce the company later. |
+
+## Structural Anti-Patterns
+
+| Pattern | Why It Fails |
+|---|---|
+| Starting a post with "I'm excited to..." | Most common LinkedIn opener. Invisible to the algorithm and the reader. |
+| Listing accomplishments as content | "I did X, Y, Z" without insight or analysis. Self-promotional, not documentarian. |
+| Asking rhetorical questions as hooks | "Have you ever wondered about AI?" — No. Nobody stops scrolling for that. |
+| Long preambles before the point | Get to the insight in the first 2 lines or lose the reader. |
+| Ending with "Thoughts?" | Lazy CTA. If you want engagement, ask something specific enough to answer. |
+| Wall of hashtags | More than 5 hashtags looks desperate. 2-5, relevant, specific. |
+| **Tag-dumping** — a block of @-mentions at the end, or tagging people who aren't in the post | Looks like engagement farming. The opposite is required: **name and tag every speaker, host, organizer and community person the post is about**, woven in where they belong or in a closing thank-you line (Alex, 2026-09-27: tagging is "one form of giving back where everyone wins" — it promotes them in the community and elevates the event). The failure is forcing it, not doing it. Alex applies the @-mentions manually on LinkedIn. |
+| Cocky **predictions about event content** ("I predicted X would be about Y") | Reads arrogant. Frame predictions about what an event *will be / contain* as curiosity or hypothesis ("I was curious going in", "I expected", "the question I brought in"). ⚠️ Applies ONLY to event-content predictions — stances on subjects/topics/analysis stay bold **where the format has room to earn them** (see the editorial-kicker + take-sides rows below, and the stance-license rule in `content-style-guide.md`). (Added 2026-05-26, AI Demo Night post review.) |
+| **The editorial kicker** (roundup only — scoped 2026-09-28, voice v2) — appending a clever take/question to an otherwise-informative synopsis ("The number worth interrogating: X", "The unanswered question: …", "The quiet tension: …") | The informative substance + the field's genuine tension IS the value; the verdict-tag *subtracts* it and reads as posturing. If the synopsis already states what's happening and the real tension, **stop there** — don't add Alex's clever interrogation. (Added 2026-05-30, Upcoming Week post review — the cleanest signal: the factual 2x AI synopsis was rated "great, informative, valuable"; the "2X against what baseline?" kicker right after it was "back to bad hot takes.") |
+| **Taking sides in a table-setting / synopsis format** (roundup only — scoped 2026-09-28, voice v2) ("the debate quietly resolved", "the barrier is org design", "X won") | A roundup synopsis has the tightest character budget of any format — no room for the context + analysis that would *earn* a position. A viewpoint without space to justify it is a hot take, not a stance, and **adds zero value**. Set the table: state the topic's current state and surface the tension **neutrally, attributed to the field**, not as Alex's verdict. Bold stances are deferred to formats with room (post-event, deep posts). See stance-license rule in `content-style-guide.md`. (Added 2026-05-30, Upcoming Week post review.) |
+| **Self as credential** ("my calendar", "my pipeline researched this in 4 minutes", "I predicted") | The "I" that brags or credentials fails. Not the failure: "I laughed", "I got this wrong", "I checked" — a reaction keeps the character in the post. (Rewritten 2026-09-28 — voice v2; was "self as protagonist", 2026-05-30.) |
+| **The interchangeable opener** — any first line that could sit on another post ("Tonight in NYC AI…", "3 great events this week…", "Tonight I'm at…") | Wastes the hook. Test: cover the rest of the post; does the first line promise something specific? Lead with a pattern break instead (a number with its baseline, a quote, a confession, a joke, a scene). (Rewritten 2026-09-28 — voice v2; was "leading an event post with I", 2026-08-07.) |
+| **Self-erasure — hiding the witness** (scrubbing every trace Alex was in the room; writing what could've been a desk recap; "people are saying…" when *he* saw it) | The counter-failure to self-as-credential. Erasing the witness kills the first-hand value that IS the moat and reads **junior** to a buyer. Audience-first is an *ordering*, not an erasure — keep the receipts, and step fully forward wherever the insight is genuinely Alex's. (Added 2026-08-21, YED-103 audience-first codification.) |
+| **False modesty — hedging real expertise** ("just my take," "I'm no expert but," "probably wrong here") when the call is genuinely his and correct | Undercuts the reader AND the job search at once. Humility belongs in *priority* (audience first), never in *hedging what he knows*. When the take is authoritative, state it with conviction. (Added 2026-08-21, YED-103.) |
+| **The bow** — ending on deference, a generic question, a credential ("I've been doing this since…"), or "I'll share what I hear" | Every post ends the same way and the reader learns nothing about the writer. End on the call, the laugh or the ask. (Rewritten 2026-09-28 — voice v2; was "the close self-trap", 2026-08-21.) |
+| **The mailed-in post** — hook + name-drops + a question, with the research left in the brief | Fails the Substance/Insight Floor. The topic/signal research is the gift to a non-attendee; leaving it in the brief and shipping a thin hook is a failure, not a post. Translate the top 3–5 insights into the body. (Added 2026-08-21, YED-103.) |
+| **No table-set — diving straight into the insight** (the post never plainly says what this is, that it was a webinar/panel, or names the speakers, before launching the thesis) | The reader gets the why and the value with no scene under them — the insight floats. A strong takeaway still fails if the audience has to reach the closing thank-you to learn it came from a *webinar with named presenters*. Table-set first: **what this is → what format → who → then why → then value** (one–two tight sentences after the hook, not a preamble). Also forfeits the Receipts / "I was in this room" credibility signal by burying it. (Added 2026-09-09, Variant C review — Alex: "you lost the table setting… always want to table-set." See `content-style-guide.md`.) |
+| **Dead-ending the curious reader — no Learn-More Set** | Every post owes the subset who want to go deeper a path. Shipping a post with no 3–5 resource set (first comment / carousel) leaves value on the table and forgoes the reach that naming sources can pull. See the Learn-More Set rule in `content-style-guide.md`. (Added 2026-08-21, YED-103.) |
+| **Punching down** — a joke at the expense of anyone junior, an attendee, a speaker's product, another job seeker; sarcasm about job-hunting; a joke in line one on a serious topic; puns in hooks, "haha", 😂, meme fonts | Punch up or in, never down: at hype, decks, LinkedIn, the pipeline. A named person is only ever the subject of affectionate hype. (Added 2026-09-28 — voice v2; see Humor in `content-style-guide.md`.) |
+| **The predictable post** — the whole post is guessable from its first line | No pattern break. Restructure around a cold open, an unexpected number, a reversal, a confession or a format not used this week. (Added 2026-09-28 — voice v2.) |
+| **No personality line** — nothing in the post only Alex would write; or a model-invented joke or reaction standing in for one | Fails the personality floor. The line comes from Alex's dictation or the steering interview; without it the C variant flags `[PERSONALITY LINE NEEDED: …]`. (Added 2026-09-28 — voice v2.) |
+| **Reinventing a series** — a new header, numbering or shape each episode | Recognizability is repetition of form with new content. Reuse the Room #N, Hype Check, Over-Engineered, Job Hunt and Best of Builds forms. (Added 2026-09-28 — voice v2.) |
+| **Fake Alex on camera** — an AI avatar of Alex, or cloned narration presented as him | Face and voice are real. A cloned voice may read a sourced quote card or a caption track, labeled. (Added 2026-09-28 — voice v2.) |
+| **Publishing recorded event speech** — any audio or video of a speaker or attendee, excerpted or audiogrammed | Transcripts are private inputs; only chosen, source-checked quotes go in text. Hallway lines are paraphrased and unnamed. (Added 2026-09-28 — voice v2.) |
+| **Private specifics in public copy** — names, comp, a target list or live processes in a Job Hunt post; personal life beyond the work | Counts and method only. (Added 2026-09-28 — voice v2; see `build-in-public.md`.) |
+
+## DM Anti-Patterns
+
+| Pattern | Why It Fails |
+|---|---|
+| "I'd love to pick your brain" | Signals you want something but haven't done any work yourself |
+| Generic compliment opener | "I've been following your work and..." — followed by something that proves you haven't |
+| Immediate ask for a meeting | Respect the relationship stage. Open a door, don't force one. |
+| Copy-paste feeling | If the DM could be sent to anyone by swapping the name, it's not personalized enough |
+| Multi-paragraph walls | 4-6 sentences max. Respect their time. |
+
+## Visual Anti-Patterns
+
+| Pattern | Why It Fails |
+|---|---|
+| Stock photo energy | Generic, interchangeable. Handshakes, laptops on desks, abstract geometric patterns. Signals "I didn't make anything specific to this content." |
+| Canva template tell | A template where only the text changed. If the layout looks familiar to a scroller, the template did the work — not you. |
+| Paragraph text on images | That's what the post body is for. Images get max 8 words in the headline. |
+| Font under 48px at 1080px wide | Fails the 2-second thumb test. If you squint at 375px wide (iPhone SE viewport), the scroller won't read it either. |
+| Medium-on-medium contrast | Gray text on gray, pastel on pastel, light blue on beige. Light-on-dark or dark-on-light only. |
+| Chart junk | Gridlines, 3D effects, legends requiring cross-reference. Extract the insight, don't recreate the chart. |
+| More than 3 colors in a visual | Background + text + accent = 3. More = noise, not design. |
+| Red-green color pairings | Colorblind-hostile. 8% of men can't reliably distinguish. Use labels or patterns alongside color. |
+| Pure white backgrounds on mobile | Glare on phones. Dark backgrounds read better in LinkedIn's mobile feed. |
+| Neon on neon | Unreadable. Also tacky. |
+| 16:9 landscape default | Loses vertical screen space vs 4:5 (a 4:5 image is 2.22× as tall at feed width). Default is 1080x1350 (4:5 portrait). Phone clips are 9:16 vertical; 16:9 is acceptable for screen-demo video. (Note added 2026-09-28 — voice v2.) |
+| **Card-only feed** | Ten consecutive posts with a typeset card and no photo, clip or face is a format failure, not a taste choice. (Added 2026-09-28 — voice v2.) |
+| Carousel under 5 slides | Feels thin, like you ran out of material. 5-8 is the sweet spot. |
+| Carousel over 10 slides | Swipe fatigue. You lose the reader before the payoff. |
+| Missing page numbers on carousel | No signal that there's more to swipe. Put them small, bottom corner. |
+| Missing alt text | Accessibility miss and LinkedIn notices. Every image, every time. |
+| Relying on color alone to convey meaning | Use labels, patterns, or icons alongside color — not instead of them. |
+| Tiny or missing source attribution on data visuals | If the number is worth showing, the source is worth citing. Small text, bottom corner. |
+| Visual tries to show multiple ideas | One visual = one idea. If you need three, make three visuals (or a carousel). |
+| **Quote-card carousel that re-prints the post** | Visuals must ADD information, not repeat the copy. Ensconcing quotes/lines already in the post body into slides is text-forward repetition, not visual content. Use visuals for architectures, user journeys, graphs, before/after states, frameworks, or "where the value moves" diagrams — anything clearer or more compelling *in visual form*. If a slide adds no new / simpler / more-compelling information beyond the text, cut it. (Added 2026-05-26, AI Demo Night post review — supersedes the default Arc-4 quote-card carousel pattern; propagate to `content-patterns/visual-briefs.md`.) |
+
+## AI Image Prompting Anti-Patterns
+
+| Pattern | Why It Fails |
+|---|---|
+| Aspirational adjectives ("professional looking") | Meaningless to the model. Specify style concretely: "flat vector illustration" / "editorial magazine photography" / "technical diagram style". |
+| No negative prompts | The model fills gaps with defaults. Specify what NOT to include: "no text, no watermarks, no people, no generic tech imagery, no stock photo energy". |
+| Single-shot acceptance | First output is a draft, never the deliverable. Iterate in 3 rounds minimum: prompt → evaluate → refine → evaluate → final. |
+| No composition spec | The model centers everything by default. Specify: "symmetrical, negative space on left for text overlay" / "wide landscape" / "centered subject with asymmetric framing". |
+| No mood specification | Output drifts generic. Specify: "authoritative and clean" / "bold and provocative" / "minimal and sophisticated". |
+| Treating the prompt as a wish, not a brief | Prompt quality = output quality. Write architecturally: composition + style + mood + negatives. |
+
+---
+
+*Last updated: 2026-09-28*
+*Version: 0.8 — Voice v2 (4-week test): self as protagonist → self as credential; I-led opener → the interchangeable opener; close self-trap → the bow; kicker and take-sides scoped to the roundup; added punching down, the predictable post, no personality line, reinventing a series, fake Alex on camera, publishing recorded event speech, private specifics in public copy, card-only feed; 9:16 / 16:9 video note.*
+*Version: 0.7 — Added the audience-first counterweight set (YED-103): self-erasure, false-modesty, the close self-trap, the mailed-in post, and dead-ending the curious reader (no Learn-More Set) — guarding against too-LITTLE self + under-serving the reader, the complement to the existing too-much-self rules. self-erasure + false-modesty are the Phase-3 charter deliverables. See `audience-north-star.md`.*
+*Version: 0.6 — Added the "Leading an event post with I" structural anti-pattern (lead with topic / stat / host-company / people / ecosystem instead). See memory `feedback-no-i-led-openers-2026-08-07`.*
+*Version: 0.5 — Added three structural anti-patterns from the Upcoming Week post review: (1) the editorial kicker (clever take/question appended to an informative synopsis — subtracts value); (2) taking sides in a table-setting/synopsis format (hot take without room to earn it = zero value); (3) self as protagonist (decenter — field is the subject, Alex is the curator). All three pair with the new stance-license rule in `content-style-guide.md`. See memory `feedback-upcoming-week-stance-and-self-2026-05-30`.*
+*Version: 0.4 — Added two anti-patterns from the AI Demo Night post review: (1) cocky predictions about event content (soften predictions, NOT subject-matter stances); (2) quote-card carousels that re-print the post (visuals must ADD, not repeat). See memory `feedback-comment-workflow-2026-05-26`.*
+*Version: 0.3 — Added Visual Anti-Patterns and AI Image Prompting Anti-Patterns sections from 10 best practices doc*

@@ -1,0 +1,479 @@
+---
+description: "Workflow B-lite — take a post-event transcript (Supercut recording preferred; audio file via ElevenLabs or manual paste as fallbacks), condition it against the event roster, then run content-correspondent to produce LinkedIn drafts + outreach in Notion Content Drafts."
+argument-hint: "[event name as it appears in Notion / Google Calendar / Supercut]"
+---
+
+# /post-event-content — post-event flow (Supercut-anchored)
+
+> Granola: off, see `.claude/references/platform-constraints.md`.
+
+Takes the transcript of Alex's own recording of an attended event (pulled from **Supercut** by default, 2026-09-28; audio file or manual paste as fallbacks), resolves the event to its Notion row, **conditions the transcript against the event roster (Step 3.5 — `transcript-conditioning`)**, then invokes `content-correspondent` with the conditioned quote bank.
+
+**Input:** event name (one argument). The transcript comes from Supercut (Step 2A), an audio file (2B), or a paste (2C).
+
+**Output (v2 — YED-96):**
+- **`post_event_brief`** (the data store) — the full enhanced brief (18 sections incl. the **learnings tier**: pro-tips · best-practices · pitfalls · hot-takes · anecdotes · enriched concept glossary, + whole-quote Quote Bank + content-derived Speaker Map). Written **both** as the canonical Content Draft **and** appended to the **Event page** (`## Post-Event Brief`, pre + post side-by-side). Synthesized Step 3.7 from the conditioned transcript + roster + pre-event brief + Step 3.6 enrichment; every downstream draft references it.
+- **Knowledge-graph write-back** (Step 3.8) — 3.8a: Notion People / Companies / Topics rows created/enriched (dedup-mandatory) and relinked to the Event · 3.8b: the event + roster + topics written to the MI graph (`substrate.py ensure-event`) · 3.8c: the brief's learnings staged as first-hand claims (`substrate.py stage-claims`). 3.8b/c are mandatory but **not enforced**: a skipped graph write will not fail the run. Report 3.8b/c status explicitly in the Step 6 summary.
+- **LinkedIn post(s) + visual carousel brief → Claude-design render** (Step 4; per `visual-briefs.md` `## Execution`). **Outreach is opt-in** — only for people Alex names; otherwise skipped.
+- **HubSpot CRM write (Step 5.5 — GATED, opt-in, post-event only).** Selective (only people Alex actually engaged or is deliberately pursuing — not the whole roster), dedup-first, **create-once** (Notes for existing contacts, never field-merge), behind a confirmation gate. Default: skip. See `docs/archive/proposals/post-event-hubspot-step.md`.
+- All drafts in `needs_review`, Event Phase = `post_event`, linked to the Notion Event row.
+
+---
+
+## Trigger
+
+This command runs when:
+- Alex types `/post-event-content [event name]`
+- Alex says "post-event content for [event]" / "draft the post for last night's [event]" / "write up [event] from Supercut"
+- Alex says "run post-event-content speaker deep-dives for [event]" → Step 1.0 + Step 1 + Step 2 (read-only transcript intake), then Step 5.6 only
+
+If the user invokes `content-correspondent` directly with raw pasted material, defer to that skill's existing path — this command adds Notion event-resolution + transcript intake + roster-grounded conditioning.
+
+## Required inputs
+
+1. **Event name** — fuzzy-match-friendly. The command resolves it against the Notion Events DB by title similarity, then anchors downstream lookups.
+2. **Transcript** — resolved in Step 2: a **Supercut** recording (default; needs the Supercut MCP or `SUPERCUT_API` in `.env`), else an audio file, else a paste.
+
+
+**Step 1.0 — CLAIM THE EVENT before anything else (YED-213, added 2026-09-24).** Git isolation does not isolate
+Notion: on 2026-09-20 two sessions ran this pipeline for the same event and only avoided duplicate pages because
+one happened to notice a Notion timestamp. Run this FIRST, before resolving the event:
+
+```bash
+python3 .claude/hooks/event-claim.py claim "<event name>" --note "<what you are running>"
+```
+
+* **exit 0** — you own this event's Notion namespace (Event, People, Companies, Topics, Content Drafts) for the run.
+* **exit 3** — another session is already running it. **Go read-only for this event and report to Alex**, exactly as
+  the reconciliation terminal does for git. Do not write. Takeover is deliberate and recorded:
+  `--force "<why>"`. A crashed session's claim expires on its own after 4h.
+
+**Release when the run closes** (or if you abandon it): `python3 .claude/hooks/event-claim.py release "<event name>"`.
+`event-claim.py list` shows live claims across every session on this machine.
+
+## Step 1 — Resolve the Notion Event row
+
+Search Notion Events DB (`9dcbc999-b4ed-4a51-b48a-10aaf171f1ba`) by event title using `mcp__notion__notion-search`. From the matching row, read:
+
+- `Event Name` (title)
+- `Event Date` (date) — anchors the Supercut recording match (`created_at`)
+- `Google Calendar Event ID` (text) — deterministic join key when populated
+- The page URL (used later for the Content Draft `Event` relation)
+
+**If no Notion match:** prompt Alex with the top 3 candidates from Notion by title similarity. If still no match, accept "create draft without Notion anchor" — content can still be generated from the transcript alone; the Content Draft just won't have a Notion Event relation set.
+
+**If multiple matches (same title, different dates):** present the candidates with dates and ask Alex to pick.
+
+## Step 2 — Get the transcript (Supercut → audio file → manual paste)
+
+Three paths, in order of preference. Every path ends with the transcript saved to `event-transcripts/YYYY-MM-DD_<Event>.md`, and Step 3.5 conditioning then runs on it unchanged. Reference: `.claude/references/supercut.md`.
+
+### 2A — Supercut recording (PREFERRED — Supercut Pro, 2026-09-28)
+1. **Find the recording.** MCP first: run ToolSearch `supercut` and use its `list_recordings` tool (parent thread only; connectors don't work in subagents). If the MCP isn't loaded this session, use REST (curl, since Cloudflare blocks Python's default user agent):
+   ```bash
+   set -a; source ./.env; set +a
+   curl -sS -H "Authorization: Bearer $SUPERCUT_API" \
+     "https://api.supercut.ai/v1/recordings/search?q=<event name, url-encoded>&limit=10"
+   ```
+   Match on title + `created_at` against the Step-1 Event Date. If Alex gives a recording id or link, use its `public_id` directly. More than one plausible match → list title + created_at + duration and ask Alex. No match → try `/recordings?list=shared`, then fall back to 2B/2C.
+2. **Fetch the transcript.** MCP `get_transcript`, or REST `GET https://api.supercut.ai/v1/recordings/<public_id>/transcript`. Check `data.status`: `completed` → use `sentences[]` (`text`, `start`, `end`); `pending`/`processing` → tell Alex it's still processing and retry later (do not draft from a partial); `failed`/`unavailable` → fall back to 2B/2C.
+3. **Persist** to `event-transcripts/YYYY-MM-DD_<Event>.md`: a header (event, date, `Source: Supercut <public_id>`, title) then one line per sentence as `(mm:ss) text`. Also pull `GET /recordings/<public_id>` for the AI `summary` + `chapters`. They feed Step 4's "Recording summary" slot (angle input only; never a quote source).
+4. **Speakers.** The REST transcript has **no speaker labels**. When quotes will be attributed to named people (panels, multi-speaker talks), also download the audio asset (`/assets/system-audio` for a webinar, `/assets/microphone-audio` for an in-room recording; signed URL, download immediately) and run **2B** on it. Scribe's diarized, roster-seeded transcript becomes the quote source, and Supercut's is the cross-check. If the MCP transcript does carry speaker labels (unverified, see `supercut.md`), treat them like any diarization: labels are pause-based, so Step 3.5 still resolves speakers by content.
+
+### 2B — Audio file → `/ingest-recording` (ElevenLabs Scribe — proven on n=4 events; YED-95)
+If there's an audio file (`.m4a`/`.mp3`/`.wav`, a phone recording, or a Supercut audio asset from 2A step 4):
+1. **Auto-seed keyterms from the Step-1 Notion roster** — pull this event's related **People** (speakers/hosts) + **Companies** (orgs/products) names into a temp keyterms file, one per line. (The `--expand-names` flag below then also seeds first/last tokens — the *Arielle / Donohue / Curran* lesson: speakers are often referred to by first-or-last name only.)
+2. **Run the locked recipe** (`.claude/scripts/ingest_recording.py` — scribe_v2 + keyterms + word timestamps; see `/ingest-recording`):
+   ```bash
+   set -a; source ./.env; set +a
+   uv run --with elevenlabs --with pillow python .claude/scripts/ingest_recording.py \
+     --audio "<recording>" --keyterms-file "<roster keyterms>" --expand-names [--num-speakers N] \
+     [--slides-dir "<event folder>"]   # include whenever the event folder has slide photos
+   ```
+3. Outputs (next to the audio): `… — Transcript (ElevenLabs).md` (the transcript) · `… .json` (word-level timestamps + confidence) · `… — REVIEW (low-confidence spots).md` (the quote-safety list → **carried into Step 3.5**) · `slide-recording-alignment.md/.json` (slide photo → recording offset + ±45 s context → **carried into Step 3.7's Slides Catalog**).
+   - **Confirm pass (YED-166):** view each aligned photo next to its context and mark matched/mismatched. Any mismatch → re-run `align_slides.py` alone with `--recording-start` (free, no re-transcription). Full rules: `/ingest-recording` step 5.
+4. **Persist** the EL transcript to `event-transcripts/YYYY-MM-DD_<Event>.md`. This is now the verbatim quote source.
+
+### 2C — Manual paste (FALLBACK — recorder-app / other transcript)
+1. Ask Alex to paste the transcript he has. **Persist immediately** to `event-transcripts/YYYY-MM-DD_<Event>.md` (save FIRST — unsaved = lost across sessions; memory `feedback-comment-workflow-2026-05-26`).
+2. Recorder-app ASR under-renders proper nouns (**~55% vs ~87%** for the EL recipe across n=4) — prefer 2A/2B whenever a recording exists.
+
+Any path: also capture any **summary / notes** Alex adds (angle/thesis input) and the **attendee names** he recalls (cross-reference Notion People for bucket sorting). If there's neither transcript nor recording, draft from his freeform recap + the pre-event brief — note lower fidelity, skip verbatim quotes.
+
+## Step 3 — Confirm the event anchor (silent if unambiguous)
+
+Only prompt if Step 1 had disambiguation (multiple or no Notion matches). Otherwise proceed silently to conditioning.
+
+```
+📝 Event: [Notion Event Name] — [date]
+   Transcript: event-transcripts/[…].md  (~N turns / M words)
+   Proceeding to condition + draft. [y / change / cancel]
+```
+
+### Step 3.4 — Detect event format (showcase branch)
+
+Before conditioning, classify the event format from the transcript + event name:
+
+- **Founder / Startup Showcase** — multiple founders pitch back-to-back, a QR/opt-in
+  intro mechanic (named series: **The Shortlist**). If detected, apply the
+  **`.claude/skills/content-patterns/founder-showcase.md`** style throughout:
+  **establish the showcase FOCUS first** (hiring / product-launch / funding / mixed —
+  ask Alex to clarify the purpose if ambiguous; it drives everything downstream);
+  Step 3.7's brief becomes the **per-company 6-dimension breakdown**; Step 4's content-correspondent
+  produces the **showcase recap** (**every company referenced — none dropped**) **+ one-slide-per-company
+  carousel** (not a single-thesis room report) **+ a focus-driven first comment** (one verified
+  reference link per company — careers pages if hiring, launch/blog/feature pages if product, etc.);
+  the contact-extraction pass captures **founders + explicitly called-out teammates in the crowd**
+  → CRM + an **Apollo enrichment CSV**. Enforce the showcase sensitivities: **confidential "stays in
+  the room" funding is never published**, and **garbled transcript names are web-verified before any
+  public/CRM use** (fan out one `company-researcher` per company).
+- **Standard** (talk / panel / roundtable / demo) — proceed with the normal flow below.
+
+## Step 3.5 — Condition the transcript (`transcript-conditioning`)
+
+Before drafting, condition the transcript so speaker labels and proper nouns can be trusted in public copy. Diarization splits on pauses, not identity, and ASR mangles proper nouns (Vercel → "Purcell", Mahan → "vahan", MCP → "FCP") — quoting that raw misattributes lines and prints garbled names. Invoke the `transcript-conditioning` skill with:
+
+- **Raw transcript** — the Step 2 transcript (persisted to `event-transcripts/`).
+- **Roster + known entities (ground truth)** — pulled from this event's Notion record: related **People** (speaker/host roster), **Companies** (canonical org/product names), and the linked pre-event **research_brief** Content Draft. Conditioning anchors speaker resolution + entity normalization to these.
+- **Quote-safety input (when Step 2B / ElevenLabs was used)** — the `… — REVIEW (low-confidence spots).md` list + the word-level `.json` confidence. Map EL per-word confidence directly onto the quote tiers below: low-confidence words must NOT be quoted verbatim (→ paraphrase or exclude), high-confidence spans are verbatim-safe. This is the **R1 quote-safety contract** — a clean-looking transcript must *raise* quote safety, not silently lower it (YED-95).
+
+**When to run:**
+- **Run by default** for multi-speaker panels, in-person / manual-paste transcripts, or any note where a named person will be quoted publicly.
+- **Skip** only when the transcript's speaker labels are clean AND the roster is ≤2 obvious speakers (per the skill's "When to use"). State the skip decision in one line.
+
+**Output (passed to Step 4 in place of the raw transcript):**
+1. Speaker resolution table (resolved person + tell + confidence)
+2. Entity normalization glossary (+ ⚠️ excluded-garble list — never quoted)
+3. Confidence-scored **quote bank** (HIGH = verbatim-safe; MED = paraphrase only)
+4. Conditioning confidence score + down-weighted sections
+
+**Discipline (Rule 12):** the transcript is a primary source for what a person *said in the room* — quote freely. It is NOT a source for external firm/person *thesis* claims; those still need independent citation before public use (the source-check rule, CLAUDE.md §6).
+
+## Step 3.6 — Post-event enrichment (bounded · gated-on-use · cached)
+
+Research the **net-new** entities the room surfaced that the pre-event brief didn't cover, so the brief stands alone and proper nouns / concepts are correct (the folder-only ABB run missed web-enrichable facts — YED-96). **Topology (hard rule):** subagents do the research and return structured text; the **parent owns the fan-out list and does all writes** (subagents can't spawn subagents — SDK constraint).
+
+**What to enrich:**
+- **Net-new speakers** flagged in the Step 3.7 Speaker Map (no pre-research) — full name · title · company · 1-line relevance · source URL · confidence.
+- **Net-new companies / funds** named on stage.
+- **Concepts / papers / frameworks** named (for the enriched Concept Glossary) — what it is, why it matters, a source link.
+
+**Bounds (cost guards — YED-96 R5):**
+- **Gated on use:** only enrich an entity that will appear in a public post OR is an opt-in outreach target. Don't crawl the long tail.
+- **Cap N per event** (default ≤ 8 entities); enrich the highest-signal first, list the rest as "un-enriched — pull on demand."
+- **Cache by entity:** check Notion People/Companies/Topics first (Step 3.8 dedup) — a recurring speaker/company already in the graph is NOT re-enriched; reuse the existing row.
+- **Quality gate:** if you can't confirm an entity to a confidence bar, mark it **UNRESOLVED** rather than guess — a hallucinated bio feeds both the graph and public posts.
+
+Feed results into the Step 3.7 brief (Concept Glossary · Speaker Map · Enrichment Resolutions) and the Step 3.8 write-back.
+
+## Step 3.7 — Synthesize the `post_event_brief` (the data store / short-term memory)
+
+Before content-correspondent drafts a single post, synthesize the **`post_event_brief`** as a Notion Content Draft. This is the post-event mirror of the pre-event `research_brief` — one comprehensive, browsable page that captures *everything the event produced* so it can be referenced by every downstream draft AND mined later as part of the knowledge graph.
+
+**Inputs:**
+- Conditioned quote bank + speaker resolution table + entity glossary (from Step 3.5)
+- The pre-event `research_brief` (for pre→post comparison): `notion-fetch` the linked Notion Event page and read its research brief (Scan head + Deep Read), or the linked `research_brief` Content Draft. If neither exists, section 4 reads "n/a — no pre-event research"; never reconstruct a pre-event view after the fact.
+- Notion roster (People + Companies + Topics relations from the Event row)
+- Slides/photos uploaded by Alex (catalog them, don't re-OCR). When `slide-recording-alignment.json` exists, the Slides Catalog is **time-aligned**: one row per slide with recording offset · capture time · slide title · confirm-pass result, and quotes/stats cite the slide they were spoken over. Unaligned photos keep a row with no offset.
+- Alex's own freeform recap / observations if provided
+
+**Completeness over curation (the v2 principle, YED-96):** the brief is the *exhaustive, enriched record of the room* — capture every quote (whole, not snippets), every learning, every named concept. Content (post/visual) is **selected** from the brief downstream; the brief itself discards nothing. Validated across n=4 formats — see `.claude/evals/post-event-brief-template-evidence.md` (the learnings tier fills even at demo nights; Pre→Post Gap is conditional on a pre-event brief; Stat Bank is format-variable).
+
+**Required sections (the full enhanced brief — mirror this scaffold; expand each as the material warrants):**
+1. **Page-index callout** at top + `/toc` hint (per `notion-write-gotchas.md` convention `i`)
+2. **Quick Take** — three sentences: what the room actually was, the headline, the event-type tag for content routing (single-presenter talk / multi-presenter showcase / shared-conversation panel)
+3. **The Thesis** — the single sharpest takeaway from the room, as a quotable line if possible
+4. **Pre → Post Gap** — table contrasting what the pre-event brief predicted vs. what actually happened (highest-value beat). *Conditional:* if no pre-event brief is linked, pull it from the Event page; if none exists, mark "n/a — no pre-event research."
+5. **Speaker Map** — **content-derived** mapping of each raw diarization `speaker_id` → person · role · company, each with HIGH/MED/LOW confidence + the tell. ⚠️ Raw diarization IDs are **NEVER 1:1 with people** — attribute by content, not by ID. Flag net-new speakers (no pre-research) for the Step 3.6 enrichment pass.
+6. **Full Quote Bank** — EVERY quotable line, captured **whole (not snippets)**, attributed to the mapped speaker, each tagged HIGH (verbatim-safe) / MED (paraphrase only). Completeness is the point; selection happens downstream.
+7. **Pro-Tips** — actionable "if X, do Y" practices stated/implied in the room (attributed, confidence-tagged)
+8. **Best Practices / Patterns** — patterns recurring across speakers/companies
+9. **Pitfalls / Anti-Patterns** — what NOT to do; failures named in the room
+10. **Hot Takes** — contrarian / surprising claims (attributed, confidence-tagged; captured raw here — the publish gate in Step 4 decides what ships)
+11. **Substantive Insights** — ranked by durability / content value
+12. **Anecdotes** — memorable stories / moments as narrative (separate from the quote bank), for hooks
+13. **Concept Glossary (enriched)** — every concept / paper / framework / tool / method named; one line on what it is from context + the Step 3.6 web-enrichment (what it is, why it matters, a source link) inline, so the brief stands alone
+14. **Tools / Companies Mentioned** — table: name · what it is · context in the room
+15. **Stat Bank** — numbers + value + confidence/caveat (never invent precision the speaker didn't claim). *Format-variable* — rich at case-study/masterclass, thin at roundtable/demo.
+16. **Documentarian Angles** — the cuts available for future content (primary + alternates + synthesis candidates)
+17. **Open Loops & Verification Flags** — follow-ups to close (touch-1 sends, comment/synthesis windows) + what cannot be asserted publicly without independent source (Rule 12 items)
+18. **Enrichment Resolutions** — what the Step 3.6 pass resolved/corrected (net-new speakers identified, concepts confirmed, errors fixed — e.g. the ABB "Kilian = Meta not Amazon" catch), each with a source
+
+**Operational sub-sections (pipeline plumbing — keep these alongside the 18):** **Slides Catalog** (one line per slide; time-aligned with recording offsets when Step 2B ran with `--slides-dir`) · **People & Outreach State** (person · role · bucket A/B/C/D · spoke? · next action) · **Content Assets Produced** (links to comment/posts/visual — fill after Step 5) · **Conditioning Notes** (speaker resolution + entity glossary + ⚠️ excluded-garble + conditioning confidence score).
+
+**Notion properties:**
+- `Title`: `Post-Event Brief — [Event Name] ([Event Date short])`
+- `Content Type`: `post_event_brief`
+- `Event Phase`: `post_event`
+- `Content Status`: `needs_review`
+- `Platform`: `notion_only` (it's an internal data store, not a publishable artifact)
+- `Event`: relation to the resolved Notion Event row
+- `People`: relations to every named person on the roster
+- `Topics`: relations to every linked Topic
+- `icon`: 🗃️ (data store)
+
+**Also write the brief to the Event page + set the idempotency marker (v2 — YED-96):**
+- **Event page:** append a `## Post-Event Brief` section to the resolved Event row's page body (mirroring how the pre-event research brief sits on the Event page), so pre + post sit **side-by-side** for in-context comparison. The canonical Content Draft above stays the downstream source-of-truth; the Event-page copy is the readable surface. (For long briefs, the Event-page section may be a rich summary + a link to the canonical Content Draft — never truncate the canonical copy.)
+- **Idempotency marker:** before the first write, check the Event page for a `post_event_processed: YYYY-MM-DD` marker (a callout at the top of the `## Post-Event Brief` section). If present, do NOT re-create the brief/Content Draft — update in place. Prevents double-writes on a re-run (there is no state store).
+- **Rollback / safety:** the Event-page write is **append-only** under its own `## Post-Event Brief` heading — never `replace_content` the page (protects the pre-event brief already on the page).
+
+**Why this step exists:** without the brief, the post-event content is one-shot — written once, then orphaned. With it, the data store survives the publishing of any single draft and feeds future synthesis posts, weekly recaps, knowledge-base mining, and re-engagement DMs. The pre-event flow has this (research_brief); the post-event flow now mirrors it.
+
+After writing the brief, capture its URL and pass it to Step 4 (content-correspondent uses it as `=== Post-Event Brief ===` input alongside the conditioned quote bank).
+
+## Step 3.8 — Knowledge-graph write-back: Notion (3.8a) + the MI graph (3.8b · 3.8c)
+
+Until 2026-09-18 this step wrote **Notion only**, despite its name — which is why 24 of 27 events after Aug 20 never reached the Supabase graph and no person was added after Aug 6 (`docs/archive/notes/yed-160-scope-2026-09-17.md`). It now has three sub-steps. **All three are mandatory** (ADR-10; YED-160). ⚠️ **Nothing enforces 3.8b/3.8c:** a skipped graph write closes green. Run both sub-steps and state their outcome (or why one was skipped) in the Step 6 summary.
+
+### Step 3.8a — Notion People / Companies / Topics (unchanged)
+
+Persist what the event added to the **People / Companies / Topics** graph so it compounds across events. **Search-before-create dedup is mandatory** (pipeline rules #10/#11) — duplicate "Hebbia" / "Hermes Frangoudis" nodes rot the graph (YED-96 R4).
+
+1. **Build the delta:** from the Step 3.6 enrichment + the Speaker Map, list every People/Companies/Topics entity the event touched.
+2. **Dedup:** for each, `notion-search` the relevant DB first → classify **MATCH (existing row)** vs **NEW** ("net-new" is defined relative to the live DB index, not a guess).
+3. **Write (parent / main-thread only — the Notion MCP does NOT work from a subagent):**
+   - **NEW** → create the row (People: Name · Current Title · Role Context · Known POV/Bio · LinkedIn · `Events` relation · Last Researched — **never Email/Phone from a transcript or roster (ADR-9 tier 1)**; Companies: Company Name · Description · Industry/Space · Website · `Events` relation; Topics per schema).
+   - **MATCH** → enrich the existing row (append POV/bio, bump Last Researched) + add the `Events` relation to this event — do NOT create a second node.
+4. **Relink** all touched rows to the Event (bidirectional — the Event's People/Companies/Topics auto-populate).
+
+Schema + property formats: `.claude/references/notion-schema.md`. If Alex prefers a review gate over auto-write, surface the NEW-vs-MATCH delta for confirmation first.
+
+### Step 3.8b — The event, its roster and topics → the MI graph (`substrate.py ensure-event`)
+
+After 3.8a, the Notion Event row's People / Companies / Topics relations are the roster. Build a manifest from them (parent thread — the Notion connector does not work in subagents) and hand it to the producer. `substrate.py` is the ONE producer path; every write goes through `spine_client` (ADR-9 guard).
+
+1. **Build the manifest** (`/tmp` or the scratchpad — never commit it; it names people):
+   - Event: `notion_page_id`, `title`, `kind: "attended"`, `event_date`, `location`, `google_calendar_event_id`.
+   - Entities: one single-database SQL query per DB (People · Companies · Topics) — `notion-query-data-sources` in SQL mode, `WHERE url IN (…)`. **Gotcha:** the SQL `url` column is `https://app.notion.com/<id>` (no `/p/`), while relation values are `https://app.notion.com/p/<id>` — strip `/p/` before the `IN` list or the query silently returns 0 rows. Multi-database queries need a Business plan; three single-database queries do not.
+   - Roles: People → `speaker` | `host` | `attendee` (from Role Context), Companies → `subject` (host / sponsor / mentioned), Topics → `tagged_topic`. These are the graph's existing role values.
+   - People carry **professional fields only**: name · title · company · linkedin_url. Never email, phone, bio, or text from the transcript (ADR-9).
+2. **Dry-run, then write:**
+   ```
+   .venv/bin/python .claude/scripts/substrate.py ensure-event --manifest <m.json> --dry-run
+   .venv/bin/python .claude/scripts/substrate.py ensure-event --manifest <m.json>
+   ```
+   Re-running is safe: a second run reports `created=0`.
+
+### Step 3.8c — The brief's learnings → first-hand claims (`substrate.py stage-claims`)
+
+Save the Step 3.7 `post_event_brief` body to `.claude/.state/briefs/<event-slug>.md` (gitignored; the same text written to Notion), then:
+```
+.venv/bin/python .claude/scripts/substrate.py stage-claims --manifest <m.json> --brief <brief.md> \
+    --brief-ref notion:<post_event_brief page id>
+```
+- Parses **only** The Thesis · Pro-Tips · Best Practices · Pitfalls · Hot Takes · Substantive Insights · Stat Bank. No inference: the brief is already written, so this is parsing plus a local embedding (bge-small, no metered API).
+- Each claim points at this event (`claim.event_id`), carries `provenance_tier = first_hand`, `asserted_at` = the event date, confidence from the brief's HIGH/MED tags (0.8 / 0.6; 0.7 untagged), and a speaker link when the bullet names someone on this event's roster.
+- Rule-12 lines ("unsourced", "don't publish") are staged with `metadata.do_not_publish = true`, confidence ≤ 0.5, and are **never** auto-approved.
+- **Always pass `--approve`** — inherited approval, **ratified by Alex 2026-09-18**: claims parsed from a brief he has reviewed land `approved`. Rule-12 / do-not-publish claims never do; they stay `candidate`. To promote claims staged before this ruling: `substrate.py approve-claims --manifest <m.json>`.
+- **0 claims parsed = loud failure (exit 3)**, not a silent pass — it means the brief's headings drifted.
+- If there is genuinely no brief (e.g. a walk-in with no transcript), say so with the reason in the Step 6 summary — skipped, not silent.
+
+**Prerequisite:** migration `supabase/migrations/0009_substrate_s1a_additive.sql` applied to prod (rehearsed on the twin via `supabase/scripts/rehearse_s1a.py`). Until it is, 3.8c fails with a 404 on `claim` — do not skip around it; say so in the Step 6 summary.
+
+## Step 3.9 — Sharpen steer (steering-interview Touch 2) — the collaborative gate
+
+The `post_event_brief` (Step 3.7) now exists — it has surfaced the room's real tensions, competing
+theses, quote-safety calls, and the documentarian cuts. **Before content-correspondent drafts a
+single post**, run **Touch 2 of `steering-interview`** (see `.claude/skills/steering-interview/SKILL.md`):
+
+- **Derive ≤3 genuine forks from the brief** — each pointing at a specific section (e.g. *"the room
+  split on X vs Y — lead with the tension or pick a side?"*, *"your strongest line is MED-confidence
+  in the quote bank — paraphrase, drop the @-tag, or cut?"*, *"two cuts available: the contrarian
+  one vs the synthesis — which is the post?"*). Never a generic "what's the angle?" — the brief is
+  the prep that earns the specific question (prep-then-ask).
+- **If the brief has no real fork, say so in one line and skip to Step 4** (*"brief is unambiguous —
+  drafting now"*). A manufactured question is worse than none.
+- **Keep the loop open:** incorporate Alex's call/pushback, adjust, confirm, then draft. May use
+  `AskUserQuestion` for genuine either/or forks.
+- **Persist** the forks + Alex's answers into the **Author Steer** block (Sharpen section) on the
+  Event page, and thread them into the Step 4 content-correspondent input.
+- **Skippable**, like all steering — if Alex says "just draft it," proceed.
+
+Touch 1 (Aim) for post-event ran earlier (the "person you want to land well with" / enrichment
+direction, folded around Step 3.6); this is the post-brief Sharpen touch.
+
+## Step 4 — Invoke content-correspondent with structured input
+
+Pass content-correspondent skill the following structured input (NOT a raw transcript paste):
+
+```
+Event: [Notion Event Name]
+Date: [Event Date]
+Notion Event URL: [Notion page URL]
+Transcript source: [Supercut public_id + title / ElevenLabs file / manual paste]
+
+=== Recording summary (angle input only — never a quote source) ===
+[Supercut AI summary + chapters from Step 2A, if available; otherwise omit this block]
+
+=== Conditioned Quote Bank + Glossary (from Step 3.5 — verbatim quote source) ===
+[transcript-conditioning output: confidence-scored quote bank attributed to resolved speakers, the entity glossary (proper-noun spelling for public copy), the speaker-resolution table, and the conditioning confidence score. Quote HIGH-confidence lines verbatim; paraphrase MED; never print excluded-garble entities. If Step 3.5 was skipped, pass the raw diarized transcript here instead and note the skip.]
+
+=== Attendees (cross-reference against Notion People DB) ===
+[attendees + calendar_event.invitees, deduped]
+
+=== Notion Pre-Event Brief (if available — for documentary thesis continuity) ===
+[Pull from Notion: research_brief Content Draft linked to this Event]
+
+=== Author Steer — Sharpen forks + Alex's calls (from Step 3.9) ===
+[The ≤3 forks put to Alex and his decisions/pushback, verbatim. These are binding editorial
+direction — the thesis pick, the quote-safety call, the cut chosen. content-correspondent honors
+them over its defaults. If Step 3.9 was skipped (no real fork / "just draft it"), note the skip.]
+
+=== Field Color (Alex's own — feeds Variant C and the Snack Index) ===
+[Alex's Wispr dictation (the subway-home "what I didn't say out loud") + phone photos/clips from
+the room, with one-line captions. Personality source for the C variant; never a quote source for
+other people. Recording/consent rules: visual-briefs.md. If absent, C flags
+[PERSONALITY LINE NEEDED: …] instead of inventing one.]
+```
+
+content-correspondent then runs its standard logic per `.claude/skills/content-correspondent/SKILL.md`: bucket-sorts contacts, drafts Tier 1 comment + Tier 2 post + visual carousel brief + bucket A/B outreach DMs. Its "structured notes if the session was recorded; use for direct quotes from speakers" input is this block: the conditioned quote bank is the only verbatim quote source.
+
+**v2 output set + gates (YED-96):**
+- **Canonical outputs = the brief (Steps 3.7–3.8) + LinkedIn post(s) + the visual carousel brief → Claude-design render.** These always run.
+- **Outreach is OPT-IN, not default.** Do NOT auto-draft bucket A/B DMs. Generate outreach **only for people Alex explicitly names** for this event (captured via the `steering-interview` "person you want to land well with" answer). Free-LinkedIn connection-message limits make blanket outreach low-yield. Default: skip and note "outreach skipped — none flagged."
+- **Attribution → public-content HARD GATE (the one irreversible failure — YED-96 R3):** a quote may be used **verbatim in a draft that @-tags a person ONLY if it is HIGH-confidence** in the conditioned quote bank. MED / low-confidence quotes → paraphrase, drop the tag, or exclude. A clean-looking transcript must not let a misattributed line reach a post that tags the wrong person.
+- **Quote-safety framing:** the brief is *permissive capture*; the post is *gated publish* — stance-license earned (post-event = high), Rule-12 source-check on thesis claims, confidence tags enforced (`content-style-guide.md` / `content-anti-patterns.md`).
+
+**Length guardrail (added 2026-06-10):** every Tier 2 post content-correspondent returns must be **≤ 3,000 characters** (LinkedIn hard cap) — the roundtable / topics×perspectives format with verbatim quotes is the one that overruns. Cut each version to budget BEFORE Step 5 commits it; sources / resource links go to the **first comment**, never inline in the post body. Canonical rule: `.claude/references/content-style-guide.md` → LinkedIn Character Budget.
+
+## Step 5 — Write drafts to Notion (inline, parent thread)
+
+Once content-correspondent returns drafts, write them **inline in this (parent) thread** with `notion-create-pages` on the Content Drafts DB. Writes run inline in the parent thread per CLAUDE.md invariant 5 (claude.ai connectors are not available inside subagents). Follow `.claude/references/notion-write-gotchas.md` (post copy as plain paragraphs, never code blocks).
+
+Each draft becomes one Content Drafts row with:
+- `Content Type` per draft (linkedin_post_post, linkedin_dm_speaker, linkedin_dm_host, etc.)
+- `Event Phase` = `post_event`
+- `Content Status` = `needs_review`
+- `Platform` = `linkedin`
+- `Event` relation = Notion Event URL
+- `People` relation = matched People DB rows for each bucketed contact
+
+## Step 5.5 — HubSpot CRM write (GATED · selective · create-once) — YED-142
+
+**Spec + rationale:** `docs/archive/proposals/post-event-hubspot-step.md`. This is the **only** place the pipeline writes to HubSpot, and it runs **post-event only** — never pre-event. Pre-event, the person record lives in **Notion People** (the knowledge graph); HubSpot (the relationship / pipeline CRM) gets a contact only once there is a real reason. Governing rules: pipeline value philosophy (*relationships, not enrichment*), CLAUDE.md invariants **8** (dedup-search before create) and **9** (HubSpot post-event, selective, create-once), and the **HubSpot write order** in `.claude/references/notion-schema.md` (Company → Contact + association → Note).
+
+**Topology (hard rule):** all HubSpot writes happen **in the parent thread** — the HubSpot MCP is unavailable inside subagents, and the confirmation table must render inline (memory `project_notion_writes_must_be_parent_thread`).
+
+### 5.5a — Build the candidate list (selective — default is exclusion)
+A person qualifies for a HubSpot write **only if one holds**:
+- Alex **actually spoke with them** in the room (`People & Outreach State` → spoke? = yes), OR
+- they are an **opt-in outreach target** (named in Step 4), OR
+- they are a **deliberate pipeline / job-search target** (e.g. a hiring manager at a company Alex is pursuing).
+
+Everyone else stays in Notion People — do NOT create a HubSpot record for "someone I researched." If the candidate list looks like the whole roster, that is the failure signal — cut it back to real relationships.
+
+- **Showcase reuse:** for a **founder-showcase** event (Step 3.4), the contact-extraction pass already produced the candidate set (founders + explicitly called-out teammates) + the Apollo enrichment CSV — **reuse that set**, don't re-derive.
+- **Default skip:** if nobody clears the bar, skip this step and note `HubSpot: skipped — no contact cleared the relevance bar; Notion People holds the roster.`
+
+### 5.5b — Dedup-search (mandatory — Rule 11)
+For each candidate, search HubSpot before deciding to write:
+- `mcp__claude_ai_HubSpot__search_crm_objects` by **name + company** (email is the primary dedup key when known).
+- Classify each: **NEW** (no match) vs **EXISTS** (matched contact — capture its record id).
+- (If unsure of internal property names, call `mcp__claude_ai_HubSpot__search_properties` / `discover_hubspot_schema` first — per the HubSpot MCP guidance.)
+
+### 5.5c — GATE: confirmation table (STOP — Alex approves before any write)
+Present the full plan and **wait**. This is a Tier-3 irreversible external write — never auto-execute.
+
+```
+🧩 HubSpot write plan — [Event Name] ([date])   (post-event · create-once)
+
+| # | Person            | Company       | Status | Action                    | Note preview                                  |
+|---|-------------------|---------------|--------|---------------------------|-----------------------------------------------|
+| 1 | [name]            | [company]     | NEW    | create Co→Contact→assoc→Note | "Met at [event] [date]; discussed X; next: Y" |
+| 2 | [name]            | [company]     | EXISTS | add Note only             | "[event] [date]: discussed X; next: Y"        |
+| … |                   |               |        |                           |                                               |
+
+Approve all / edit row N / skip row N / skip HubSpot entirely?
+```
+
+### 5.5d — Write (create-once, in dependency order — only approved rows)
+- **Company** (if NEW) → `mcp__claude_ai_HubSpot__manage_crm_objects` (standard fields). If the company already exists, reuse it — do not duplicate.
+- **Contact** — **NEW** → create + associate to the Company (HubSpot association). **EXISTS** → do **NOT** recreate and do **NOT** field-merge existing properties (Rule 6 — the fragile update path); proceed to the Note only.
+- **Note** (every approved row, new or existing) → create a Note engagement via `manage_crm_objects`, associated to the contact, body = `event · date · role · what was discussed · next step`. The Note **is** the event-association mechanism (Static Lists are unavailable via MCP).
+  - **Idempotency:** before adding, check the contact for an existing Note that names **this event** — if present, skip (no note-spam on re-run).
+
+### 5.5e — Report
+Roll the results into the Step 6 summary: created contacts/companies, Notes added, rows skipped (with reason). If the HubSpot MCP is unavailable, **fail clean** — surface the candidate + note table in chat so Alex can act manually; the Notion writes (Steps 3.7–3.8, 5) are already committed and unaffected.
+
+## Step 5.6 — Speaker deep-dives (OPTIONAL — ask, never auto-run)
+
+Evergreen, one-per-presenter teardown posts built from the `post_event_brief` + transcript. Methodology:
+`.claude/skills/content-patterns/speaker-deep-dive.md` (read it in full before running).
+
+1. **Ask Alex:** "Speaker deep-dives for this event? [yes / later / no]". `no` or `later` → skip to Step 6
+   (note `later` in the summary). No default run.
+2. **Standalone on a past event** ("run post-event-content speaker deep-dives for <event>"): allowed for any
+   event whose Notion page has a `post_event_brief` + a transcript. Run Step 1.0 (claim) and Step 1 (resolve)
+   first, then Step 2 read-only (reuse the local `event-transcripts/YYYY-MM-DD_<Event>.md` if present, else
+   2A/2B/2C), then jump here; skip Steps 3–5.5. Release the claim when done.
+3. **Build slices** (parent) → **fan out** one `general-purpose` drafting agent per presenter, in parallel, in
+   one message; text + web only, working files under gitignored `.claude/.state/deep-dives/<event-slug>/`.
+4. **Collect**, re-invoke any thin return alone, then **write to Notion inline** (CLAUDE.md invariant 5): one
+   Content Draft per speaker, `needs_review`, 3 hook variants, plain paragraphs. Nothing lands in a tracked path.
+5. **Failure:** no `post_event_brief` → stop and say so; no transcript → paraphrase-only, flagged; a Notion
+   write fails → return that draft in chat.
+
+## Step 6 — Summary
+
+```
+✅ /post-event-content complete: [Event Name]
+
+Transcript source: [Supercut <public_id> — title / ElevenLabs file / manual paste]
+Graph write-back (3.8b/3.8c): [ensure-event ok / claims staged N / skipped: reason]  (not enforced — report it)
+Drafts created: N
+  - Tier 1 comment: [Notion URL]
+  - Tier 2 post + visual brief: [Notion URL]
+  - Bucket A outreach: N drafts
+  - Bucket B outreach: N drafts
+
+HubSpot (Step 5.5): [N contacts created / M Notes added / K skipped]  — or "skipped — no contact cleared the bar"
+Speaker deep-dives (Step 5.6): [N drafts / later / no]
+Room page: [added to empire-state-hub rooms.curated.json — run `pnpm gen:rooms` once the recap is published / already listed]
+
+All drafts in needs_review. Edit in Notion → mark approved when ready to ship.
+```
+
+---
+
+## Failure modes
+
+- **No Supercut match** — try `list=shared` and a wider date window once; still nothing → offer 2B (audio file) or 2C (paste). Never guess between two plausible recordings; ask Alex.
+- **Supercut transcript `pending`/`processing`** — not final. Tell Alex and stop; do not draft from a partial transcript.
+- **Supercut transcript `failed`/`unavailable`** — final (e.g. no audio). Fall back to 2B/2C.
+- **Supercut 401/403** — `SUPERCUT_API` missing, expired or wrong workspace (regenerate under Settings → Personal API Tokens). A 403 with "Error 1010" is Cloudflare rejecting the client's user agent, not an auth failure: use curl.
+- **Supercut MCP not loaded this session** (added after the session started) — use the REST path; restart Claude Code to pick up the MCP.
+- **No transcript at all** — draft from Alex's recap + the pre-event brief (lower fidelity, no verbatim quotes).
+- **Notion Event row not found** — present top 3 title-similarity candidates from Events DB. If none, allow "create draft without Notion anchor" path.
+- **Notion People DB doesn't match the recalled attendees** — pass attendee names through unmatched; content-correspondent will still draft outreach but Content Draft `People` relation will be sparse. Acceptable — Alex can backfill in Notion if needed.
+- **A Notion write fails** — flag the error, return the in-memory drafts to Alex in chat so the work isn't lost. He can paste manually.
+- **HubSpot (Step 5.5) MCP unavailable / errors** — fail clean: surface the candidate + Note table in chat for manual entry. Notion writes (Steps 3.7–3.8, 5) are already committed and unaffected. Never retry blindly against the CRM.
+- **HubSpot dedup ambiguous** (multiple contacts match name+company) — do NOT guess. Present the matches to Alex in the Step 5.5c gate and let him pick the record or mark NEW.
+- **HubSpot candidate list looks like the whole roster** — that's the over-creation signal. Re-apply the 5.5a bar (spoke-with / opt-in / pursued-target) and cut it back; the rest belong in Notion People only.
+
+---
+
+## Why this design
+
+The friction kill is removing the transcript-paste step, not removing Alex from the loop. Supercut already records, transcribes and summarizes; pulling that by API/MCP (vs. finding a file and pasting it) frees Alex from the post-event drain of "now I have to find the file and paste it in." Conditioning (Step 3.5) stays in the loop because no vendor transcript is safe to quote from raw.
+
+The dual-path resolution (GCal ID first, title fuzzy fallback) means:
+- Future events captured via `/check-new-events` get the deterministic join automatically
+- Existing events from before the GCal ID property was added still work via fallback
+- No backfill required for the 2 events tomorrow — they'll match on title+date
+
+Summary + transcript together is intentional: the summary drives angle/thesis decisions, the conditioned transcript provides verbatim quotes for color. Summary alone is too tidy for Alex's documentarian voice; transcript alone is too noisy for fast angle-finding.
+
+---
+
+## Ground truth references
+
+- **Conditioning skill (Step 3.5)**: `.claude/skills/transcript-intelligence/transcript-conditioning/SKILL.md` — speaker resolution, entity glossary, confidence-scored quote bank
+- **Downstream skill**: `.claude/skills/content-correspondent/SKILL.md` — content generation logic, bucket sorting, ladder
+- **Speaker deep-dives (Step 5.6)**: `.claude/skills/content-patterns/speaker-deep-dive.md` — replaces the retired `/evergreen-deep-dive` command
+- **Supercut (Step 2A)**: `.claude/references/supercut.md` — auth, endpoints, MCP vs REST, verified/unverified facts
+- **Notion write rules (Step 5, inline)**: `.claude/references/notion-write-gotchas.md` + `.claude/references/notion-schema.md` (full property mapping; writes run inline in the parent thread per CLAUDE.md invariant 5)
+- **HubSpot step spec (Step 5.5)**: `docs/archive/proposals/post-event-hubspot-step.md` — the gated selective create-once pattern + pre-mortem
+- **HubSpot CRM schema + Notes convention**: `.claude/references/notion-schema.md` (canonical fields for all three write destinations)
+- **Notion Events DB ID**: `9dcbc999-b4ed-4a51-b48a-10aaf171f1ba`
+- **Notion Content Drafts DB ID**: `6c24c9f5-66c9-4eed-a61d-3f9b87c3f775`
+- **Upstream chain**: `/check-new-events` → `/event-deep-research` writes `Google Calendar Event ID` to Events DB → this command uses it
