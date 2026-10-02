@@ -1,0 +1,619 @@
+#!/usr/bin/env python3
+"""spine_client — the ONE write path to the Market-Intelligence spine (ADR-9, YED-81).
+
+Every Supabase REST write in this repo goes through `req()` (or `write()`), and every POST/PATCH
+body is checked by `guard()` BEFORE it leaves the machine. The guard is hard-fail: a violation
+raises PIIViolation (exit 2) naming field · tier rule · fix. There is no in-run override.
+
+ADR-9 tier 2 (the spine) holds professional-public identity only. Concretely:
+  * a column may be SET only if it is in ALLOW[table]; ANY column may be NULLED (nulling is
+    always safe — it is how the email migration runs through this same guard);
+  * email / phone columns are forbidden on every table;
+  * every string value is scanned — recursively through dicts/lists (`metadata` jsonb included) —
+    for email and phone patterns;
+  * rows sourced from the inbox (source starts with `inbox_miner`) carry a tier-0 backstop:
+    `metadata.sender_domain` / `metadata.from_domain` must not match `inbox-denylist.md`.
+
+Reads (GET) and `/rpc/` calls pass through unguarded — they write nothing.
+
+Usage from scripts:      from spine_client import req, write, q, PIIViolation
+CLI (see spine_write.py) python3 .claude/scripts/spine_write.py <table> --json '{...}'
+Self-test:               python3 .claude/scripts/spine_client.py --selftest   (27 cases)
+Repo check (AC2):        python3 .claude/scripts/spine_client.py --check-writers
+
+Conventions preserved from the six writers this replaced: (status, parsed_json) return shape;
+`prefer=` header; 30s default timeout (pass timeout=60 for doc-KB); `raise_on_error=True` gives
+dockb's raise-on-HTTPError semantics. Exit codes: 2 = PIIViolation, 1 = selftest/check failure.
+"""
+from __future__ import annotations
+import fnmatch, http.client, json, os, re, ssl, sys, time, urllib.error, urllib.parse, urllib.request
+
+REF = "oicikjyzmxqfomrrqkvf"
+BASE = f"https://{REF}.supabase.co/rest/v1"
+ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+ENV = os.path.join(ROOT, ".env")
+DENYLIST_PATH = os.path.join(ROOT, ".claude", "references", "inbox-denylist.md")
+SELF = os.path.abspath(__file__)
+
+
+class PIIViolation(Exception):
+    """A write that ADR-9 forbids. Message = field · tier rule · fix. Exit code 2."""
+    exit_code = 2
+
+
+# ---------------------------------------------------------------------------
+# ADR-9 tier-2 allowlists — the columns a producer may SET. Keep in sync with
+# market-intel-schema.sql + doc-kb-schema.sql + doc-kb-migration-b1.sql. Adding a table = one row.
+# ---------------------------------------------------------------------------
+_MI_COMMON = {"notion_page_id", "source", "relevance_score", "last_engaged_at", "engagement_count",
+              "metadata", "created_at", "updated_at"}
+ALLOW: dict[str, set[str]] = {
+    "company": {"id", "name", "description", "website", "industry", "funding_stage", "company_type",
+                "linkedin_url"} | _MI_COMMON,
+    # person: professional-public identity ONLY. No email. No phone. (ADR-9 decision 1, 2026-09-13)
+    "person": {"id", "name", "title", "company_id", "linkedin_url", "bio", "role_context"} | _MI_COMMON,
+    "topic": {"id", "name", "description"} | _MI_COMMON,
+    "event": {"id", "title", "kind", "event_date", "description", "url", "source", "confidence",
+              "notion_page_id", "metadata", "created_at", "updated_at"},
+    "event_entity": {"id", "event_id", "entity_type", "entity_id", "role", "created_at"},
+    "documents": {"id", "title", "author", "source_type", "blob_key", "sha256", "word_count",
+                  "embedding_model", "notion_page_id", "ingested_at",
+                  # ADR-10 S1a (0009): documents generalized to every artifact with a body
+                  "event_id", "external_ref", "doc_date", "version", "supersedes_id", "is_current",
+                  "produced_by", "visibility", "metadata"},
+    "doc_chunks": {"id", "document_id", "chunk_index", "content", "embedding", "token_count",
+                   "locator", "created_at"},
+    "doc_claims": {"id", "document_sha256", "claim_key", "claim_text", "claim_type", "locator", "quote",
+                   "proposed_entities", "confidence", "extractor", "extractor_model", "lane", "status",
+                   "promoted_event_id", "created_at", "reviewed_at"},
+    # --- ADR-10 S1a (0009) — the Knowledge Substrate claim layer ---------------------------------
+    # claim: utility_score / use_count / last_used_at are deliberately ABSENT. ADR-10 decision 5:
+    # nothing ranks on usage until >=20 outcome rows exist, so no producer may set those columns.
+    # The rule is enforced here, in code, not left to prose. `tsv` is generated (never written).
+    "claim": {"id", "source_key", "claim_key", "claim_text", "claim_type", "quote", "locator",
+              "proposed_entities", "document_id", "event_id", "provenance_tier", "confidence",
+              "asserted_at", "status", "extractor", "extractor_model", "lane", "embedding",
+              "embedding_model", "metadata", "created_at", "reviewed_at"},
+    "claim_entity": {"claim_id", "entity_type", "entity_id", "role", "created_at"},
+    "claim_relation": {"id", "from_claim_id", "to_claim_id", "relation", "method", "confidence", "created_at"},
+    "document_entity": {"document_id", "entity_type", "entity_id", "role", "created_at"},
+    "artifact_outcome": {"document_id", "goal", "target", "outcome", "outcome_value", "outcome_date",
+                         "source", "updated_at"},
+    "claim_usage": {"id", "claim_id", "document_id", "consumer", "used_at"},
+}
+# Forbidden on EVERY table, regardless of allowlist — contact PII never enters the spine.
+FORBIDDEN_COLUMNS = {"email", "e_mail", "phone", "phone_number", "mobile", "telephone"}
+
+# Patterns scanned over every string value. Phone requires separators or a leading +/( so that
+# 10-digit integers (unix timestamps, ids) never false-positive.
+EMAIL_RE = re.compile(r"(?<![\w/])[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}(?![\w])")
+PHONE_RE = re.compile(
+    r"(?<![\w.+-])(?:\+\d{1,3}[\s.-]?)?(?:\(\d{3}\)|\d{3})[\s.-]\d{3}[\s.-]\d{4}(?![\w])"   # 555-123-4567 / (555) 123 4567
+    r"|(?<![\w.])\+\d{10,15}(?![\w])"                                                          # +15551234567 (E.164 compact)
+)
+# Bot / no-reply addresses are not personal data (git trailers surface them in generated artifacts).
+EMAIL_ALLOWLIST_RE = re.compile(r"^(?:noreply|no-reply|donotreply)@|@users\.noreply\.github\.com$", re.I)
+
+
+# ---------------------------------------------------------------------------
+# Tier-0 backstop: the inbox denylist (skip-list). Parsed from the human-readable markdown so the
+# boundary stays a single, auditable file. Exact domains, subdomain suffixes, and `*` globs.
+# ---------------------------------------------------------------------------
+def load_denylist(path: str = DENYLIST_PATH) -> tuple[set[str], list[str]]:
+    """(domains, globs) for the tier-0 backstop. Delegates to inbox_boundary — the ONE parser of
+    inbox-denylist.md (YED-161) — and falls back to the inline parser only if that module is absent."""
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from inbox_boundary import load_denylist as _full
+        d = _full(path)
+        return set(d.domains), list(d.globs)
+    except ImportError:
+        pass
+    exact: set[str] = set()
+    globs: list[str] = []
+    if not os.path.exists(path):
+        return exact, globs
+    text = open(path, encoding="utf-8").read()
+    for tok in re.findall(r"`([^`\n]+)`", text):
+        t = tok.strip().lower()
+        if " " in t or "@" in t or "." not in t and "*" not in t:
+            continue                      # prose, exact senders, or bare words like `docusign`
+        if "*" in t:
+            globs.append(t if "." in t or t.startswith("*") else t)
+        else:
+            exact.add(t.lstrip("."))
+    return exact, globs
+
+
+def domain_denylisted(host: str, deny: tuple[set[str], list[str]] | None = None) -> bool:
+    if not host:
+        return False
+    host = host.lower().strip()
+    exact, globs = deny if deny is not None else load_denylist()
+    if host in exact or any(host.endswith("." + d) for d in exact):
+        return True
+    return any(fnmatch.fnmatch(host, g) for g in globs)
+
+
+# ---------------------------------------------------------------------------
+# The guard
+# ---------------------------------------------------------------------------
+def _walk(value, path=""):
+    """Yield (path, string) for every string inside a nested dict/list/scalar."""
+    if isinstance(value, str):
+        yield path, value
+    elif isinstance(value, dict):
+        for k, v in value.items():
+            yield from _walk(v, f"{path}.{k}" if path else str(k))
+    elif isinstance(value, (list, tuple)):
+        for i, v in enumerate(value):
+            yield from _walk(v, f"{path}[{i}]")
+
+
+def _scan_pii(row: dict, table: str) -> None:
+    for path, s in _walk(row):
+        for m in EMAIL_RE.finditer(s):
+            if not EMAIL_ALLOWLIST_RE.search(m.group(0)):
+                raise PIIViolation(
+                    f"{table}.{path} contains an email address · ADR-9 tier 2: contact PII never enters "
+                    f"the spine · fix: drop it from the producer (contact detail belongs in HubSpot)")
+        if PHONE_RE.search(s):
+            raise PIIViolation(
+                f"{table}.{path} contains a phone number · ADR-9 tier 2: contact PII never enters the "
+                f"spine · fix: drop it from the producer (contact detail belongs in HubSpot)")
+
+
+def guard(table: str, row: dict, *, op: str = "insert") -> dict:
+    """Validate one row for `table`. Returns the row unchanged or raises PIIViolation."""
+    table = table.strip("/").split("?")[0]
+    if not isinstance(row, dict):
+        raise PIIViolation(f"{table}: body must be a JSON object per row · got {type(row).__name__}")
+    if table not in ALLOW:
+        raise PIIViolation(
+            f"{table}: no ADR-9 allowlist for this table (fail-closed) · fix: add its columns to "
+            f"spine_client.ALLOW after checking the schema for PII")
+    for col, val in row.items():
+        c = col.lower()
+        if val is None:
+            continue                       # nulling any column is always permitted
+        if c in FORBIDDEN_COLUMNS:
+            raise PIIViolation(
+                f"{table}.{col} is a contact-PII column · ADR-9 tier 2: email/phone never enter the "
+                f"spine · fix: remove the field; store contact detail in HubSpot")
+        if c not in ALLOW[table]:
+            raise PIIViolation(
+                f"{table}.{col} is not an allowlisted column for {op} · ADR-9: only known professional "
+                f"fields may be set · fix: use an allowlisted column or extend ALLOW[{table!r}] deliberately")
+    _scan_pii(row, table)
+    src = str(row.get("source") or "")
+    if src.startswith("inbox_miner"):
+        meta = row.get("metadata") or {}
+        for key in ("sender_domain", "from_domain", "domain"):
+            host = meta.get(key) if isinstance(meta, dict) else None
+            if host and domain_denylisted(str(host)):
+                raise PIIViolation(
+                    f"{table}.metadata.{key}={host!r} is on inbox-denylist.md · ADR-9 tier 0: never "
+                    f"enters · fix: the scan should have skipped this thread (YED-161)")
+    return row
+
+
+def guard_body(path: str, body) -> None:
+    """Guard a request body for a write to `path` (table or table?filter). Lists = batch of rows."""
+    table = path.strip("/").split("?")[0]
+    if table.startswith("rpc/"):
+        return
+    rows = body if isinstance(body, list) else [body]
+    for r in rows:
+        guard(table, r)
+
+
+# ---------------------------------------------------------------------------
+# HTTP — the shape every writer used, preserved.
+# ---------------------------------------------------------------------------
+_KEY: str | None = None
+
+
+def load_key(env_path: str = ENV) -> str:
+    global _KEY
+    if _KEY:
+        return _KEY
+    k = os.environ.get("SUPABASE_API_KEY")
+    if not k and os.path.exists(env_path):
+        with open(env_path) as f:
+            for line in f:
+                if line.startswith("SUPABASE_API_KEY="):
+                    k = line.split("=", 1)[1].strip().strip('"').strip("'")
+                    break
+    if not k:
+        sys.exit("FATAL: SUPABASE_API_KEY not in .env — refusing to proceed (no silent no-op).")
+    _KEY = k
+    return k
+
+
+def q(v) -> str:
+    """URL-encode a filter value (PostgREST)."""
+    return urllib.parse.quote(str(v), safe="")
+
+
+# Transient-failure retry (YED-205 acceptance run, 2026-09-27). A stage-research run is ~250 sequential
+# REST calls; one multi-second network stall anywhere used to kill the whole run (3 of 4 attempts on the
+# Shortlist run died on a single `urlopen ... timed out`). Only requests that are safe to repeat are
+# retried: a plain-insert POST that timed out may already have landed, so it still fails loud.
+REQ_RETRIES = 3                  # total attempts
+REQ_BACKOFF = (1.0, 3.0)         # seconds before attempt 2, 3
+# ssl.SSLError is a plain OSError (not a ConnectionError): without it a TLS drop on a reused socket escaped as a raw
+# traceback (judge, 2026-09-27). urllib used to wrap these into URLError for us; http.client does not.
+_TRANSIENT = (urllib.error.URLError, TimeoutError, ConnectionError, http.client.HTTPException, ssl.SSLError)
+
+# Persistent connection (YED-149 diagnosis, 2026-09-27, measured): ~10% of FRESH TCP connects from Alex's network
+# hang on the SYN — to every host, not just Supabase — and each hang cost the full 30s timeout. One urllib connection
+# per call turned a 200-role dry run (455 calls) into ~24 min, 93% of it stalls; over one reused connection the same
+# calls took 65s with 0 stalls. So retry-safe calls (GET / set-PATCH / upsert) reuse ONE keep-alive connection, and a
+# dropped one is closed and rebuilt by the retry loop. A NON-retryable call (plain insert, /rpc/) always gets its own
+# fresh connection, exactly as before: if a reused socket died mid-send we could not know whether the insert landed.
+CONNECT_TIMEOUT = 10             # a stalled SYN now costs 10s once, not 30s per call
+# Single-threaded by design: every caller is a sequential CLI loop in the parent thread (fan-out never writes).
+# _CONN is shared module state with no lock — do not call req() from threads without adding one.
+
+
+class NotSent(ConnectionError):
+    """The connection never opened, so not one byte of the request left this machine. Retrying is safe for ANY
+    method, including a plain insert: nothing can have landed (first live backfill died on exactly this, 2026-09-27)."""
+_CONN: http.client.HTTPSConnection | None = None
+
+
+def _drop_conn() -> None:
+    global _CONN
+    if _CONN is not None:
+        try:
+            _CONN.close()
+        except Exception:
+            pass
+    _CONN = None
+
+
+def _send(method: str, path: str, data, headers: dict, timeout: int, reuse: bool) -> tuple[int, str]:
+    """One HTTP exchange -> (status, body text). Every connect-time failure is raised as NotSent; a failure after
+    connect raises the underlying _TRANSIENT error (or a non-transient one, which req() does not retry).
+    The only socket code in this file; the retry selftest stubs it, the lifecycle selftest drives it with a fake
+    HTTPSConnection."""
+    global _CONN
+    host = f"{REF}.supabase.co"
+    conn = _CONN if reuse else None
+    if conn is None:
+        conn = http.client.HTTPSConnection(host, 443, timeout=min(timeout, CONNECT_TIMEOUT))
+        try:
+            conn.connect()
+        except OSError as e:     # ANY connect failure — SYN stall, DNS (gaierror), TLS handshake, no route — sent nothing
+            conn.close()
+            raise NotSent(f"connect failed before sending: {type(e).__name__}: {e}") from e
+        if reuse:
+            _CONN = conn
+    conn.sock.settimeout(timeout)
+    try:
+        conn.request(method, "/rest/v1" + path, body=data, headers=headers)
+        resp = conn.getresponse()
+        return resp.status, resp.read().decode()
+    except Exception:
+        if reuse:
+            _drop_conn()
+        else:
+            conn.close()
+        raise
+    finally:
+        if not reuse:
+            conn.close()
+
+
+def _retryable(method: str, path: str, prefer: str | None) -> bool:
+    """Idempotent-by-construction only: GET, PATCH (set-to-value), and upsert POSTs (`resolution=` in Prefer).
+    /rpc/ is excluded — an rpc may write. Everything else repeats nothing."""
+    if path.startswith("/rpc/"):
+        return False
+    if method in ("GET", "PATCH"):
+        return True
+    return method == "POST" and "resolution=" in (prefer or "")
+
+
+def req(method: str, path: str, body=None, prefer: str | None = None, *, timeout: int = 30,
+        raise_on_error: bool = False, extra_headers: dict | None = None):
+    """(status, parsed_json_or_text). Every POST/PATCH/PUT body is guarded (except /rpc/ paths).
+    There is deliberately NO parameter that disables the guard — judge finding 2026-09-13."""
+    method = method.upper()
+    if method in ("POST", "PATCH", "PUT") and body is not None:
+        guard_body(path, body)
+    key = load_key()
+    headers = {"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    if prefer:
+        headers["Prefer"] = prefer
+    if extra_headers:
+        headers.update(extra_headers)
+    data = json.dumps(body).encode() if body is not None else None
+    retryable = _retryable(method, path, prefer)
+    attempts = REQ_RETRIES           # a non-retryable call still retries a NotSent failure (see NotSent), nothing else
+    for attempt in range(1, attempts + 1):
+        try:
+            code, txt = _send(method, path, data, headers, timeout, reuse=retryable)
+            if code >= 400:                            # a real HTTP answer: never retried
+                if raise_on_error:
+                    raise RuntimeError(f"Supabase {method} {path} -> {code}: {txt[:500]}")
+                return code, txt
+            return code, (json.loads(txt) if txt else None)
+        except _TRANSIENT as e:                        # no answer at all: stall / reset / dropped socket
+            # A non-retryable call may have landed unless nothing was sent: fail loud on the first stall, as before.
+            giving_up = attempt >= attempts or (not retryable and not isinstance(e, NotSent))
+            if giving_up:
+                sys.stderr.write(f"req: gave up after {attempt} attempt(s) on {method} {path[:90]} — {type(e).__name__}: "
+                                 f"{str(e)[:120]}. Nothing after this call ran; a re-run is idempotent (upserts "
+                                 f"and GETs), and the skipped graph write is reported in the run summary.\n")
+                raise
+            wait = REQ_BACKOFF[min(attempt, len(REQ_BACKOFF)) - 1]
+            sys.stderr.write(f"req: transient {type(e).__name__} ({str(e)[:80]}) on {method} {path[:90]} — "
+                             f"retry {attempt}/{attempts - 1} in {wait:g}s\n")
+            time.sleep(wait)
+
+
+def write(table: str, rows, prefer: str | None = "return=representation", *, patch_filter: str | None = None,
+          dry_run: bool = False, **kw):
+    """Guarded write. POST /table by default; PATCH /table?patch_filter when given."""
+    path = f"/{table.strip('/')}" + (f"?{patch_filter}" if patch_filter else "")
+    guard_body(path, rows)
+    if dry_run:
+        return 0, {"dry_run": True, "path": path, "rows": rows if isinstance(rows, list) else [rows]}
+    return req("PATCH" if patch_filter else "POST", path, rows, prefer=prefer, **kw)  # guards again: pure + cheap
+
+
+# ---------------------------------------------------------------------------
+# AC2 — repo check: no other REST writer may exist. Scripts fail; prose warns.
+# ---------------------------------------------------------------------------
+# Detection patterns for check_writers() — module-level so --selftest can pin them (judge findings 2026-09-13).
+_SCRIPT_WRITE_RE = re.compile(r"urlopen|requests\.(post|patch|put)|\bcurl\b|\bfetch\(|axios\.(post|patch|put)|https?\.request\(")
+_WRITE_TABLES = (r"(topic|event|company|person|event_entity|documents|doc_chunks|doc_claims|claim|"
+                 r"claim_entity|claim_relation|document_entity|artifact_outcome|claim_usage)")
+_PROSE_CURL_RE = re.compile(r"\bcurl\b[^\n]*(-X\s*(POST|PATCH)|--data|-d\s)")
+_PROSE_VERB_RE = re.compile(r"`(POST|PATCH) /" + _WRITE_TABLES)
+
+
+def check_writers() -> tuple[list[str], list[str]]:
+    offenders, prose = [], []
+    exempt = {SELF, os.path.join(os.path.dirname(SELF), "spine_write.py")}
+    for dirpath, _, files in os.walk(os.path.join(ROOT, ".claude")):
+        if any(x in dirpath for x in ("/artifacts", "/.state", "/evals", "/proposals", "/notes")):
+            continue                       # specs, notes and telemetry describe writes; they don't perform them
+        for fn in files:
+            p = os.path.join(dirpath, fn)
+            if p in exempt:
+                continue
+            try:
+                s = open(p, encoding="utf-8", errors="ignore").read()
+            except OSError:
+                continue
+            if "rest/v1" not in s:
+                continue
+            if fn.endswith((".py", ".sh", ".mjs", ".js", ".ts")):
+                if _SCRIPT_WRITE_RE.search(s):
+                    offenders.append(os.path.relpath(p, ROOT))
+            elif fn.endswith(".md"):
+                if _PROSE_CURL_RE.search(s) or _PROSE_VERB_RE.search(s):
+                    prose.append(os.path.relpath(p, ROOT))
+    return sorted(offenders), sorted(prose)
+
+
+# ---------------------------------------------------------------------------
+# Self-test — the living acceptance layer (AC1). Positive AND negative cases.
+# ---------------------------------------------------------------------------
+def selftest() -> bool:
+    deny = ({"bank.example", "irs.gov"}, ["*.gov", "myhealth*"])
+    cases: list[tuple[str, callable, bool]] = []  # (name, thunk, expect_violation)
+
+    def add(name, fn, expect):
+        cases.append((name, fn, expect))
+
+    add("person.email set → refuse", lambda: guard("person", {"name": "A", "email": "a@b.com"}), True)
+    add("person.phone set → refuse", lambda: guard("person", {"name": "A", "phone": "555-123-4567"}), True)
+    add("person.bio containing email → refuse",
+        lambda: guard("person", {"name": "A", "bio": "reach me at jane@example.com"}), True)
+    add("event.metadata nested phone → refuse",
+        lambda: guard("event", {"title": "t", "kind": "market", "metadata": {"contact": {"cell": "+1 (555) 123-4567"}}}), True)
+    add("event.metadata E.164 compact phone → refuse",
+        lambda: guard("event", {"title": "t", "kind": "market", "metadata": {"x": "+15551234567"}}), True)
+    add("unknown table → refuse (fail-closed)", lambda: guard("secrets", {"x": 1}), True)
+    add("non-allowlisted column set → refuse", lambda: guard("topic", {"name": "t", "owner_ssn": "1"}), True)
+    add("inbox row from denylisted sender_domain → refuse",
+        lambda: guard("event", {"title": "t", "kind": "market", "source": "inbox_miner:market",
+                                "metadata": {"sender_domain": "alerts.bank.example"}}) if not domain_denylisted("alerts.bank.example", deny) else (_ for _ in ()).throw(PIIViolation("tier 0")), True)
+    add("company clean row → pass", lambda: guard("company", {"name": "Veris AI", "website": "https://veris.ai", "linkedin_url": "https://linkedin.com/company/veris"}), False)
+    add("person clean row (linkedin ok) → pass",
+        lambda: guard("person", {"name": "Ritiz Tambi", "title": "CEO", "linkedin_url": "https://linkedin.com/in/ritiz", "bio": "Founder; talked about agent simulation."}), False)
+    add("PATCH nulling email → pass (nulling always allowed)", lambda: guard("person", {"email": None}, op="update"), False)
+    add("metadata unix timestamp 1757700000 → pass (no phone false-positive)",
+        lambda: guard("event", {"title": "t", "kind": "market", "metadata": {"ts": "1757700000", "id": 1757700000}}), False)
+    add("url with /@handle → pass (not an email)",
+        lambda: guard("event", {"title": "t", "kind": "market", "url": "https://x.com/@ritiz_tambi/status/1"}), False)
+    add("noreply bot address → pass (allowlisted)",
+        lambda: guard("event", {"title": "t", "kind": "market", "description": "Co-Authored-By: bot <noreply@anthropic.com>"}), False)
+    add("doc_claims clean row → pass",
+        lambda: guard("doc_claims", {"document_sha256": "abc", "claim_key": "k", "claim_text": "Static evals grade answers.", "status": "candidate"}), False)
+    # ADR-10 S1a — the claim layer
+    add("claim clean first-hand row (dates + stats) → pass",
+        lambda: guard("claim", {"source_key": "s", "claim_key": "k", "provenance_tier": "first_hand",
+                                "claim_text": "Plans flipped between 4 shapes, 1.0 to 173.6 s, on 2026-09-16.",
+                                "asserted_at": "2026-09-16T22:00:00Z", "confidence": 0.8,
+                                "locator": {"speaker": "Ryan Booz", "timestamp": "00:41:12"}}), False)
+    add("claim.utility_score set → refuse (ADR-10 decision 5: no ranking on usage yet)",
+        lambda: guard("claim", {"source_key": "s", "claim_key": "k", "claim_text": "x", "utility_score": 0.9}), True)
+    add("claim.quote carrying a speaker's email → refuse",
+        lambda: guard("claim", {"source_key": "s", "claim_key": "k", "claim_text": "x",
+                                "quote": "ping me at ryan@example.com"}), True)
+    add("claim_relation clean row → pass",
+        lambda: guard("claim_relation", {"from_claim_id": "a", "to_claim_id": "b", "relation": "contradicts"}), False)
+    add("documents our-artifact row (no blob) → pass",
+        lambda: guard("documents", {"title": "Brief", "source_type": "research_brief", "sha256": "h",
+                                    "external_ref": "notion:3ded3699", "version": 1, "is_current": True}), False)
+    add("prose scan catches `POST /claim`",
+        lambda: None if _PROSE_VERB_RE.search("then `POST /claim` with") else (_ for _ in ()).throw(PIIViolation("miss")), False)
+    add("batch body guards every row → refuse on 2nd",
+        lambda: guard_body("/person", [{"name": "ok"}, {"name": "bad", "email": "x@y.io"}]), True)
+    add("rpc path passes through", lambda: guard_body("/rpc/match_doc_chunks", {"query_embedding": [0.1]}), False)
+    add("denylist: subdomain suffix + glob", lambda: (_ for _ in ()).throw(PIIViolation("x")) if (domain_denylisted("alerts.bank.example", deny) and domain_denylisted("portal.irs.gov", deny) and domain_denylisted("myhealthplus.com", deny) and not domain_denylisted("veris.ai", deny)) else None, True)
+
+    import inspect
+    add("req() exposes NO guard-bypass parameter (judge finding 2026-09-13)",
+        lambda: (_ for _ in ()).throw(PIIViolation("bypass param present")) if any("guard" in k for k in inspect.signature(req).parameters) else None, False)
+    add("writer scan catches a JS fetch() POST to rest/v1",
+        lambda: None if _SCRIPT_WRITE_RE.search('fetch("https://x.supabase.co/rest/v1/person", {method: "POST"})') else (_ for _ in ()).throw(PIIViolation("miss")), False)
+
+    # Transient retry (2026-09-27): the rule is pinned, and the loop is exercised against a stubbed socket.
+    add("retry rule: GET / PATCH / upsert-POST retry; plain POST and /rpc/ do not",
+        lambda: None if (_retryable("GET", "/person?x", None) and _retryable("PATCH", "/person?id=eq.1", "return=minimal")
+                         and _retryable("POST", "/claim?on_conflict=k", "resolution=ignore-duplicates,return=minimal")
+                         and not _retryable("POST", "/person", "return=representation")
+                         and not _retryable("POST", "/rpc/match_doc_chunks", "resolution=merge-duplicates"))
+        else (_ for _ in ()).throw(PIIViolation("retry rule drifted")), False)
+
+    def _retry_loop_case():
+        g = globals()
+        calls = {"n": 0}
+
+        def fake_send(method, path, data, headers, timeout, reuse):
+            calls["n"] += 1
+            calls.setdefault("reuse", []).append(reuse)
+            if calls["n"] < 3:
+                raise NotSent("connect failed") if calls.get("notsent") else urllib.error.URLError("timed out")
+            return 200, "[]"
+        saved = (g["REQ_BACKOFF"], g["_send"], g["load_key"])
+        g["REQ_BACKOFF"], g["_send"], g["load_key"] = (0, 0), fake_send, (lambda: "test-key")
+        try:
+            st, body = req("GET", "/person?select=id&limit=1")
+            if not (st == 200 and body == [] and calls["n"] == 3):
+                raise PIIViolation(f"retry loop drifted: status={st} calls={calls['n']}")
+            # Exhausted retries say so in one readable line (YED-228 follow-up), then re-raise the same type.
+            import io, contextlib
+            calls["n"] = -10                                   # every attempt stalls
+            buf = io.StringIO()
+            try:
+                with contextlib.redirect_stderr(buf):
+                    req("GET", "/person?select=id&limit=1")
+                raise PIIViolation("exhausted retries did not raise")
+            except urllib.error.URLError:
+                if "gave up after 3 attempt(s) on GET /person" not in buf.getvalue():
+                    raise PIIViolation("exhausted retries raised without the readable 'gave up' line")
+            calls["n"] = 0
+            calls["n"] = 0
+            try:
+                req("POST", "/person", [{"name": "Plain Insert"}], prefer="return=representation")
+                raise PIIViolation("plain POST retried")     # must NOT reach a 3rd call; must raise on the 1st
+            except urllib.error.URLError:
+                if calls["n"] != 1:
+                    raise PIIViolation(f"plain POST made {calls['n']} calls")
+                if calls["reuse"][-1] is not False:
+                    raise PIIViolation("plain POST went over the shared keep-alive connection")
+            # ...but a plain POST whose connection never opened IS retried: nothing was sent.
+            calls["n"], calls["notsent"] = 0, True
+            st, _ = req("POST", "/person", [{"name": "Plain Insert"}], prefer="return=representation")
+            if not (st == 200 and calls["n"] == 3):
+                raise PIIViolation(f"NotSent plain POST not retried: calls={calls['n']}")
+        finally:
+            g["REQ_BACKOFF"], g["_send"], g["load_key"] = saved
+    add("retry loop: 2 stalls then success on GET; plain POST fails on the 1st stall unless nothing was sent",
+        _retry_loop_case, False)
+
+    def _send_lifecycle_case():
+        """Drives the real _send() with a fake HTTPSConnection: reuse, drop-on-error, fresh-for-non-retryable, and
+        every connect-time OSError (DNS, TLS, SYN stall) surfacing as NotSent."""
+        import socket
+        g, made = globals(), []
+
+        class _R:
+            status = 200
+            def read(self): return b"[]"
+
+        class _Sock:
+            def settimeout(self, t): pass
+
+        class _Conn:
+            fail_connect = None
+            fail_request = None
+            def __init__(self, host, port, timeout=None):
+                self.closed, self.sock = False, None
+                made.append(self)
+            def connect(self):
+                if _Conn.fail_connect:
+                    raise _Conn.fail_connect
+                self.sock = _Sock()
+            def request(self, *a, **k):
+                if _Conn.fail_request:
+                    raise _Conn.fail_request
+            def getresponse(self): return _R()
+            def close(self): self.closed = True
+
+        saved = (http.client.HTTPSConnection, g["_CONN"])
+        http.client.HTTPSConnection, g["_CONN"] = _Conn, None
+        try:
+            _send("GET", "/x", None, {}, 30, reuse=True)
+            _send("GET", "/x", None, {}, 30, reuse=True)
+            if len(made) != 1:
+                raise PIIViolation(f"keep-alive not reused: {len(made)} connections for 2 GETs")
+            _send("POST", "/x", b"{}", {}, 30, reuse=False)
+            if len(made) != 2 or not made[-1].closed or g["_CONN"] is not made[0]:
+                raise PIIViolation("non-retryable call touched the shared connection or left its own open")
+            _Conn.fail_request = ConnectionResetError("reset")
+            try:
+                _send("GET", "/x", None, {}, 30, reuse=True)
+                raise PIIViolation("request failure did not raise")
+            except ConnectionResetError:
+                if g["_CONN"] is not None or not made[0].closed:
+                    raise PIIViolation("a failed shared connection was not dropped")
+            _Conn.fail_request = None
+            for err in (socket.gaierror(8, "nodename nor servname"), ssl.SSLError(1, "handshake"),
+                        TimeoutError("timed out"), OSError(65, "no route")):
+                _Conn.fail_connect = err
+                try:
+                    _send("POST", "/x", b"{}", {}, 30, reuse=False)
+                    raise PIIViolation(f"{type(err).__name__} at connect did not raise")
+                except NotSent:
+                    pass
+            _Conn.fail_connect = None
+        finally:
+            http.client.HTTPSConnection, g["_CONN"] = saved
+    add("_send lifecycle: one shared conn, non-retryable isolated + closed, dropped on error, any connect OSError -> NotSent",
+        _send_lifecycle_case, False)
+    add("prose scan catches `POST /doc_claims`",
+        lambda: None if _PROSE_VERB_RE.search("then `POST /doc_claims` with") else (_ for _ in ()).throw(PIIViolation("miss")), False)
+
+    failures = 0
+    for name, fn, expect in cases:
+        try:
+            fn()
+            got = False
+        except PIIViolation:
+            got = True
+        ok = got == expect
+        failures += 0 if ok else 1
+        print(f"  {'✓' if ok else '✗'} {name}")
+    n = len(cases)
+    print(f"selftest: {n - failures}/{n} guard cases pass")
+    return failures == 0
+
+
+def main(argv: list[str]) -> int:
+    if "--selftest" in argv:
+        return 0 if selftest() else 1
+    if "--check-writers" in argv:
+        off, prose = check_writers()
+        for p in off:
+            print(f"  ✗ REST writer outside spine_client: {p}")
+        for p in prose:
+            print(f"  ⚠ prose instructs a raw REST write (route via spine_write.py): {p}")
+        print(f"check-writers: {len(off)} script offender(s), {len(prose)} prose warning(s)")
+        return 1 if off else 0
+    print(__doc__)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main(sys.argv[1:]))
+    except PIIViolation as e:
+        print(f"PIIViolation: {e}", file=sys.stderr)
+        sys.exit(PIIViolation.exit_code)

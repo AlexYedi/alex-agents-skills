@@ -1,0 +1,563 @@
+---
+name: pre-event-content
+description: Generate pre-event content for NYC AI/tech events from completed research briefs. Produces LinkedIn posts (personal and "The Upcoming Week" roundup), speaker/host connection request notes (200-char free-tier cap), and prepared questions. Writes to Notion Content Drafts database. Use when Alex says "draft pre-event content for [event]", "write the LinkedIn post for [event]", "DMs for [speaker/host]", "connection notes for [speaker/host]", "Sunday roundup post", or anything similar. Requires a completed research brief in Notion.
+---
+
+# Skill: Pre-Event Content Generation
+
+Generate pre-event content for NYC AI/tech events based on completed research briefs.
+Produces LinkedIn posts, speaker/host DMs, and prepared questions. Writes to Notion
+Content Drafts database.
+
+**Prerequisites:** The event must have a completed research brief in Notion (generated
+by the event-research skill). The skill reads from the brief — it does not do its own research.
+
+**Reference files (read before generating any content):**
+- `.claude/references/audience-north-star.md` — **top-level ethos**: mission (democratize access), embedded-expert-correspondent persona, the three floors (Receipts / HM-Activation / Anti-Goodhart), and the Learn-More Set. The style-guide + anti-patterns codify its operative rules.
+- `.claude/references/content-style-guide.md` — voice, tone, post architecture, audience, formatting
+- `.claude/references/content-anti-patterns.md` — words, phrases, and patterns to avoid
+- `.claude/references/outreach-templates.md` — **200-char connection request note patterns** (Patterns 1-3), anti-patterns, personalization rubric, character-count discipline
+
+**Craft references (load when entering the relevant step; the `alex:*` ones are plugin skills, invoked via the Skill tool):**
+- `alex:brand-storytelling` — narrative arcs, "5-second moment," movement framing → used in Step 2 + Step 3
+- `alex:message-architecture` — Promise → Proof → Hook → CTA, hook formulas → used in Step 3
+- `.claude/skills/content-patterns/visual-briefs.md` — carousel-as-narrative pattern, four arcs, per-slide schema, quality gates → used in Step 3b
+- `alex:cold-email-personalization` (+ its `assets/`) — custom-signal openers, scoring rubric, QA checklist → used in Step 4
+
+The imported skills *augment* but do **not override** the existing reference files. When guidance conflicts (e.g., voice rules), `content-style-guide.md` and `content-anti-patterns.md` win. Imported skills supply structure and rigor; the references supply Alex's voice.
+
+---
+
+## Input
+
+Alex provides one of:
+- An event name (skill fetches the research brief from Notion)
+- A pasted research brief (if generating outside the Notion workflow)
+- A list of events for The Upcoming Week post
+
+---
+
+## Step 1: Load Context
+
+1. Read all three reference files listed above
+2. Fetch the research brief from Notion (search Content Drafts for the event name, Content Type = research_brief)
+3. Extract from the brief:
+   - Event name, date, location (virtual vs. in-person)
+   - Topics with Current Events, Opportunities, Challenges, Use Cases, Top Questions
+   - People with roles, POVs, connection angles
+   - Companies with recent developments
+   - Documentarian angle
+   - **Verification Flags / provenance exclusions (v1.2, YED-132)** — the brief's `Verification Flags` section AND, if a `prior_context_pack` Content Draft is linked to this Event, its `UNVERIFIED` and `do-not-cite` items. These are the claims that must NOT flow into public copy as fact.
+3b. **Pull prior posts on the theme (YED-208).** Pick the post's 1–3 themes from the fixed list and run the back-catalog query in `content-style-guide.md` → *Variants and prior-post callbacks*. Carry the hits into Steps 2–3 as callback candidates.
+4. Confirm with Alex what content types to generate for this event:
+   - The Upcoming Week post (only if multiple events queued for the week)
+   - Pre-Event LinkedIn post
+   - Speaker/Host DMs
+   - All of the above
+5. **Check for an `## Author Steer — [date]` block** on the Event page (from the `steering-interview` skill). If present, honor it: answer #1 steers the content/angle/what-to-avoid, #2 steers structure/format, #4 is context to keep top of mind. If no steer block exists and Alex is present, offer to run `steering-interview` first ("anything you want to steer before I draft? or skip").
+6. **Build the provenance exclusion list + apply it as a standing rule (v1.2, YED-132).** From the Verification Flags + `prior_context_pack` items collected in (3), assemble this run's **do-not-assert list**. Standing rule for Steps 2–5: **no item on the exclusion list appears in public copy as a stated fact.** For each, choose exactly one — (a) **drop it** (default; a `do-not-cite` benchmark like unverified deliverability stats is dropped, never paraphrased); (b) **attribute it explicitly** to its primary source, and only if one exists ("Attention's own release says…"); or (c) **soften to Alex's own observation**, never a factual claim about the firm/person (the source-check rule, CLAUDE.md §6). Thesis/positioning claims default to (b) or (c), never bare assertion. Surface the honored exclusions at the Step 6 write — a one-line `Excluded per provenance: […]` — so Alex sees what was kept out and why.
+
+---
+
+## Step 1.9: Sharpen steer (steering-interview Touch 2) — before any generation
+
+The research brief is now loaded (Step 1) — that's the prep. **Before drafting** the Upcoming Week
+post, the per-event post, notes, or questions, run **Touch 2 of `steering-interview`**
+(`.claude/skills/steering-interview/SKILL.md`): derive **≤3 genuine forks from what the brief
+surfaced** and put them to Alex — e.g. *"the brief found a non-obvious angle on [X] that isn't in
+your usual framing — make it the hook, or keep the event-forward frame?"*, *"two speakers you'd tag
+have opposing takes on [Y] — which do you foreground?"*, *"which segment is this one for — the fork
+changes which variant carries the HM-activation angle?"* Grounded in a brief section, never generic
+(prep-then-ask). **If the brief has no real fork, say so and proceed.** Keep the loop open; persist
+the forks + Alex's calls into the `## Author Steer` (Sharpen) block and honor them below. Skippable.
+
+(Touch 1 / Aim ran earlier — the pre-research intake at Step 1.5 or via `/check-new-events` Step
+6a.0. This is the post-brief Sharpen touch.)
+
+## Step 2: Generate The Upcoming Week Post (if requested)
+
+**When:** Sunday (or week-open) post covering events for **the coming week only**.
+**Input:** Multiple event research briefs (one per event that week).
+**Sources = the briefs only (Alex, 2026-09-27).** Draw each event's unit from its research brief (Quick Take + Verification Flags), the same way for every event. Do NOT read or align to the per-event pre-event drafts or their Author Steer, and do not flag "roundup angle doesn't match the event's own post" as a gap.
+**Length:** Long-form, but the per-event units are tight (this format has the smallest character budget per idea of anything we write).
+
+> **The roundup's job is to SET THE TABLE — not to take a side (rule added 2026-05-30, Upcoming Week post review).** This is the single most important thing about this format. The roundup calls out the topics, gives a brief state-of-the-union, and surfaces the genuine tensions in the field — **without taking a position on them.** Per the stance-license rule in `content-style-guide.md`: a viewpoint needs room for context + analysis to be worth anything, and a synopsis has none. **A hot take in a synopsis = zero value** (social-media slop / unearned posturing). Bold POV is deferred to the per-event and post-event posts, where there's space to earn it. Do NOT editorialize, do NOT declare winners, do NOT append a clever interrogation ("the number worth interrogating: X") to a synopsis — see `content-anti-patterns.md` (editorial kicker, taking-sides, self-as-protagonist).
+
+**Before drafting, load `alex:brand-storytelling`** — but apply it for *framing the week's through-line*, NOT for manufacturing a thesis you then argue. The "movement/five-second-moment" lenses set the frame; they do not license a side.
+
+### Structure
+
+```
+HOOK — Lead with the REAL, NAMED, CURRENT frame (e.g., "It's NYC Tech Week") and the
+       ABUNDANCE, then narrow. Decenter the self — the events are the subject, Alex is
+       the curator, NOT the protagonist. Surface the through-line / shared question the
+       week's events collectively raise, posed as a QUESTION or a tension, not a verdict.
+       Model: "Hundreds of events for NYC Tech Week — the seven worth watching are…"
+       (NOT "Seven rooms on my calendar…" — that centers Alex and reads as a brag.)
+
+FOR EACH EVENT (set the table — tight):
+  - Event name + date + format (in-person / virtual)
+  - 2-3 sentence synopsis = TOPIC + brief STATE OF THE UNION + the genuine TENSION
+    that already exists in the field:
+    * What's happening / who's on stage / the concrete facts (the informative core).
+    * The state of the union: what's dominating the conversation in this space right now.
+    * The tension/open question that exists in the FIELD — attributed to the field, not
+      to Alex, and left OPEN. ("The field is split — X has shown A; Y just bet on B.")
+    * Then STOP. No verdict, no "here's what I'd ask," no editorial kicker.
+  - **Learn-More Set: 3–5 curated resources** (papers, company announcements, speaker writing, publications on the topics/tech/companies/people) → first comment; mandatory every post (see `content-style-guide.md` → The Learn-More Set)
+
+EVENTS PENDING (if any):
+  - Brief mention of events Alex has applied to / hoping to attend
+  - Same table-setting treatment, lighter touch
+
+CTA:
+  "If you can't make it or aren't in the NYC area but have a question you wish you could
+  ask — connect, message me and I'll ask it. If you're going, happy to connect before,
+  don't hesitate to say and I'll see you there."
+```
+
+**Scope discipline (added 2026-05-30):**
+- **This week only.** Events outside the coming week (e.g., the following week) do NOT belong in this roundup — drop them or hold for the next one.
+- **Only events Alex is actually attending.** Attendance changes; if Alex has dropped an event, it comes out. (This is exactly what the `steering-interview` Q3/Q4 captures before generation.)
+
+**Generate 3 variants** with different hooks/framing angles (different through-line framings — NOT different takes). Present as inline options. *(3 for every post, roundup included: ruled 2026-09-11, confirmed "3 everywhere" by Alex 2026-09-19. Connection notes stay at 2, A/B, because they are anchored to two signal types, not framings.)*
+
+### Quality Checks
+- At least 2, no more than 3 data points per event synopsis
+- **Each synopsis SETS THE TABLE — states the topic + state-of-union + a field tension, takes no side, and ends without an editorial kicker** (the highest-priority check for this format)
+- **Decentered self — the events/field are the subject, not Alex; no "I/me" that reads as a brag** (scan every first-person word and cut the ones that center Alex)
+- **Scope correct — only this week, only events Alex is attending**
+- Each synopsis passes the "So What?" test *without* needing a hot take to get there
+- 2-5 relevant hashtags at the end
+- Emoji used sparingly as structural markers
+- **Character budget (added 2026-06-10):** the whole roundup is **≤ 3,000 chars** (LinkedIn hard cap), target 1,300–2,200. This format balloons fastest — count it and cut to budget BEFORE presenting. Sources/deeper links go to the first comment, never inline. Show the count on hand-off. See `content-style-guide.md` → LinkedIn Character Budget.
+
+---
+
+## Step 3: Generate Pre-Event LinkedIn Post
+
+**When:** Per-event post, typically a few days before the event.
+**Length:** Mid-form (8-15 lines).
+
+> **This post is the FIRST HALF of a deliberate two-part arc (rule added 2026-09-11 — canonical: `content-style-guide.md` → "The pre→post arc").** Structure it **macro → micro → implications**:
+> 1. **Table-set the topic** — its current state, the trends, the recent developments.
+> 2. **Dig into the specific perspective** the event description and the person presenting bring to it.
+> 3. **Discuss that perspective's implications in the broader context.**
+>
+> Stance-license is **medium — structured, not a hot take.** You have deep Field Guide research, so the post is *substantiated* (not a lightly-held question) — but you were **not in the room**: **open the question, do not resolve it.** The reality-check (what was actually said, where the room agreed, where it argued) belongs to the **post-event post**, which cashes this setup against what actually happened.
+>
+> **Editorial steer overrides these defaults.** Step 1.9 (`steering-interview` Touch 2) and Alex's direction for the specific event/week lead — this format is collaboratively steered by design.
+
+**Before drafting, load both:**
+- `alex:brand-storytelling` — for the post's narrative arc. Apply **"Start in the middle of the action"** (Merci Grace) — open inside the tension, not with setup. Apply **"Problems beat successes"** (Jason Feifer) — the post's insight should orbit a real problem in the topic, not a celebration of progress.
+- `alex:message-architecture` — for hook bank structure. Use the framework's **hook formulas** (question / contrarian / stat / story) to generate variants below. The Hook-Context-Insight-CTA architecture below maps to message-architecture's Audience → Promise → Proof → CTA.
+
+### Structure
+
+Follow the Hook-Context-Insight-CTA architecture from the style guide:
+
+```
+HOOK — First 1-2 lines. A surprising stat, a specific detail from the research,
+       or a framing that makes someone stop. NOT "I'm excited to attend..."
+
+CONTEXT — Why this event/topic matters right now. Connect to a broader trend or
+          recent development from the research brief. This is where 2-3 data points land.
+
+INSIGHT — The ONE thing. One deeply considered observation or one genuinely novel
+          question about the topic. The thing that would make an expert pause.
+          This is the entire value of the post.
+
+CTA — "If you're deep into [topic], what are you most looking forward to learning
+      or hearing about?"
+```
+
+**Generate 3 variants** with different hook formulas (per message-architecture):
+- **Variant A:** Question hook — opens with a sharp question only an insider would ask
+- **Variant B:** Contrarian OR stat hook — opens with a take that pushes against the consensus, OR a specific data point from the brief
+- **Variant C:** Character variant (voice v2, 2026-09-28) — same facts as A/B, but a cold open with a joke or a confession in Alex's voice. If no steer or dictation supplied the personality line, write the rest and leave `[PERSONALITY LINE NEEDED: <what kind of line, where>]` in place; never invent a confession.
+
+Present as inline options; ship all three to Notion, never pre-select.
+
+**Walk-in line (under the variants):** one ≤25-word phone-clip script Alex can say on camera walking into the room — the question he's walking in with, in plain speech. Ships in the same Notion page body under the variants; it is a script, not a post.
+
+### Quality Checks
+- Exactly 2-3 data points from the research brief, with sources available if Alex wants to reference
+- **Learn-More Set: 3–5 curated resources → first comment/carousel** (mandatory every post; separate from the in-body data points — see `content-style-guide.md` → The Learn-More Set)
+- One clear insight or question that passes the expert-pause test
+- No words/patterns from the anti-patterns file
+- 2-5 relevant hashtags
+- Emoji sparingly
+- Documentarian framing: specific detail (reporter), synthesis (student), interpretation (analyst) — hit at least one
+- **Source-check (added 2026-05-26):** any firm/person thesis or positioning claim is source-backed in the brief; if it's an unsourced brief assertion, verify or cut before this goes public
+- **Character budget (added 2026-06-10):** post is **≤ 3,000 chars** (LinkedIn hard cap), target 900–1,500. Count it; if over, cut to budget BEFORE presenting — never hand Alex an over-limit draft to trim. Sources go to the first comment or the carousel, never inline. Show the count on hand-off (e.g. "1,180 / 3,000"). See `content-style-guide.md` → LinkedIn Character Budget.
+
+---
+
+## Step 3b: Generate Visual Carousel Brief
+
+For each LinkedIn post (Upcoming Week and/or Pre-Event), generate a single
+**3-5 slide carousel brief** that tells the post's thesis through different
+perspectives.
+
+This step is **not optional**. Every LinkedIn post deliverable ships with its
+carousel brief embedded in the same Notion page body. DMs and prepared questions
+do not get carousels — they are private artifacts.
+
+### Step 3b.1: Read the canonical pattern
+
+Read `.claude/skills/content-patterns/visual-briefs.md` in full. That file is
+the authoritative definition of:
+
+- The four narrative arcs (Hook → Evidence → Mechanism → CTA; Thesis A → B →
+  Tension → Take → Invitation; Before → After → What Changed → So What; One
+  Question, Five Perspectives)
+- Universal slide requirements (slide N of N, job, visual mode, headline, body,
+  palette, source attribution, alt text, tool routing)
+- Quality gates (arc fit, job differentiation, frame parallelism, thumb test,
+  source citations, final slide earns the swipe)
+- Anti-patterns (recap-of-the-post slides, generic AI hero shots, stat-without-
+  context slides, "Follow for more" final slides, color-by-vibe)
+- Output schema for the Notion page body
+
+Everything below assumes that file has been loaded. Do NOT re-derive the shape
+in this skill; if the spec has drifted, update `visual-briefs.md` directly so
+all skills inherit the change.
+
+### Step 3b.2: Pick the narrative arc
+
+Match the post's argument structure to one of the four arcs from
+`visual-briefs.md`:
+
+| Post type | Default arc | Default slide count |
+|---|---|---|
+| Per-event pre-event post grounded in a data point | Arc 1 — Hook → Evidence → Mechanism → CTA | 3-4 |
+| Per-event pre-event post about a panel with multiple speakers | Arc 4 — One Question, Five Perspectives | 4-5 |
+| Per-event pre-event post about a change/shift the event surfaces | Arc 3 — Before → After → What Changed → So What | 3-4 |
+| The Upcoming Week roundup post | Arc 4 — One Question, Five Perspectives (one slide per event) | 4-5 |
+| Two-thesis synthesis (handled by pattern-synthesis skill, not here) | Arc 2 | 4-5 |
+
+If the post doesn't fit cleanly into one arc, the post itself is probably trying
+to do too much — go back to Step 3 and tighten the thesis before generating the
+brief.
+
+### Step 3b.3: Draft the carousel brief
+
+Produce exactly one carousel brief per LinkedIn post, in the output schema
+defined at the bottom of `visual-briefs.md`. The brief must include:
+
+- The arc name (one of the four)
+- One-sentence carousel thesis (what the reader walks away with after swiping)
+- Slide count (3-5, determined by complexity not default)
+- Tool routing summary (which slides → which generation tool)
+- Per-slide blocks with: slide N of N, job, visual mode, headline (max 8 words),
+  exact body/content text, palette with accent hex, source attribution if any
+  data point or quote appears, alt text, tool
+- Quality gate self-check at the bottom (arc fit, job differentiation, frame
+  parallelism if Arc 2 or 3, thumb test per slide, source citations, final
+  slide earns the swipe)
+
+Every slide must be load-bearing. If you can drop a slide and lose nothing, the
+carousel is padded — cut it before shipping.
+
+### Step 3b.4: Quality gate enforcement
+
+Before moving to Step 4, run every quality gate from `visual-briefs.md` against
+the carousel brief. If any gate fails:
+
+- **Arc fit fails** → return to Step 3b.2 and pick a different arc
+- **Job differentiation fails** → cut the redundant slide
+- **Frame parallelism fails** (Arc 2 or 3 only) → redraft the paired slides
+- **Thumb test fails on any slide** → shorten the headline or cut a sub-headline
+- **Source citation missing on a stat or quote slide** → add the source line
+- **Final slide is "Follow for more" or recap** → replace with the question,
+  take, or synthesis
+
+Do NOT ship a brief with a flagged gate. The gate exists because that failure
+mode is repeating across runs.
+
+### Step 3b.5: Render the visual with Claude design (default; rewritten 2026-09-19, YED-200)
+
+**Do not restate rendering mechanics here.** The one source of truth is
+`../content-patterns/visual-briefs.md` → `## Execution — Claude design (default) + Gemini (pictorial)`
+and its `### Export` subsection. This step only says when to run it and what to hand over.
+
+After Step 4 writes the Content Draft (post + embedded brief) to Notion:
+1. Offer the **four format options** from visual-briefs.md (2 singles + 3-slide +
+   5-slide carousel); let Alex pick, or generate the recommended option.
+2. **Structured / label-dense visuals** (diagrams, matrices, stat cards, carousels): Claude authors
+   a self-contained HTML/SVG design at 4:5 and exports it to PDF/PNG per the Execution section.
+   Claude renders exactly what is authored, so labels and numbers stay intact.
+3. **Pictorial imagery** (conceptual, editorial, photographic; no dense labels): Gemini.
+4. Save the final rendered PDF/HTML in the event folder (final outputs only) and link it from the
+   Notion Content Draft.
+
+### Step 3b.6: Other rules
+
+- **The brief is the artifact.** When the post is reviewed, the brief is
+  reviewed alongside it. They are one Content Draft, not two. The brief stays
+  in the Notion page body as the human-readable reference even after the
+  render runs, because Alex may want to iterate later (edit the HTML, re-export).
+- **Voice propagation.** If `update-voice-and-style.md` runs and updates the
+  written voice, the visual voice in `visual-briefs.md` must be reviewed in the
+  same pass. They are paired.
+- **Tool routing field is metadata, not execution.** The "Tool:" line per slide
+  describes visual-mode intent for human reference. **Execution is Claude design, or
+  Gemini for pictorial imagery** (see visual-briefs.md `## Execution`).
+
+---
+
+## Step 4: Generate Speaker & Host Connection Request Notes
+
+**Operational reality (rule added 2026-05-20):** LinkedIn free tier limits direct messages to 1st-degree connections; Premium/Sales Navigator plans burn scarce InMail credits when sending to non-connections. The right primitive for first-touch outreach to speakers/hosts Alex doesn't already know is a **connection request note** — which carries a **200-character hard cap on the free plan** (300 char on Premium). Alex is on the free plan, so target 200 chars.
+
+The goal of this note is **connection request acceptance**, not engagement after acceptance. Optimize accordingly — punch over polish, question over praise, signal over greeting.
+
+**For each person** identified in the research brief (speakers, hosts, organizers):
+
+**Before drafting, load `alex:cold-email-personalization` and read these of its assets:**
+- `assets/research-playbook.md` — what counts as a Tier 1 vs Tier 2 signal (recent talks, posts, hires, launches)
+- `assets/scoring-rubric.md` — 0-100 scoring; **gate at ≥80 before presenting to Alex**
+- `assets/qa-checklist.md` — pre-send checklist
+
+**Also read `.claude/references/outreach-templates.md`** — that file is the canonical spec for 200-char connection-request-note patterns and anti-patterns.
+
+**Mapping cold-email patterns → 200-char connection request notes:**
+- "Custom Signal" path → use a specific moment from their talk abstract, recent post, podcast, or open-source work as the anchor
+- "Whole Offer" path is **NOT applicable** — this is a connection request, not a pitch
+- The **no-CTA rule** is non-negotiable — connection notes do NOT include "let's chat", "would love to connect", "coffee?" — the connection request itself IS the CTA
+
+Generate **2 variants per person — Variant A and Variant B — anchored to DIFFERENT signals** (not just reworded versions of the same idea). Each variant must:
+
+1. Follow a structural pattern from `outreach-templates.md` adapted to the 200-char form
+2. Meet **Level 3 personalization** (connect their specific work to a specific research insight or event topic)
+3. **Hard cap: 200 characters including spaces and punctuation.** Generate, then count, then trim. No exceptions.
+4. Lead with the question/insight — drop greetings ("Hi Jane,"), drop self-intros ("I'm Alex..."), drop sign-offs ("Looking forward!")
+5. **Score ≥80 on the cold-email-personalization rubric** before presenting. If below 80, regenerate.
+
+### Variant differentiation (mandatory — A ≠ B)
+
+The two variants must be anchored to materially different signals so Alex picks based on which signal lands harder, not which phrasing is prettier:
+
+- **Variant A — Talk-anchored** (Pattern 1 from `outreach-templates.md`): references something specific from their session/talk/abstract for THIS event. Best when the talk abstract or session description has substance to engage with.
+- **Variant B — Adjacent-work-anchored** (Pattern 2 from `outreach-templates.md`): references something specific from their recent post, podcast appearance, open-source commit, shipped product, or other work OUTSIDE the talk. Best when they have visible recent output to anchor on.
+
+**For hosts/organizers (rather than speakers):** Variant A uses Pattern 1 if they're also presenting, or Pattern 3 (Host-Curation angle) if they're purely organizing. Variant B uses Pattern 2 (their recent work outside this event).
+
+### Fallback: when only ONE signal exists
+
+If person-research surfaces only one Tier 1 signal (e.g., they have a talk abstract but no recent visible work outside it — or vice versa), generate **only the variant that has a real anchor** and explicitly note "Variant B (or A) skipped — no [talk / adjacent work] signal found in research." DO NOT ship a Level 2 filler variant just to have two — a weak variant burns the impression on a one-shot channel.
+
+### What gets cut at 200 chars
+
+To fit, drop everything that isn't load-bearing:
+- Greetings ("Hi Jane,") — drop (LinkedIn shows your name + headline; greeting adds zero info)
+- Self-introductions ("I'm Alex, I work in...") — drop (your profile carries this)
+- Soft framing ("I noticed...", "I've been thinking...") — drop, get to the point
+- Sign-offs ("Looking forward...", "Cheers") — drop
+- Multiple sentences setting up the question — drop, lead with the question
+
+What stays: the **one sharp question or insight** that uses event context + a person-specific signal.
+
+### Fallback: when there's no Tier 1 signal
+
+If person-research surfaces no Tier 1 signal (no recent talk, no recent post, no concrete moment to anchor on), flag the person as **"needs more research"** and do NOT generate a filler note. A weak Level 2 note burns the connection request impression — and you only get one shot per person. Better to surface "Alex, do you have a specific signal for [Person] you can share?" than to ship a generic note that gets rejected or ignored.
+
+### Presentation Format
+
+Present variants grouped by person:
+
+```
+### [Person Name] — [Role] at [Company]
+Talk/Topic: [their specific talk or the event topic]
+
+**Variant A — Talk-anchored** ([N] chars / 200 cap)
+Signal anchored: [specific moment from their talk/abstract]
+> [full note text]
+Rubric score: [X]/100
+
+**Variant B — Adjacent-work-anchored** ([N] chars / 200 cap)
+Signal anchored: [specific recent post / podcast / work outside the talk]
+> [full note text]
+Rubric score: [X]/100
+```
+
+If only one signal exists (talk OR adjacent work but not both), present only the variant that has a real anchor and explicitly note the skip:
+
+```
+### [Person Name] — [Role] at [Company]
+Talk/Topic: [their specific talk or the event topic]
+
+**Variant A — Talk-anchored** ([N] chars / 200 cap)
+Signal anchored: [specific moment from their talk/abstract]
+> [full note text]
+Rubric score: [X]/100
+
+**Variant B — skipped:** no recent adjacent work surfaced in research. To unlock: [what kind of signal would help — e.g., "their last LinkedIn post", "a recent podcast appearance"]
+```
+
+If NO Tier 1 signal is available at all (no talk content, no adjacent work), present as:
+
+```
+### [Person Name] — [Role] at [Company]
+⚠️ NEEDS MORE RESEARCH — no Tier 1 signal found in brief
+Suggestion: [what kind of signal would unlock this]
+```
+
+### Quality Checks
+- Passes Level 3 personalization (not Level 1 or 2)
+- Could NOT be sent to a different person by swapping the name
+- No anti-pattern phrases (see `outreach-templates.md` anti-pattern table)
+- No CTA ("let's chat", "coffee", "would love to connect", "20 min call")
+- **Character count ≤ 200** (counted including spaces and punctuation, before submission to Alex)
+- Cold-email-personalization rubric score ≥80
+- Specific person-signal is cited (not just "your work at [Company]")
+- **Source-check (added 2026-05-26):** any claim about the person's or their firm's thesis/positioning is source-backed — don't assert an unverified brief claim in a note the person may read
+
+---
+
+## Step 5: Compile Prepared Questions
+
+**Reframed 2026-05-20:** Prepared Questions are now generated **independently** from the same per-person research insights, not as a byproduct of unused DM variants (Step 4 produces connection notes: 2 variants per person, A talk-anchored and B adjacent-work-anchored, or 1 when only one real signal exists).
+
+For each person identified in the brief, generate 1-3 prepared questions that:
+- Reference a specific moment from their talk abstract, recent post, podcast, or work
+- Connect that moment to a topic insight from the brief
+- Could be asked live during Q&A or in conversation at the event
+- Go one layer deeper than the source material did
+
+The Step 4 connection note and the Step 5 prepared questions can share research foundation but serve different moments:
+- **Step 4 note:** punchy, optimized for connection request acceptance, ≤200 chars, ONE sharpest question
+- **Step 5 questions:** textured, optimized for in-person depth, multi-sentence OK, multiple angles per person
+
+If the connection request is accepted (Step 4 lands), the prepared questions become natural follow-up material in subsequent DM or in-person conversation.
+
+Format:
+
+```
+## Prepared Questions: [Event Name]
+
+### For [Person Name] — [Talk Topic]
+1. [Question] — (angle: [description])
+2. [Question] — (angle: [description])
+
+### For [Person Name] — [Talk Topic]
+1. [Question] — (angle: [description])
+```
+
+Include context notes: "Ask this if [X topic] comes up" or "Good follow-up if they mention [Y]"
+
+---
+
+## Step 6: Write to Notion
+
+**Every post draft sets `Themes`** (the 1–3 picked in Step 1.3b, as a JSON array). Prepared questions and connection notes stay untagged.
+
+Write all approved content to the **Content Drafts** database.
+
+**Database:** `collection://6c24c9f5-66c9-4eed-a61d-3f9b87c3f775`
+
+> **Visual carousel persistence rule (revised 2026-05-12):** Every LinkedIn post Content Draft (`linkedin_post_pre`, `linkedin_post_post`, `linkedin_post_synthesis`) MUST include the Step 3b carousel brief in the same page body, appended below the post copy under a `## Visual Brief — N-slide carousel` H2. The brief is one 3-5 slide carousel, not three single-image briefs — see `.claude/skills/content-patterns/visual-briefs.md` for the canonical shape. The carousel brief lives with the post it supports so Alex has both the copy and the per-slide prompts in one place. Step 3b.5 renders the carousel with Claude design (Gemini for pictorial imagery). The brief remains in the page body for human reference and for later iteration. If Step 3b was skipped for a given post, that's a Step 3b execution gap, not a Step 6 schema gap — go back and run it.
+
+### Content pages to create:
+
+**The Upcoming Week post (if generated):**
+```
+"Title": "The Upcoming Week — [date range]"
+"Content Type": "linkedin_post_pre"
+"Event Phase": "pre_event"
+"Content Status": "needs_review"
+"Platform": "linkedin"
+"Event": [relation to all events mentioned in the post]
+"Topics": [relation to all topics across events]
+```
+Page body: the approved post variant + **the Step 3b carousel brief appended under a `## Visual Brief — N-slide carousel` H2** (one 3-5 slide carousel using one of the four arcs from `visual-briefs.md`). For The Upcoming Week roundup, the default arc is Arc 4 — One Question, Five Perspectives, with one slide per event.
+
+**Pre-Event LinkedIn post:**
+```
+"Title": "[Event Name] — Pre-Event Post"
+"Content Type": "linkedin_post_pre"
+"Event Phase": "pre_event"
+"Content Status": "needs_review"
+"Platform": "linkedin"
+"Event": [relation to event page]
+"People": [relation to people mentioned]
+"Topics": [relation to topics covered]
+```
+Page body: all three post variants + the Step 3 walk-in line + **the Step 3b carousel brief appended under a `## Visual Brief — N-slide carousel` H2** (one 3-5 slide carousel using one of the four arcs from `visual-briefs.md`). Arc selection per Step 3b.2 — match the post's argument structure to the right arc (data-anchored → Arc 1; multi-speaker panel → Arc 4; change-over-time → Arc 3).
+
+**Speaker/Host Connection Request Notes (one page per person):**
+```
+"Title": "Connection Note — [Person Name] re: [Event Name]"
+"Content Type": "linkedin_dm_speaker" or "linkedin_dm_host"  # name preserved for backward compatibility; spec is now 200-char connection note per outreach-templates.md
+"Event Phase": "pre_event"
+"Content Status": "needs_review"
+"Platform": "linkedin"
+"Event": [relation to event page]
+"People": [relation to person]
+"Topics": [relation to relevant topics]
+```
+Page body: BOTH variants (A and B), each with character count, signal anchored, rubric score, and pattern. Format:
+```
+**Variant A — Talk-anchored** (N chars / 200 cap)
+> [note text]
+Signal anchored: [specific signal used]
+Rubric score: [X]/100
+Pattern: [Pattern 1/2/3 from outreach-templates.md]
+
+**Variant B — Adjacent-work-anchored** (N chars / 200 cap)
+> [note text]
+Signal anchored: [specific signal used]
+Rubric score: [X]/100
+Pattern: [Pattern 1/2/3 from outreach-templates.md]
+```
+If only one variant produced (per fallback rule), the page body includes that variant plus the "Variant B skipped — needs [X signal]" note. Alex picks the variant to send when he engages with the page in needs_review.
+
+**Prepared Questions:**
+```
+"Title": "Prepared Questions — [Event Name]"
+"Content Type": "prepared_questions"
+"Event Phase": "pre_event"
+"Content Status": "needs_review"
+"Platform": "notion_only"
+"Event": [relation to event page]
+"People": [relation to all people with questions]
+"Topics": [relation to relevant topics]
+```
+Page body: the compiled question list from Step 5
+
+---
+
+## Step 7: Summary
+
+```
+## Pre-Event Content Complete: [Event Name]
+
+### Generated
+- The Upcoming Week: [Yes/No] ([X] events covered) + carousel brief ([N] slides, Arc [name])
+- Pre-Event Post: 3 variants + carousel brief ([N] slides, Arc [name])
+- Speaker/Host Connection Notes: [count] people, [count] A-variants, [count] B-variants, [count] B-variants skipped (no adjacent-work signal), [count] flagged "needs more research" (avg rubric score: [X]/100; avg char count: [N]/200)
+- Prepared Questions: [count] questions compiled
+
+### Written to Notion
+- Content Drafts: [count] pages created
+- All relations linked to Event, People, Topics
+
+### Content Status
+All drafts set to "needs_review" — Alex reviews and moves to "approved" when ready to post.
+```
+
+---
+
+## Error Handling
+
+- **Research brief not found:** Ask Alex to run event-research skill first or paste the brief directly.
+- **No people in the brief:** Skip connection-note generation (Step 4). Only produce posts.
+- **MCP write fails:** Report exactly what failed. Offer to retry or present content in conversation for manual copy.
+- **Anti-pattern detected in own output:** Flag it, explain why, and regenerate that section.
+- **Personalization below Level 3:** Flag the DM as weak and explain what's missing. Offer to regenerate with more context or skip.
+
+---
+
+## Cadence rules (do not violate)
+
+- **Max one full pre-event run per event.** Don't re-run on the same post unless the brief changes materially.

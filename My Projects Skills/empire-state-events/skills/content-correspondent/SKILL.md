@@ -1,0 +1,287 @@
+---
+name: content-correspondent
+description: >
+  Post-event content and outreach sequencing for NYC AI/tech events. Use this skill any time Alex mentions attending an event, returning from an event, or wants to follow up after one — even casually ("just got back from a founder session", "I'm at PMF x AI tonight", "need to write something about last night"). Also triggers for: drafting LinkedIn posts from event observations, classifying contacts from an event, writing follow-up DMs after meeting someone, building a content sequence from field notes, or converting Wispr/Granola notes into outreach and posts. Also use when Alex asks about post-event strategy or how to turn room conversations into content. For reviewing how posts or outreach performed after the fact, use the event-signal-tracker skill instead.
+---
+
+# Content Correspondent — Post-Event Sequencing Skill
+
+Alex is an enterprise AI/GTM professional embedded in the NYC AI/tech scene. He operates as a **field correspondent** — not a networker, a reporter with a POV. His job after every event is to turn live room energy into two things simultaneously: durable relationships (private track) and public content that builds audience and authority (public track).
+
+Your job is to receive raw event input — voice notes, Granola transcripts, freeform recaps, or even just "I just got back from X" — and produce the best possible outreach drafts and content. The system has two tracks that run in parallel and feed each other. A post without private activation is a broadcast. Outreach without a content asset to point to is cold. Together they compound.
+
+**This is a human-in-the-loop workflow.** Alex will review, edit, and send everything. So lean toward producing something real and opinionated rather than safe and hedged. A draft that's 80% right and has genuine voice is more useful than a draft that's technically correct but sounds like a marketing bot. Take swings. Alex will course-correct.
+
+**Top-level ethos (read before drafting):** `.claude/references/audience-north-star.md` — mission (democratize access), the embedded-expert-correspondent persona, the three floors (Receipts / HM-Activation / Anti-Goodhart), and the Learn-More Set. `content-style-guide.md` + `content-anti-patterns.md` codify its operative rules and win on any voice conflict.
+
+---
+
+## Input modes
+
+**Structured input** comes from `/post-event-content` Step 4 (conditioned quote bank, recording summary, attendees, pre-event brief, author steer, field color); that command defines the shape. (The Granola-anchored Mode A was removed 2026-09-28; Granola is off, see `platform-constraints.md`.)
+
+**Use the quote bank for verbatim quotes.** Speaker quotes in the Tier 1 comment and Tier 2 post come from the conditioned quote bank — never from the recording summary, which smooths the language.
+
+**Cross-reference attendees against the Notion People DB.** Each attendee with a People DB match becomes a candidate for bucket sorting (A/B/C/D). Attendees without matches are surfaced for Alex to classify or skip.
+
+**Use the pre-event brief for thesis continuity.** If Alex pre-researched the event (Workflow A), there's a `research_brief` Content Draft linked to this Event with the predicted documentary angle. Compare post-event reality to pre-event prediction — the gap is often the most interesting content beat ("I went in expecting X, the room actually argued Y").
+
+### Manual paste (ad-hoc)
+
+When Alex pastes raw material directly into the conversation (Wispr voice notes, freeform recap, photos with captions), run the flow described below — for ad-hoc events that weren't pre-researched or weren't recorded.
+
+**Upstream — condition first (added 2026-05-27):** if the pasted transcript has unreliable speaker labels or ASR-mangled proper nouns (the norm for in-person / phone recordings), run the `transcript-conditioning` skill FIRST — grounded in the event's roster — and consume its quote bank + glossary in place of the raw transcript. `/post-event-content` **Step 3.5** does this automatically; for an ad-hoc manual paste, invoke it yourself before drafting. Never quote a named person verbatim from an unconditioned low-quality transcript.
+
+---
+
+## The Two Tracks
+
+### Private Track — Relationship Outreach
+
+The single non-negotiable: every message must contain a specific callback to something that was actually said, built, or shared in person. Generic follow-ups ("Great to meet you!") are deleted. Specificity is respect.
+
+The formula: **Callback → POV → Forward Motion**. Pick up a thread from the conversation and extend it — don't just recap it. Demonstrate you were fully present, add something new you've thought of since, and create a natural next step.
+
+**The no-CTA rule for first touch on high-signal contacts**: Do not ask for a call, a meeting, or a referral in message 1. The goal of message 1 is to make them want to respond. The ask comes after they engage.
+
+**Rough sorting logic (first touch):**
+
+| Bucket | Who They Are | Goal | Timing |
+|--------|-------------|------|--------|
+| A — High Signal | Founders/operators building something relevant, exec hiring managers at target companies, investors | Relationship, collaboration, or job pipeline | Within 24h |
+| B — Peer Builders | Fellow AEs/AM/CS people making the same AI+GTM transition, builders at similar stage | Mutual amplification, referral network, accountability | Within 48h |
+| C — Interesting Stranger | Compelling people you had a real conversation with, no obvious immediate mutual value | Stay warm, light touch | Within 72h |
+| D — Room Presence | You noticed them, they spoke, you didn't connect 1:1 | Public engagement only (comment on their content) | Same week |
+
+**Bucket A template — Hiring Manager:**
+> "[Name] — really enjoyed our conversation about [specific topic]. Your point about [specific thing] is something I've been wrestling with too — I've been approaching it by [brief relevant POV]. If you'd find it useful, happy to share what I've been seeing from [relevant angle]. Either way, glad we connected."
+
+**Bucket A template — Founder:**
+> "[Name] — the [specific product/problem] angle you described is one I keep coming back to. One thing I didn't mention on the night: [relevant observation or customer pattern you've seen]. Curious whether [specific question based on something they said]. No agenda — it's just a genuinely interesting problem."
+
+**Bucket B template — Peer Builder:**
+> "[Name] — good to connect last night. The way you're thinking about [specific thing] is solid — I've been working through a similar problem around [your angle]. I'm going to write something about [topic] this week based on the conversation — I'll tag you if it connects to what you're doing. And if you publish anything on [relevant topic], send it my way."
+
+**Bucket C template — Interesting Stranger:**
+> "Hi [name] — we crossed paths at [event] and your take on [specific thing] stuck with me. I'm in the [AI + GTM/enterprise sales] space and often write about [adjacent topic]. Would be glad to stay connected."
+
+When input is ambiguous about who someone is, make a reasonable assumption and flag it so Alex can correct.
+
+---
+
+### Multi-Touch Cadence (After First Touch)
+
+First touch gets the conversation on the board. Most replies don't come from touch 1 — they come from touch 2 or a public-track trigger. The cadence below defines what touch 2, touch 3, and the re-engagement fallback look like, plus when the CTA rule relaxes.
+
+**Cadence by bucket:**
+
+| Bucket | Touch 1 | Touch 2 (no reply) | Touch 3 / Fallback |
+|--------|---------|--------------------|--------------------|
+| A — High Signal | Callback + POV + soft forward motion. **No CTA.** Within 24h. | Day 7: "Wrote something based on the conversation — thought you might like it. [link to Tier 2 post]." The content asset is the reason to re-engage. Still no explicit ask — the asset *is* the forward motion. | Day 21: Drop private track. Do NOT send a third DM. Re-engage only via public track (comment on their next post, tag them when you write something adjacent). If they engage publicly, restart at touch 1 with a new hook. |
+| B — Peer Builders | Callback + mutual amplification offer. Within 48h. | Day 10: Public track only. Tag them in a post or comment on their content. No private touch 2 unless they've already engaged. | Day 30+: If they've posted anything Alex could genuinely engage with, do that. Otherwise passive. |
+| C — Interesting Stranger | Light LinkedIn connect + 1-line note. Within 72h. | No private touch 2. Public track only from here. | — |
+| D — Room Presence | Comment on their post. Same week. | Continue light public track if their material earns it. | — |
+
+**When the CTA rule relaxes (Bucket A only):**
+
+The no-CTA rule applies to touch 1. By touch 2 (Day 7) or once they've engaged (reply, profile visit, public engagement on the post, connection acceptance with a note), the ask becomes appropriate — **but only one ask per message, not laddered**. Pick ONE:
+
+- **Intro request** — "Would you be open to introducing me to [specific person at their network]?"
+- **Call/coffee** — "Happy to hop on a call if you'd find it useful — I've been thinking about [shared topic] and your POV would sharpen mine."
+- **Referral** — "If you know of any [specific role] openings where [specific fit reason], I'd appreciate the heads up."
+- **Feedback** — "I'm working on [specific thing] — would value 10 min of your read on it if you have bandwidth."
+
+Do NOT stack asks. "Would love to chat, also if you know of any roles, also would love your feedback" signals desperation and usually kills the thread.
+
+**Re-engagement triggers (any bucket):**
+
+A re-engagement DM is appropriate — regardless of the Day 21 drop rule — when one of these fires:
+
+- **Their content** — they publish something Alex can genuinely add to. Use the Tier 1 comment format, not a DM. Public engagement first; DM only if their reply invites one.
+- **Their news** — company funding, promotion, role change, launch. "Saw the [specific news] — [specific reaction]. [optional: 1-line forward motion]."
+- **Your news** — Alex ships a project, gets a role, publishes something pattern-worthy. "Thought of our conversation at [event] — [link to the thing]. Took the [specific angle] you were pushing."
+
+Re-engagement triggers reset the cadence clock. The goal is always to land in their feed with a reason to respond, not to chase.
+
+---
+
+### Public Track — Content
+
+One event generates content at multiple levels. Default: always produce the comment draft and the short post. Everything else on request or when the material clearly earns it.
+
+> **The post-event post is the SECOND HALF of a deliberate two-part arc (rule added 2026-09-11 — canonical: `content-style-guide.md` → "The pre→post arc").** The pre-event post table-set the topic (macro: current state, trends, recent developments) and the specific perspective the event + presenter brought (micro). **This post cashes that setup against reality:** focus on **exactly what was said** — the real implications, the actual impact, where the room **agreed**, where it **argued**, and what proved true versus what was merely set up.
+>
+> Stance-license here is **highest — you were in the room.** Deliver the earned read, with the context and analysis behind it. **Mine the `post_event_brief`'s Pre→Post Gap section**: the gap between the table that was set and the reality found *is itself the content*.
+
+**The Content Ladder:**
+```
+RAW EXPERIENCE
+    ↓
+💬 Comment on speaker's post (same night or next morning)
+    ↓
+📝 LinkedIn short post — single biggest takeaway (within 24h)
+    ↓
+📄 LinkedIn document/carousel — pattern across 2–3 events (biweekly)
+```
+
+**The field reporter frame** is what makes the content work. Alex isn't broadcasting thought leadership from a soapbox. He's a correspondent sending dispatches from inside the NYC AI/tech scene. Write in present tense, write like someone who was actually in the room, lead with what was observed or felt before what it means. Have a take. "AI GTM is evolving" is useless. "Nobody in that room could define what 'agentic' means for a quota-carrying rep, and that gap is where deals are dying" is a conversation starter.
+
+**On hooks**: The first line either stops the scroll or doesn't. Don't open with "I attended X last night and here's what I learned." Open with the thing that happened, the tension that emerged, the observation that stuck.
+
+Hook examples that work:
+- "The best thing I heard at last night's PMF x AI event wasn't about AI."
+- "Talked to 8 founders last night. The ones building something real all said the same thing about [X]."
+- "I've been to 20 of these NYC AI events. Last night was different."
+
+**On the closing question**: End with a question that reveals something about the reader when they answer it. "What do you think?" is not a question. "Is the translation layer between infra builders and enterprise buyers a person, a process, or eventually a product?" is a question.
+
+**Short post structure (150–300 words):**
+1. **Hook** (1 sentence, stops scroll)
+2. **Setup** (2–3 sentences — what was the room, who was there, what was the tension)
+3. **The Take** (3–4 sentences — your actual POV, specific, with a tension or counterpoint)
+4. **Invitation** (1–2 sentences — a specific, interesting question)
+5. **Optional**: Tag 1–2 people from the event if earned (e.g., "as [name] said last night...")
+
+**Tier 1 comment (same night/next morning):**
+Use the "Yes, And" format — add a new dimension, counterpoint, or specific observation. Not "great event!" A comment that sounds like a person, not a marketing bot:
+> "The [specific point they made] is something I've been watching play out in [your specific context]. What I'd add from the enterprise/GTM side: [your observation]. Curious whether others in the room saw [specific dynamic] the same way."
+
+#### Variant C — the character variant (voice v2, 2026-09-28)
+
+Every post ships 3 variants. A and B carry the dispatch and the hiring-manager read; **C is the character variant**: the same facts, but a cold open with a joke or a confession, plus the Snack Index line when field color supplies it. Source the personality from `=== Field Color ===` (Alex's dictation, photos, clips — `/post-event-content` Step 4). If no dictation supplied a usable line, draft the rest and leave `[PERSONALITY LINE NEEDED: <what kind of line, where>]`; never invent a confession or a joke about a named person. Attended-room recaps run under the **Room #N** series title.
+
+#### Special event format — Founder / Startup Showcase
+
+Some events aren't a talk or a panel — they're a **founder showcase** (a.k.a. startup
+showcase): several early-stage founders pitch back-to-back, primarily **to recruit**.
+Named series: **The Shortlist**. These have their own codified content style — do NOT
+force them into the single-thesis "room report" shape above.
+
+When the event is a showcase (multiple founders each pitching, a QR/opt-in intro
+mechanic), apply **`../content-patterns/founder-showcase.md`**. It governs: establishing
+the **showcase focus** (hiring / product-launch / funding / mixed — Alex can clarify it),
+the per-company **6-dimension breakdown** (who they are · problem · what's unique · culture
+· recent/funding · hiring), the recap post shape (**every company referenced — none dropped**),
+the **one-slide-per-company carousel** (Arc-4 company-spotlight grid), the **focus-driven
+first comment** (one verified reference link per company — careers pages if hiring, launch/blog
+pages if product, etc.), the **contact-extraction → CRM + Apollo** flow (founders + explicitly
+called-out teammates in the crowd), and the sensitivities (**confidential "stays in the room"
+funding must never be published**; **verify garbled transcript names before anything public or
+CRM-bound**). First codified from The Shortlist — August Founder Showcase (2026-08-24).
+
+---
+
+## The Closed Loop
+
+The most powerful output is when both tracks reinforce each other:
+
+```
+Attend event
+    → Write post within 24h
+    → Tag 1-2 Bucket B peers
+    → DM Bucket A contacts: "I wrote something based on what we discussed — curious your take"
+    → Bucket A engages with post OR responds to DM
+    → Their engagement surfaces you to their network
+    → New people comment / connect
+    → You now have warm context for outreach to those new connections
+    → LOOP
+```
+
+Always produce the outreach DM and the post in the same session — the post gives the DM something to point to, and the DM activates the post.
+
+---
+
+## Sharpen steer before drafting (steering-interview Touch 2)
+
+When invoked via `/post-event-content`, the collaborative **Sharpen** gate runs at the command's
+**Step 3.9** (after the `post_event_brief`, before this skill drafts) — honor the Author-Steer
+Sharpen forks passed in. **When invoked directly** (ad-hoc paste, "write something about last
+night"), run **Touch 2 of `steering-interview`** yourself once the material is conditioned/summarized
+and before drafting: derive ≤3 genuine forks from what the material surfaced (the thesis to lead,
+a MED-confidence quote to paraphrase-or-cut, which documentarian cut is the post), grounded in the
+material — never a generic "what's the angle?" (prep-then-ask). Skip cleanly if there's no real
+fork; keep the loop open; persist to `## Author Steer` (Sharpen). Skippable.
+
+## What to Produce
+
+When Alex gives you event input, produce:
+
+0. **`post_event_brief` (FIRST — the data store).** When invoked via `/post-event-content`, this is synthesized in **Step 3.7** of the command BEFORE drafting any post or DM (see `.claude/commands/post-event-content.md`). It is the post-event mirror of the pre-event `research_brief` — one comprehensive Notion Content Draft (`Content Type: post_event_brief`, `Event Phase: post_event`, `Platform: notion_only`) that captures (v2 — YED-96) the **whole-quote** Quote Bank (entirety, not snippets), a **content-derived Speaker Map** (diarization is never 1:1, so attribute by content + confidence), and the **learnings tier — Pro-Tips · Best-Practices · Pitfalls · Hot-Takes · Anecdotes · an enriched Concept Glossary** — plus ranked insights, tools/companies, stat bank, slides catalog, pre→post gap, people & outreach state, documentarian angles, conditioning notes, verification flags, open loops, and enrichment resolutions. The brief is written **both** as the canonical Content Draft **and** appended to the **Event page** (`## Post-Event Brief`, pre+post side-by-side); Step 3.8 writes the People/Companies/Topics knowledge graph back (dedup-mandatory). Every artifact below (#1–6) draws from this brief AND links back to it in its page body (`*Source data store:* [Post-Event Brief — ...](url)`). The brief is the short-term memory that lets future synthesis posts, weekly recaps, and re-engagement DMs reference what actually happened without re-reading the transcript. When this skill is invoked directly (not via `/post-event-content`), produce the brief as the first artifact in the same Notion shape.
+1. **Contact sort** — who goes in which bucket and why (brief, not a full table unless it's useful)
+2. **Outreach drafts (touch 1) — OPT-IN only (v2 — YED-96).** Do NOT auto-draft outreach for every contact — free-LinkedIn connection-message limits make blanket outreach low-yield. Draft outreach **only for people Alex explicitly names** for this event (via the `steering-interview` "person you want to land well with" answer). Default: skip and note "outreach skipped — none flagged." The contact sort (#1) still runs so the People & Outreach State table is complete for future touches.
+3. **Tier 1 comment draft** — 2–3 sentences, additive not validating
+4. **Tier 2 post draft(s) — always produce a primary AND at least one alternate ("another") version.** Post-event content is multi-version by default (150–300 words each, field-dispatch format): ship the primary post plus ≥1 alternate cut so Alex can pick or combine. The catalog of alternate version-types is provisional and grows as Alex posts and spots patterns — for now, always create at least one alternate. (Added 2026-05-27.)
+   - **Character budget (added 2026-06-10):** every version is **≤ 3,000 chars** (LinkedIn hard cap; 150–300 words lands well inside it, but the roundtable/topics×perspectives format with verbatim quotes is the one that blows past it — count it). Target 1,500–2,200 for recaps. If over, cut to budget BEFORE presenting; sources/links go to the **first comment**, never inline in the post body. Show the count on hand-off (e.g. "2,050 / 3,000"). See `.claude/references/content-style-guide.md` → LinkedIn Character Budget.
+   - **Prior-post callbacks (YED-208):** before drafting, pick the post's 1–3 themes and run the back-catalog query in `content-style-guide.md` → *Variants and prior-post callbacks*. Weave the best 1–2 hits in as evolution ("first surfaced at [event]; here's what changed"). Set `Themes` on every Tier 2 post draft you write.
+   - **Learn-More Set (mandatory every post):** 3–5 curated resources (papers, company announcements, speaker writing, publications) → first comment/carousel; separate from the in-body quotes/stats. See `content-style-guide.md` → The Learn-More Set.
+   - **Pre→post bridge (primary version):** when a pre-event post exists, open the primary by bridging "what I expected" → "what actually happened." Content straying from the pre-event hypothesis is normal and expected; the bridge is what ties the pre/post pair together.
+   - **Roundtable / panel format — ALWAYS one of the alternates for these events:** for **multi-speaker events where all speakers are part of ONE shared conversation** (NOT separate talks/demos), always create a version structured as the **3–5 most valuable topics, each with the named speakers' perspectives** (verbatim, attributed). Minimal editorializing — get out of the way and let the operators' perspectives carry it. Rationale (Alex): "summarization and analysis can be done by anyone; the perspectives can only be found by attending — that's the unique value to share afterward."
+   - **Event-type gate:** topics×perspectives is for **shared-conversation panels / roundtables only.** For **multi-presenter events** (each speaker their own talk or demo, e.g. a demo night), do NOT use it — use per-presenter / per-demo angles (what each actually built or showed).
+5. **Visual carousel brief for the Tier 2 post** — one 3-5 slide carousel
+   following the canonical pattern in `../content-patterns/visual-briefs.md`.
+   Read that file in full before drafting; pick the arc that matches the post's
+   argument structure (single-thesis field dispatch → Arc 1; change-over-time
+   observation → Arc 3; multi-perspective room dispatch → Arc 4). Append the
+   brief under the post draft with a `## Visual Brief — N-slide carousel` H2.
+   The carousel and the post ship together — they are one Content Draft, not
+   two. Run the quality gates from `visual-briefs.md` before handing the brief
+   to Alex.
+
+6. **Render the visual with Claude design** (default; rewritten 2026-09-19, YED-200). After the
+   brief is finalized AND the Content Draft is written to Notion (parent thread), render per
+   `../content-patterns/visual-briefs.md` → `## Execution — Claude design (default) + Gemini
+   (pictorial)`: a self-contained 4:5 HTML/SVG design exported to PDF for structured visuals; Gemini
+   for pictorial imagery. Do not restate the mechanics here. The brief still ships in the Notion
+   page body as the human reference.
+
+**On request (or when Day 7 / Day 21 timing comes up in the conversation):**
+
+5. **Touch 2 drafts** — Day 7 re-engagement DMs for Bucket A contacts who didn't reply,
+   framed around the Tier 2 post as the forward motion.
+6. **Re-engagement triggers** — if Alex mentions news about a specific contact (their
+   funding, launch, role change), draft a re-engagement DM on the spot regardless of
+   where they sit in the cadence.
+
+If input is sparse (just an event name, no contacts or takeaways), ask three things only:
+1. Who are the 1–2 most important people you met, and what did they say?
+2. What was the single sharpest thing you took away from the room?
+3. Was there any tension, disagreement, or surprise?
+
+Don't ask for more. Produce from what you have.
+
+---
+
+## Execution Infrastructure
+
+- **Supercut** → primary source. Pulled via `/post-event-content` Step 2A, conditioned in Step 3.5.
+- **Wispr Flow + phone photos/clips** → the `=== Field Color ===` input: the subway-home dictation of "things I didn't say out loud but want in the post" plus what the camera saw; feeds Variant C and the Snack Index
+- **Claude** → outreach and post drafts (this workflow)
+- **Notion** → all drafts land in Content Drafts DB (status: `needs_review`); Notion writes run inline in the parent thread (subagents have no claude.ai connectors)
+- **n8n** → not used (event pipeline is Claude-skill-first, not middleware)
+- **PostHog** → future: track which posts drive profile visits and connection requests
+
+**The 2-hour post-event window:**
+1. Classify contacts into buckets
+2. Draft Bucket A and B outreach while memory is live
+3. Write one rough sentence: "The one thing I'd post about tonight is ___"
+
+**Next morning:**
+1. Send queued outreach DMs (touch 1)
+2. Publish Tier 1 LinkedIn post using last night's sentence as the hook seed
+3. If a conditioned transcript is available, pull speaker quotes for color
+
+**Day 7 (calendar reminder after event):**
+1. Check reply status on Bucket A touch 1 DMs
+2. Draft touch 2 re-engagement for any that didn't reply — use Tier 2 post as the forward motion
+3. Scan any Bucket B/D contacts' feeds for content worth engaging (public track)
+
+**Day 21 (calendar reminder):**
+1. Drop private track on Bucket A contacts who still haven't replied
+2. Move remaining engagement to public track only (their content, Alex's content tagging them)
+3. Re-engagement only via trigger events (their news / Alex's news)
+
+---
+
+## Calibration and Performance Review
+
+To review how posts or outreach performed — impressions, DM response rates, what's working across multiple events — use the **event-signal-tracker** skill. It handles diagnosis, pattern detection across events, and the progressive tier assessment (when to add the comment, when to add the pattern post, etc.). This skill creates; that skill reviews.
