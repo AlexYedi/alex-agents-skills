@@ -23,7 +23,7 @@ It is a map, not a script: each step names the agent to dispatch, the model, the
 | Execution and prose: builds, diagnosis, pitch drafting, primers | Opus |
 | Specialist and bulk: sponsor research, code review, demo walk-through | Sonnet |
 
-Budgets (from the agent-routing budgets): ≤12 live agents, ≤2 Fable or Opus agents in the background at once, and on build day **≤3 builders at once**. A spend-limit kill or cap bounce ends the wave: stop, report what landed, re-plan.
+Budgets (from the agent-routing budgets): ≤12 live agents; **≤2 Opus or Fable agents running in the background at once, and on build day that cap is the builder cap** (two Opus builders at a time, or one builder plus one reviewer/diagnostician; a third piece waits or runs on Sonnet). A spend-limit kill or cap bounce ends the wave: stop, report what landed, re-plan.
 
 ---
 
@@ -31,12 +31,12 @@ Budgets (from the agent-routing budgets): ≤12 live agents, ≤2 Fable or Opus 
 
 ### Step 0 · Capture the organizer brief privately
 - **Who:** parent thread (no agent).
-- **Do:** save the organizer's brief verbatim — schedule, deadline, judging rubric and weights, required submission fields, sponsor list and prize criteria, rules on pre-built code — to a private file outside the public sprint repo (or a gitignored `private/` folder). **Strip coupon codes, credit links and credentials** into `.env` or a password manager; the note keeps only "credits: see .env".
+- **Do:** save the organizer's brief verbatim — schedule, deadline, judging rubric and weights, required submission fields, sponsor list and prize criteria, rules on pre-built code — to a private file **outside** the public sprint repo (never inside it, even gitignored: one `git add -f` from a leak). **Strip coupon codes, credit links and credentials** into `.env` or a password manager; the note keeps only "credits: see .env".
 - **Alex decides:** nothing yet; confirms the brief is complete and which parts are unknown until day-of.
 
 ### Step 1 · Concept primer
 - **Agent:** `alex:learning-coach-mentor` · **Model:** Opus.
-- **Skills:** `ai-engineering-foundations`, `ai-agent-design-patterns`, `book-distiller`.
+- **Skills:** `ai-engineering-foundations`, `ai-agent-design-patterns`, `agent-memory-and-guardrails`.
 - **Do:** a 15-minute primer on the concepts the brief assumes (e.g. sandboxed code execution, agent tracing and evals, tool calling), each tied to something Alex already knows from enterprise SaaS. Ends with 3 questions Alex should be able to answer before picking an idea.
 - **Alex decides:** which concepts he wants deeper before Step 3.
 
@@ -66,7 +66,7 @@ Budgets (from the agent-routing budgets): ≤12 live agents, ≤2 Fable or Opus 
 ### Step 5 · Adversarial safeguards and failure check
 - **Agent:** `alex:systems-analyst` · **Model:** Fable.
 - **Skills:** `consulting-failure-design`, `systems-thinking`, `agent-memory-and-guardrails`.
-- **Do:** pre-mortem ("it's 3:30 and the demo failed — why?") plus attack the architecture: prompt injection paths, the lethal trifecta (private data + untrusted input + an outbound channel in one component), credential exposure, runaway loops or spend. Rank by severity × likelihood; name the one safeguard that most strengthens the pitch.
+- **Do:** pre-mortem ("it's the deadline and the demo failed — why?") plus attack the architecture: prompt injection paths, the lethal trifecta (private data + untrusted input + an outbound channel in one component), credential exposure, runaway loops or spend. Rank by severity × likelihood; name the one safeguard that most strengthens the pitch.
 - **Alex decides:** which risks to mitigate in the build, which to state honestly in the pitch, which to accept.
 
 ### Step 6 · Repo scaffold decision
@@ -84,7 +84,7 @@ Budgets (from the agent-routing budgets): ≤12 live agents, ≤2 Fable or Opus 
 ### Step 8 · Build plan in 30-minute blocks
 - **Agent:** parent thread, with `Plan` (built-in) if the build is large · **Model:** Fable.
 - **Skills:** `consulting-roadmap-sequencing`, `shipping-products`.
-- **Do:** work **back from the deadline**: deadline − 90 min = feature freeze; before that, 30-minute blocks, each with an owner (Alex or a named builder dispatch), a path allowlist, a done-check and a **cut line**. The demo path's thinnest end-to-end slice is built first; everything else is layered on after it runs.
+- **Do:** work **back from the deadline**, with these fixed marks: **thin slice running** (the demo path end to end, canned data allowed) by about the build midpoint → **record the fallback video and run reviewer `demo` + `safeguards` on the thin slice immediately** (findings become the next blocks) → deadline − 90 min = feature freeze → deadline − 15 min = **submitted** (Devpost upload buffer). Subtract opening talks, lunch and sponsor demos from build time before planning; before that, 30-minute blocks, each with an owner (Alex or a named builder dispatch), a path allowlist, a done-check and a **cut line**. The demo path's thinnest end-to-end slice is built first; everything else is layered on after it runs.
 - **Alex decides:** the block order and every cut line, before sleeping.
 
 **Phase close:** `alex:learning-coach-mentor` recap — the pick, why it beat the others, the architecture in one sentence, the three safeguard layers, and the cut lines.
@@ -100,24 +100,24 @@ Budgets (from the agent-routing budgets): ≤12 live agents, ≤2 Fable or Opus 
 
 ### 2 · Parallel builder pieces
 - **Agent:** `alex:builder` · **Model:** Opus · **Skills:** `karpathy-coder`, `tdd-workflow`, plus `fullstack-dev` / `frontend-dev` / `building-mcp-servers` / `building-with-llms` as the piece needs.
-- **Do:** one dispatch per block-sized piece, **each with a path allowlist, a done-check, and the commit rule**. **≤3 builders at once**, on non-overlapping paths (worktrees or separate directories) so they cannot collide. Builders never push.
-- **Alex decides:** every fork a builder returns; he reads each diff summary before the next wave.
+- **Do:** one dispatch per block-sized piece, **each with a path allowlist, a done-check, and the commit rule**. **≤2 Opus builders at once** (the background cap above), on non-overlapping paths (worktrees or separate directories) so they cannot collide. Builders never push.
+- **Alex decides:** every fork a builder returns. **Silence default:** if Alex hasn't picked within 5 minutes, the parent takes the builder's recommendation or the block's cut line, logs it, and tells him. During the build, teaching contracts collapse to one line each; the full versions come back in the phase-close recap.
 
 ### 3 · Diagnostician on any failure
-- **Agent:** `alex:diagnostician` · **Model:** Opus · **Skills:** `post-mortems-retrospectives` (optional, for the write-up).
+- **Agent:** `alex:diagnostician` · **Model:** Opus (no skills; it works from the failing data).
 - **Do:** reproduce, **inspect the actual data at the failure point before theorising**, bisect, one root cause with evidence, smallest-fix proposal. It does not edit; the proposal goes to a builder. Two failed hypotheses → it stops and escalates, and the parent checks the cut line before spending more time.
 - **Alex decides:** apply the fix, or take the cut.
 
 ### 4 · Review gates
 - **Agent:** `alex:reviewer` · **Model:** Sonnet.
 - **Before each merge:** mode `code` (correctness, scope, secrets).
-- **Before submission:** mode `safeguards` (containment / policy / evidence, tested layer by layer) and mode `demo` (run the demo path exactly as it will be shown, time it, list what could fail live and the fallback).
+- **On the thin slice (mid-build, not at the end):** mode `safeguards` (containment / policy / evidence, tested layer by layer) and mode `demo` (run the demo path exactly as it will be shown, time it, list what could fail live and the fallback). A blocker found here is fixed before the freeze; a final `demo` pass after the freeze checks only what changed.
 - **Alex decides:** on any `blocker`, fix or cut; he never ships past a reviewer `blocker` without saying so out loud.
 
-### 5 · Submission (from deadline − 90 minutes)
+### 5 · Submission (from deadline − 90 minutes; submitted by deadline − 15)
 - **Who:** Alex, with the parent thread.
 - **Devpost fields checklist:** project name and tagline · problem and what it does · how it's built (architecture image) · **sponsor tools used, each with what it does in the project** · safeguards · challenges and what's next · public GitHub repo link (README complete, secret scan clean, repo visibility checked as public) · demo video link.
-- **Demo video < 2 minutes:** record the rehearsed demo path; this is also the fallback if the live demo fails.
+- **Demo video < 2 minutes:** the fallback cut was recorded on the thin slice; re-record the final path now if it changed. It is also the fallback if the live demo fails.
 - **Pitch rehearsal:** at least twice against a timer at the stated length (e.g. 3 minutes), once with someone asking the Step 7 Q&A questions.
 
 ### 6 · Post-event
