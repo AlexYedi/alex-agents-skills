@@ -106,7 +106,7 @@ If this skill was invoked as a pre-step inside a larger workflow (e.g., an orche
 
 ## Known gotchas
 
-- **Subagent registries can be session-frozen in some Claude Code environments.** Edits to `agents/systems-analyst.md` mid-conversation may not be picked up until a fresh session. Validate any analyst changes in a fresh conversation.
+- **Plugin agents refresh only on plugin update.** Edits to `agents/systems-analyst.md` are not picked up until the plugin is updated (or a fresh session). Validate any analyst changes in a fresh conversation.
 - **The analyst reads the `alex:systems-thinking` skill's references.** Edits to those reference files may require a fresh conversation to land in the analyst's loaded context.
 - **Horizon framing is project-specific.** If your project doesn't define a horizon framework (H1/H2/H3 or equivalent), the analyst will omit that section rather than fabricate one.
 

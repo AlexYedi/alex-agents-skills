@@ -7,8 +7,8 @@
     {
       "name": "alex",
       "source": "./",
-      "description": "Alex's cross-project skill library — product, engineering, GTM, data, and operating discipline.",
-      "version": "0.4.2",
+      "description": "Alex's cross-project skill library \u2014 product, engineering, GTM, data, and operating discipline.",
+      "version": "0.5.0",
       "author": {
         "name": "Alex Yedibalian"
       },

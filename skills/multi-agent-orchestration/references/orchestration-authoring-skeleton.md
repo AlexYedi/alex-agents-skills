@@ -19,8 +19,8 @@ skill.
    **dedup read here** so later writes upsert, not duplicate.
 2. **Dispatch / fan-out (parent thread, explicit).** State exactly which agents run, **in parallel or
    serially**, and *why*. Parallel = independent `Agent` calls **in one message**. Each dispatch leads with
-   the verbatim source + a one-line framing of what that specialist returns. **Hard SDK constraint:**
-   subagents can't spawn subagents — the fan-out lives in the parent, not in a "lead" agent (see
+   the verbatim source + a one-line framing of what that specialist returns. **Design rule:**
+   by design the fan-out lives in the parent, not in a "lead" agent (see
    `claude-code-sdk-constraints.md`).
 3. **Collect & handle thin returns.** Wait for all dispatched agents. If one returns thin, **re-invoke just
    that one** with deeper scope — don't restart the whole run.
