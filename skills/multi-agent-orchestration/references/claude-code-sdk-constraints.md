@@ -1,40 +1,40 @@
 # Claude Code SDK constraints — the rules that govern agent/command design
 
-Three durable, non-obvious runtime constraints of the Claude Code harness. They are not configurable —
-design around them. Consolidated from hard-won project experience; consumed by anyone building
-multi-agent workflows, subagents, or slash commands.
+Durable runtime facts of the Claude Code harness that shape agent and command design. **Re-verified
+2026-10-15 against the live docs and changelog (v2.1.300)**: the first two rules below were platform
+limits until mid-2026 and are now design choices. Re-check this file against the changelog before
+relying on it.
 
-## 1. Subagents cannot spawn other subagents
+## 1. Parent fan-out is a design choice, not a platform limit
 
-The `Agent` tool (formerly `Task` — renamed ~v2.1.63; both names alias) is **not exposed inside a
-subagent's context**. It exists by design, to prevent runaway nesting.
+Subagents **can** dispatch subagents, up to three levels below the main conversation
+(`CLAUDE_CODE_MAX_SUBAGENT_SPAWN_DEPTH`, default 3 since v2.1.219; it was impossible before that). A
+fork cannot spawn further forks.
 
-- **Official docs** ([sub-agents](https://code.claude.com/docs/en/sub-agents.md)): *"Subagents cannot
-  spawn other subagents. If your workflow requires nested delegation, use Skills or chain subagents from
-  the main conversation."*
-- **Empirically confirmed:** across a parent + 5 subagents, `Agent`/`Task` was absent from every
-  subagent's tool surface — both directly and via `ToolSearch select:Task,Agent` ("No matching deferred
-  tools found").
+**Still prefer parent fan-out for predictable workflows.** One thread then owns concurrency, ordering
+and the chain, which is what Anthropic's *Building Effective Agents* recommends when the steps are
+known, and what Cognition's *Don't Build Multi-Agents* argues for (context is lost at every handoff;
+parallel workers make conflicting implicit decisions). The reliable shape is unchanged: *parent fans out
+N specialists → collects returns → hands them to one synthesis-only agent*. Use nesting deliberately,
+for genuinely dynamic delegation, and budget it (below).
 
-**Implication — the orchestrator anti-pattern.** Any fan-out to specialists must run from the **parent
-thread** (the slash-command's main conversation), *not* from inside a "lead/orchestrator" subagent. A
-design that says "agent X orchestrates the others" is wrong and will silently fail to dispatch. What DOES
-work as a subagent: **synthesis-only** agents (text in → text out, no dispatch). The reliable shape is:
-*parent fans out N specialists in parallel → collects their returns → hands them to one synthesis-only
-subagent (or synthesizes inline).*
+**Budget every wave.** At most 20 subagents run at once per session (`CLAUDE_CODE_MAX_CONCURRENT_SUBAGENTS`,
+raisable, cannot be disabled; the 21st fails with `Concurrent subagent limit reached`). WebSearch is
+capped at 200 calls per session across all subagents. Background agents are killed when the account
+spend limit is reached. Stop and report on a bounce; never retry silently.
 
-## 2. The agent registry is session-frozen
+## 2. Agent files hot-reload; prove every edit with a dispatch
 
-The harness loads the list of available agents from `.claude/agents/**/*.md` **once, at conversation
-start**, and uses that snapshot for the whole session. Adding, editing, deleting, or renaming an agent
-file mid-conversation is written to disk but **not** reflected in the live registry.
+The harness watches `~/.claude/agents/` and `.claude/agents/` and picks up edits within seconds, with
+three exceptions: the first file in a new `agents` directory, `--add-dir` directories, and
+`--disable-slash-commands`. **Plugin agents refresh only when the plugin is updated** (this repo's
+pull/merge hook runs the update). Rule: after any agent edit, prove it with one real dispatch before
+relying on it; if it doesn't load, start a fresh conversation.
 
-- Confirmed: after deleting agent A and creating agent B mid-session, the runtime still listed A and could
-  not find B (or any newly-named agent).
-- **Validation rule:** any change to a `.claude/agents/` file (frontmatter, body, model, tools, name)
-  requires a **fresh conversation** to test. You cannot smoke-test an agent change in the same session
-  that made it. (Same root cause as the general "custom-agent discoverability mid-conversation is
-  unreliable" gotcha — but it applies to *all* agent-definition changes, not just new ones.)
+Also: a `model:` override on the `Agent` call works on every agent, including plugin agents, so choose
+the agent for the job and the model separately. Plugin agents ignore `hooks`, `mcpServers` and
+`permissionMode` frontmatter, so their `tools:` line is the only enforcement lever. Subagents inherit
+the parent's MCP tools by default, which is why the `tools:` line below matters.
 
 ## 3. Give every subagent an explicit, minimal `tools:` frontmatter line
 

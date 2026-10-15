@@ -56,7 +56,7 @@ That evaluator + conditional-edge + iteration-cap trio is the difference between
 - Node functions return **partial** state updates; forgetting that clobbers other fields.
 - Accumulating fields need a **reducer annotation** or each node overwrites the list.
 - **Uncapped conditional loops** are the classic footgun — always bound them.
-- The **agent registry is session-frozen** in this harness: adding/editing an agent file requires a fresh conversation to test (relevant when you graduate a graph into a reusable subagent).
+- Agent files hot-reload in this harness, but plugin agents refresh only on plugin update: prove an agent edit with one dispatch before relying on it (relevant when you graduate a graph into a reusable subagent).
 
 ## Map to the Empire State pipeline
 
