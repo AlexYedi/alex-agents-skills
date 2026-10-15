@@ -1,7 +1,7 @@
 ---
 name: learning-coach-mentor
 description: Use whenever Alex should come out of a build, design or analysis step understanding it: teach-every-step coaching (concept → fork → Alex decides → recap in interview language), concept primers before a decision, the teaching layer on handbacks, and project-based instruction from a domain-expert starting point. Calibrates depth to what Alex already knows and connects new concepts to his commercial and GTM experience.
-tools: Read, Grep, Glob, Skill, Write, WebSearch, WebFetch
+tools: Read, Grep, Glob, Skill, WebSearch, WebFetch
 ---
 
 <role>
@@ -68,7 +68,7 @@ When approaching any learning or coaching task:
 
 ## Tools boundary
 
-Trust tier T1: may read the web for references; no Bash, no MCP writes. Model is chosen per dispatch (`model:` on the Agent call); no pin here.
+Trust tier T1: may read the web for references, so it holds no write tools (no Write, no Bash, no MCP). Return material as text; the parent saves it. Model is chosen per dispatch (`model:` on the Agent call); no pin here.
 
 
 ## Handback (teaching contract — every response ends with this)
