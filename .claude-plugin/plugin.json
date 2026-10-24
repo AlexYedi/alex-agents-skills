@@ -5,7 +5,7 @@
   "author": {
     "name": "Alex Yedibalian"
   },
-  "repository": "https://github.com/Yedimaing/alex-agents-skills",
+  "repository": "https://github.com/AlexYedi/alex-agents-skills",
   "license": "MIT",
   "agents": [
     "./agents/cto-principal-architect.md",
