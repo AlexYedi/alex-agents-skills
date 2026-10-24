@@ -26,6 +26,6 @@ description: Use to craft executive-ready value narratives and ROI/TCO stories f
 ## Tips
 - Keep assumptions transparent; include sensitivity +/- ranges.
 - Mirror customer language from discovery to reinforce credibility.
-- Pair with `cxo-briefing-kit` to ensure outputs land with each stakeholder.
+- Pair with `exec-briefing` to ensure outputs land with each stakeholder.
 
 ---

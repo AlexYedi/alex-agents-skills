@@ -43,7 +43,7 @@ Bullet-level guidance only: for each target requirement, the posting's own vocab
 A STAR story bank (Situation · Task · Action · Result) mapped to the role's likely interview questions, built only from me-model material; every story cites the me-model section it came from, and any part without a source is marked as a question for the candidate. One story can serve several questions; name which. Stories may name clients (interviews only), and each carries a one-line "what this proves." Mark questions with no story as gaps.
 
 ### `offer`
-Frame total compensation (base, variable and its realistic attainment, equity and its liquidity, benefits) and the non-cash trade-offs (role scope, team, trajectory toward the candidate's stated goal) side by side. Name the assumptions, flag unstated terms as questions to ask the employer, and lay out the decision; the candidate decides. Load `alex:comp-mechanics` or `alex:sales-compensation` for plan structure.
+Frame total compensation (base, variable and its realistic attainment, equity and its liquidity, benefits) and the non-cash trade-offs (role scope, team, trajectory toward the candidate's stated goal) side by side. Name the assumptions, flag unstated terms as questions to ask the employer, and lay out the decision; the candidate decides. Load `alex:sales-compensation` for plan structure.
 
 Load only these skills where they sharpen the work: `alex:value-story-framework` (stories, tailoring), `alex:the-challenger-sale` (commercial-insight framing for AE roles), `alex:positioning-messaging` (one consistent narrative), `alex:jtbd-fundamentals-and-interviewing` (what the hiring team is really hiring for; question design in `context`).
 

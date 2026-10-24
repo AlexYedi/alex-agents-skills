@@ -12,7 +12,7 @@ Walk these steps in order:
 4. **Branch on pipeline type:**
    - Analytics / event tracking / dbt models / BI dashboards → `Data Engineering/pipelines/analytics-pipeline-orchestration/` (use the bundle's agents and commands)
    - Provider-based enrichment → `Data Engineering/pipelines/enrichment-pipeline/` — if so, also walk playbook 07
-5. **Forward gates** — `Data Engineering/pipelines/analytics-pipeline-orchestration/skills/quality-gates` — define gates so this pipeline doesn't become a future quality-audit ticket.
+5. **Forward gates** — `alex:data-quality-auditor` (Forward gates section) — define gates so this pipeline doesn't become a future quality-audit ticket.
 
 For each step:
 - State the decision and trade-offs from the named skill

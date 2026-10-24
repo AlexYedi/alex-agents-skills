@@ -206,8 +206,7 @@ after the end trigger.
   each VSM step in cost and time using Time-Driven ABC. `consulting-tacit-work-elicitation`
   (Step 4): digs into the undocumented work happening inside the steps this map only
   sketches at a high level.
-- **Elsewhere in the library** — `problem-definition`, `journey-mapping`,
-  `systems-thinking`, `capacity-modeling`.
+- **Elsewhere in the library** — `problem-definition`, `systems-thinking`.
 - **References** — SIPOC: Six Sigma / DMAIC Define phase, popularized via GE, rooted in
   Rummler & Brache process mapping. *Learning to See: Value Stream Mapping to Add Value
   and Eliminate Muda* (Rother & Shook, 1999), Lean Enterprise Institute.

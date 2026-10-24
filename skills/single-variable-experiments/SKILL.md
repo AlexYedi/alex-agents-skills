@@ -233,7 +233,7 @@ results: <empty until day 21>
 
 - `experiment-design-kit` — hypothesis templates, guardrails, and measurement-plan scaffolding to pair with this discipline
 - `approval-loop-fanout` — if the thing being tested is a generation prompt applied across a batch
-- `hypothesis-library` — reusable hypotheses to draw candidates from
+- `experiment-design-kit` — reusable hypotheses to draw candidates from
 - `systems-thinking` — when a confounded result points at a feedback loop rather than a variable
 
 ## Note on provenance

@@ -220,5 +220,5 @@ Realization review date: <set post-go-live checkpoint>
 ## Related
 
 - **In-suite** — `consulting-cost-time-baseline` (step 3, upstream): supplies the baselines every benefit measure is set against. `consulting-roadmap-sequencing` (step 9, upstream/pairs): supplies the sequenced initiatives that populate the BDN's technology enablers. `consulting-acceptance-bar` (step 14, downstream): converts this skill's benefit measures into go-live SLOs and error budgets.
-- **Elsewhere in the library** — `creating-financial-models`, `roi-benchmark-library`, `board-readiness-kit`.
+- **Elsewhere in the library** — `creating-financial-models`, `exec-briefing`.
 - **References** — Ward, J. & Daniel, E., *Benefits Management: How to Increase the Business Value of Your IT Investments* (Cranfield School of Management/Wiley, 2006); Amdahl, G. M., "Validity of the Single Processor Approach to Achieving Large Scale Computing Capabilities," *AFIPS Conference Proceedings*, 1967.

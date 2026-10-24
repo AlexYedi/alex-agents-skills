@@ -186,6 +186,6 @@ Failure mode | Detection-improving mitigation | Proposed monitor/check | Owner
   and invariants this skill stress-tests. `consulting-acceptance-bar` (step 14, downstream):
   receives the detection-improving mitigations as candidate monitors and error-budget inputs,
   closing the loop with `consulting-benefits-case` and `consulting-behaviour-specification`.
-- **Elsewhere in the library** — `risk-register`, `risk-scoring-framework`, `post-mortems-retrospectives`.
+- **Elsewhere in the library** — `risk-playbooks`, `account-health-framework`, `post-mortems-retrospectives`.
 - **References** — *Performing a Project Premortem* (Gary Klein, 2007), Harvard Business Review;
   FMEA per MIL-STD-1629A; *AIAG-VDA FMEA Handbook* (2019).

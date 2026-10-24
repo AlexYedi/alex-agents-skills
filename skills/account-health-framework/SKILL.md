@@ -12,10 +12,13 @@ description: Use to score accounts, flag risks, and standardize remediation trig
 
 ## Framework
 1. **Signal Library** – define categories (product usage, support, sentiment, executive alignment, commercial).
+   - **Metric Groups** – activation, engagement, collaboration, monetization, support load (self-serve / hybrid cohorts).
 2. **Weighting & Thresholds** – assign weights and thresholds per segment/tier.
+   - **Weighting & Decay** – weights per signal, freshness decay, negative indicators.
 3. **Automation Hooks** – map scores to alerts, workflows, and CRM fields.
 4. **Play Mapping** – connect each tier to recommended plays and owners.
 5. **Review Cadence** – set refresh frequency, calibration sessions, and feedback loops.
+   - **Validation Loop** – back-test against churn, expansion, NPS outcomes.
 
 ## Templates
 - **Health Scorecard**: See `assets/health_scorecard.md` for calculation and components.

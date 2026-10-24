@@ -219,8 +219,7 @@ Repeat the scenario block for every requirement in the table.
   (Step 12, derives pre/postconditions and invariants from these scenarios);
   `consulting-acceptance-bar` (Step 14, sets go-live thresholds against this
   same scenario set).
-- **Elsewhere in the library** — `tdd-workflow`, `workflow-testing`,
-  `writing-prds`, `ai-evals`.
+- **Elsewhere in the library** — `tdd-workflow`, `writing-prds`, `ai-evals`.
 - **References** — North, D., "Introducing BDD" (2006); ISO/IEC/IEEE
   29148:2018, *Systems and software engineering — Life cycle processes —
   Requirements engineering*.

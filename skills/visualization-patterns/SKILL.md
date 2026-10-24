@@ -18,12 +18,13 @@ description: Use when designing dashboards, reports, and narratives for GTM stak
 5. **Narrative & Actions** – annotate insights, embed CTA buttons or playbook links.
 
 ## Templates
-- Dashboard wireframe grid with KPI slots.
+- Dashboard wireframe grid with KPI slots — see `templates/dashboard_wireframe.md`.
 - Metric dictionary (definition, source, owner, refresh schedule).
 - Adoption checklist (stakeholder review, enablement session, feedback form).
 
 ## Tips
 - Keep hero KPIs at top-left with trend vs target.
+- Limit hero metrics to 3–5; move detailed tables into drill sections.
 - Use consistent color palettes for good/bad variance.
 - Embed documentation or Loom walkthroughs directly in BI tool when possible.
 

@@ -17,6 +17,9 @@ description: Use to drive consistent forecast methodology, grading, and inspecti
 3. **Cadence** – schedule prep steps, live inspections, and follow-up check-ins.
 4. **Accountability** – log actions, approvals, and exceptions tied to each commit change.
 5. **Continuous Improvement** – review accuracy vs actuals, adjust rubric/cadence quarterly.
+   - **Driver Taxonomy** – classify deltas into volume, conversion, price/mix, churn, expansion, currency.
+6. **Method Selection** – bottom-up CRM, top-down macro, cohort, or blended; document assumptions.
+7. **Scenario Logic** – base/upside/downside with tunable levers.
 
 ## Templates
 - Forecast call agenda + checklist.
@@ -32,6 +35,8 @@ description: Use to drive consistent forecast methodology, grading, and inspecti
 - Pair with CRM hygiene dashboards to ensure data supports forecast claims.
 - Mirror GTM Agents cadence: Monday management prep, Tuesday deal desk sync, Thursday exec forecast call.
 - Require written rationale for any commit movement >5% week over week.
+- Keep raw inputs + assumptions in version control.
+- Feed learnings back into forecast assumptions once variance is understood.
 - If guardrail breached twice in a quarter, trigger RevOps remediation sprint (see lifecycle rip-cord procedures).
 
 ## GTM Agents Forecast Governance Overlay

@@ -17,7 +17,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "jq -c 'if (.prompt // \"\") | test(\"\\\\b(audit\\\\s+(my\\\\s+|the\\\\s+)?data|data\\\\s+quality|anomalies\\\\s+in|profile\\\\s+(this\\\\s+|the\\\\s+)?dataset)\\\\b\"; \"i\") then {hookSpecificOutput: {hookEventName: \"UserPromptSubmit\", additionalContext: \"Data quality audit context: consult Data Engineering/playbooks/04-quality-audit.md. Start with governance-and-quality/data-quality-auditor (profile + DQS + remediation plan), then branch by root cause: schema -> databases/database-designer; policy -> governance-and-quality/mdm-and-federated-governance; forward prevention -> pipelines/analytics-pipeline-orchestration/skills/quality-gates. Bypass: just profile the data or skip the playbook.\"}} else empty end' 2>/dev/null || true"
+            "command": "jq -c 'if (.prompt // \"\") | test(\"\\\\b(audit\\\\s+(my\\\\s+|the\\\\s+)?data|data\\\\s+quality|anomalies\\\\s+in|profile\\\\s+(this\\\\s+|the\\\\s+)?dataset)\\\\b\"; \"i\") then {hookSpecificOutput: {hookEventName: \"UserPromptSubmit\", additionalContext: \"Data quality audit context: consult Data Engineering/playbooks/04-quality-audit.md. Start with governance-and-quality/data-quality-auditor (profile + DQS + remediation plan), then branch by root cause: schema -> databases/database-designer; policy -> governance-and-quality/mdm-and-federated-governance; forward prevention -> data-quality-auditor (Forward gates). Bypass: just profile the data or skip the playbook.\"}} else empty end' 2>/dev/null || true"
           },
           {
             "type": "command",
