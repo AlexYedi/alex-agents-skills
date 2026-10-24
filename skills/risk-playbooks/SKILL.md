@@ -57,6 +57,8 @@ Spotify / Shopify launch-ops: every launch ends with a retro that updates the pl
 - **4–6 (yellow):** one-line mitigation + named owner, logged in register.
 - **1–3 (green):** acknowledged in register, no action required pre-launch.
 
+For deal pursuits rather than launches, swap the category column for a **Risk Catalog** – categorize by workstream (value, product, legal, security, executive, finance). Either way, keep risk statements precise (impact + trigger).
+
 ## Severity Reference
 
 | Sev | Meaning | Response |

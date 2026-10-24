@@ -257,6 +257,10 @@ Recommended Action: ___
 Priority Signal: ___
 ```
 
+### Tiering Matrix
+- Tiering matrix (T1/T2/T3 criteria, coverage model, SLA) — see `assets/tiering_matrix.md`.
+- **SLA Definitions** – touch frequency, personalization level, reporting cadence by tier.
+
 ## Tips
 - Qualification is an investment, not a cost. Every minute spent qualifying saves 10 minutes of wasted outreach on bad-fit accounts.
 - The most common qualification mistake: over-weighting firmographics and under-weighting intent. A small company that's actively hiring for your use case is a better prospect than a large company with no buying signals.

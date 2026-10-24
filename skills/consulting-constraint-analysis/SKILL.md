@@ -212,6 +212,6 @@ NEXT-CONSTRAINT WATCH
   (step 7, upstream): supplies the candidate automations mapped against the constraint in the
   Elevate step. `consulting-roadmap-sequencing` (step 9, downstream): sequences initiatives using
   the constraint diagnosis as its primary economic-value signal.
-- **Elsewhere in the library** — `systems-thinking`, `capacity-modeling`, `performance-analysis`.
+- **Elsewhere in the library** — `systems-thinking`, `performance-analysis`.
 - **References** — Goldratt, E. M. & Cox, J., *The Goal*, North River Press, 1984; Goldratt, E. M.,
   *Theory of Constraints*, North River Press, 1990.

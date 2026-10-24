@@ -33,6 +33,11 @@ New sales hires need ramp periods with guaranteed draws or reduced quotas while 
 ### Simplicity drives behavior
 Complex comp plans with many variables lead to confusion and gaming. Simple plans where reps understand exactly what actions increase their pay are more effective.
 
+### Know the plan mechanics
+When reading or designing a plan, name each part explicitly:
+- **Plan Components** – quota basis, crediting rules, accelerators, caps, clawbacks.
+- **Rate Tables** – payout rates by attainment band with accelerators/decelerators.
+
 ## Questions to Help Users
 
 - "What percentage of new deals churn within the first year? Does your comp plan account for this?"

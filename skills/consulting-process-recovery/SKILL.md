@@ -196,6 +196,6 @@ Handoff notes: <what steps 3 and 8 need to know>
   this mining exercise operates inside. `consulting-cost-time-baseline` (3): consumes the mined
   step-level timing and rework data to build the cost/time baseline. `consulting-constraint-analysis`
   (8): consumes the hotspot table to confirm the real bottleneck rather than the assumed one.
-- **Elsewhere in the library** — `instrumentation`, `performance-analysis`, `observability-designer`.
+- **Elsewhere in the library** — `performance-analysis`, `observability-designer`.
 - **References** — *Process Mining Manifesto* (IEEE Task Force on Process Mining, 2011); van der
   Aalst, *Process Mining: Data Science in Action* (Springer, 2016).

@@ -16,6 +16,8 @@ description: Template system for building, tagging, and distributing competitive
 3. **Enablement Hooks** – talk tracks, snippets for sequences, asset links, CRM surfaces, content snippets.
 4. **Review Cadence** – SME assignments, refresh schedule, localization requirements.
 5. **Analytics** – usage tracking, win rate impact, prioritized backlog.
+6. **Delivery Format** – deck, one-pager, LMS module, short-form scripts.
+7. **Feedback Loop** – collect field feedback, update win/loss data, refresh quarterly.
 
 ## Templates
 - Battlecard deck/Notion template with modular sections.
@@ -25,6 +27,7 @@ description: Template system for building, tagging, and distributing competitive
 ## Tips
 - Embed battlecards directly into CRM/workspace surfaces where reps already work.
 - Flag trap-setting and landmines clearly to avoid disclosure mistakes.
+- Keep "permission to win" statements crisp; avoid feature dumping.
 - Pair with `build-battlecard-suite` command to automate population.
 
 ---

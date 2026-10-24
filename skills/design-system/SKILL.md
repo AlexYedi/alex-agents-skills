@@ -1,6 +1,6 @@
 ---
 name: design-system
-description: Use this skill to generate or audit design systems, check visual consistency, and review PRs that touch styling.
+description: Use this skill to generate or audit design systems, check visual consistency, review PRs that touch styling, and decide when to invest in a design system and how to drive its adoption.
 origin: ECC
 ---
 
@@ -80,3 +80,39 @@ Identifies generic AI-generated design patterns:
 ```
 /design-system slop-check
 ```
+
+## Strategy: when to invest, how to drive adoption
+
+Generating and auditing are the production layer. Before either, decide whether the team needs a system yet and how it will get adopted.
+
+### Core Principles
+
+#### Separate concept from production
+Bob Baxley: "Once we locked down on the block frames, we could send it to an agency and they could do the full high-res comps in a day, because they knew exactly what they were doing." Use low-fidelity 'block brain diagrams' to lock down conceptual logic, then apply the design system for rapid high-fidelity output.
+
+#### Design systems drive enterprise expansion
+Claire Butler: "Design systems are one of the main reasons you upgrade from pro to org or enterprise. That became just the key thing we leaned in on." Design systems practitioners are key internal champions for organizational scaling.
+
+#### Assets should teach their own usage
+Jessica Hische: "My goal always when designing a logo is to design a logo that's so easy to use that you don't have to be an extremely skilled designer to design well with it." Design assets that 'teach' the user how to apply them through their inherent structure, prioritizing ease of use over complexity.
+
+#### Flat design is evolving
+Brian Chesky: "I think flat design is over or ending. We're going to move back into a world with color, texture, dimensionality, more haptic feedback." Interface design is shifting from flat aesthetics to more dimensional, tactile, and AI-enhanced experiences.
+
+### Questions to Help Users
+
+- "What's the biggest inconsistency problem you're facing today?"
+- "Who will be using this design system - designers only, or engineers too?"
+- "How will you measure adoption and success of the design system?"
+- "Do you have the resources to maintain and evolve the system over time?"
+- "What's the smallest viable version you could ship first?"
+
+### Common Mistakes to Flag
+
+- **Building too early** - Creating a design system before you have enough patterns to systematize
+- **Over-engineering** - Building complex systems that require expert designers to use correctly
+- **No ownership** - Creating a design system without dedicated resources to maintain it
+- **Ignoring adoption** - Building a beautiful system that no one actually uses
+- **Static systems** - Treating the design system as 'done' rather than continuously evolving
+
+For all 4 insights from 4 guests, see `references/guest-insights.md`.

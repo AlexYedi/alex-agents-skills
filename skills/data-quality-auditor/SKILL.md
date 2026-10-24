@@ -186,6 +186,16 @@ Never auto-remediate 🔴 findings without human confirmation.
 
 ---
 
+## Forward gates
+
+When an audit finding should become a standing check instead of a one-off fix, turn it into a gate:
+
+- **Test Coverage** – schema, freshness, unique, referential, accepted values, volume thresholds.
+- Tie quality gates to CI/CD or dbt Cloud jobs to block bad deploys.
+- Checklist: `assets/qa_checklist.md`.
+
+---
+
 ## Communication Standard
 
 Structure all audit reports as:
@@ -218,7 +228,7 @@ Structure all audit reports as:
 
 - **`governance-and-quality/mdm-and-federated-governance`** — the policy and contract frame around the data this skill audits. Use that skill to define what "good" looks like (data contracts, ABAC, MDM style); use this skill to confirm the data actually meets it.
 - **`databases/database-designer`** — when an audit traces issues back to schema design, normalization, or missing constraints.
-- **`pipelines/analytics-pipeline-orchestration`** — pair with its `quality-gates` sub-skill when audit findings should become forward-looking gates instead of one-off remediation.
+- **Forward gates** (section above) — when audit findings should become forward-looking gates instead of one-off remediation.
 
 ## References
 

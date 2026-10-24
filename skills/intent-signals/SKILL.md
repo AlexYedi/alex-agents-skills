@@ -117,6 +117,8 @@ Each factor rated 1-5:
 | 10-19 | Low | Add to monitoring list |
 | Below 10 | Noise | Ignore |
 
+**Decay Curves** – time-based decay per signal category with expiration thresholds. Version control the scoring logic; share diffs.
+
 ---
 
 ### Signal Combinations (Stacking)
@@ -142,6 +144,18 @@ Single signals are useful. Signal combinations are powerful. When multiple signa
 3. **Person-level signals > Company-level signals.** The VP Sales posting about outbound challenges (person) is stronger than the company posting 3 SDR jobs (company) — because you know exactly WHO is feeling the pain.
 
 4. **Don't stack noise.** Three weak signals don't equal one strong signal. "Posted on LinkedIn" + "website has a blog" + "company is in tech" = noise, not intent.
+
+5. **Blend at least two independent signals before green-lighting high-effort plays.**
+
+---
+
+### Suppression
+
+A signal firing does not mean the account should be contacted. Run suppression before routing:
+
+- **Reason Taxonomy** – legal/compliance, commercial conflicts, lifecycle constraints, technical issues.
+- **Duration Logic** – cooling periods, review cadences, auto-expiration.
+- Mirror CRM/MAP suppression lists; heartbeat alert when suppression counts spike.
 
 ---
 

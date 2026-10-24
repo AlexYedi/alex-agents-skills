@@ -224,7 +224,7 @@ before it can decompose the process into tasks.
   models, and tacit-rules list to decompose the enriched picture of real work
   into routine/non-routine, manual/cognitive tasks.
 - **Elsewhere in the library** — `conducting-user-interviews`,
-  `jtbd-fundamentals-and-interviewing`, `voice-of-customer`.
+  `jtbd-fundamentals-and-interviewing`, `analyzing-user-feedback`.
 - **References** — Flanagan, "The Critical Incident Technique,"
   *Psychological Bulletin*, 51(4), 1954. Beyer & Holtzblatt, *Contextual
   Design: Defining Customer-Centered Systems* (Morgan Kaufmann, 1998).

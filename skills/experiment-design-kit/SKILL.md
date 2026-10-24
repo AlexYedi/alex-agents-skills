@@ -15,6 +15,7 @@ description: Toolkit for structuring hypotheses, variants, guardrails, and measu
 1. **Problem Framing** – define user problem, business impact, and north-star metric.
 2. **Hypothesis Structure** – "If we do X for Y persona, we expect Z change" with assumptions.
 3. **Measurement Plan** – primary metric, guardrails, min detectable effect, power calc.
+   - **Threshold Matrix** – warning vs critical bands per metric / persona / region.
 4. **Variant Strategy** – control definition, variant catalog, targeting, and exclusion rules.
 5. **Operational Plan** – owners, timeline, dependencies, QA/rollback steps.
 
@@ -29,16 +30,19 @@ description: Toolkit for structuring hypotheses, variants, guardrails, and measu
 ## Tips
 - Pressure-test hypotheses with counter-metrics to avoid local optima.
 - Document data constraints early to avoid rework during build.
-- Pair with `guardrail-scorecard` to ensure sign-off before launch.
+- Get guardrail sign-off (Threshold Matrix above) before launch.
+- Tie guardrails to downstream systems (billing, support) to catch second-order impacts.
+- Require at least one supporting data point before moving to prioritization.
 - Apply GTM Agents cadence: Monday backlog groom, Wednesday build review, Friday learnings sync.
 - Require KPI guardrails per stage (activation, engagement, monetization) before authorizing build.
 - If a test risks Sales velocity, include Sales Director in approval routing per GTM Agents governance.
 
 ## GTM Agents Experiment Operating Model
 1. **Backlog Intake** – ideas flow from GTM pods; Growth Marketer tags theme, objective, expected impact.
+   - **Status Tracking** – idea → scoped → running → decided → archived.
 2. **Prioritization** – score with RICE + qualitative "strategic fit" modifier; surface top 3 bets weekly.
 3. **Design & Instrumentation** – reference Serena/Context7 to patch code + confirm documentation.
-4. **Launch & Monitor** – use guardrail-scorecard to watch leading indicators (churn, complaints, latency).
+4. **Launch & Monitor** – use the guardrail register (Threshold Matrix) to watch leading indicators (churn, complaints, latency).
 5. **Learning Loop** – run Sequential Thinking retro; document hypothesis, result, decision, follow-up in backlog card.
 
 ## KPI Guardrails (GTM Agents Reference)

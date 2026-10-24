@@ -204,7 +204,7 @@ Freeze lifts when: <e.g. burn rate back under 1x and budget replenished to >= X%
   the verifiable requirements and scenarios that "task success" is measured against.
   `consulting-failure-design` (Step 13, upstream): supplies the failure modes and monitors that
   define what counts as an error and where the data comes from.
-- **Elsewhere in the library** — `observability-designer`, `quality-gates`,
+- **Elsewhere in the library** — `observability-designer`, `data-quality-auditor`,
   `ai-evaluation-methodology`, `ai-evals`.
 - **References** — Beyer, B., Jones, C., Petoff, J. & Murphy, N. R. (eds.), *Site Reliability
   Engineering: How Google Runs Production Systems* (O'Reilly, 2016), "Service Level Objectives."

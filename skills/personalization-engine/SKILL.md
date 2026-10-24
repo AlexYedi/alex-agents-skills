@@ -165,6 +165,8 @@ These require reading/analyzing content:
 | `{{specificChallenge}}` | Content + inference | "Scaling past 10 reps without losing quality" |
 | `{{customCampaignIdea}}` | AI analysis of company | "Target CFOs at PE-backed SaaS with the efficiency angle" |
 
+**Token Management** – define data sources, fallback values, formatting rules. Keep a token dictionary (field, source, fallback, formatting) next to every template so a missing variable renders the fallback, not a blank.
+
 ---
 
 ### Personalization at Scale: The Bucket Strategy

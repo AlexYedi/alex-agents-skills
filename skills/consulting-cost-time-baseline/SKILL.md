@@ -191,5 +191,5 @@ Unused capacity (per pool)    = (practical capacity - capacity used) x capacity 
 ## Related
 
 - **In-suite** — `consulting-boundary-setting` (step 1, upstream): supplies the scoped VSM steps this skill costs and times. `consulting-process-recovery` (step 2, upstream): supplies the real variants that drive the time equations. `consulting-benefits-case` (step 10, downstream): measures automation savings against this cost/time baseline. `consulting-constraint-analysis` (step 8, downstream): uses the cost/time table to help locate the actual bottleneck.
-- **Elsewhere in the library** — `creating-financial-models`, `capacity-modeling`, `variance-analysis`.
+- **Elsewhere in the library** — `creating-financial-models`, `forecast-discipline`.
 - **References** — Kaplan, R. S. & Anderson, S. R., "Time-Driven Activity-Based Costing," *Harvard Business Review*, November 2004; *Time-Driven Activity-Based Costing* (Kaplan & Anderson, Harvard Business School Press, 2007).

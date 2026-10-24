@@ -207,7 +207,7 @@ def calculate_data_quality_score(data, sources):
 | Low email discovery | Wrong waterfall for input | Check pattern with Hunter; try AI for execs |
 | High credit burn | Cache miss / wrong sequence | Audit TTL, raise cache hit floor |
 | Poor data quality | No verification / single source | Add ZeroBounce; require 2+ source agreement |
-| Provider outage | Single-vendor dependency | Add failover; check `provider-scorecard` |
+| Provider outage | Single-vendor dependency | Add failover; check the Provider scorecard (under Tips) |
 
 ## Templates
 
@@ -246,11 +246,25 @@ const enrichContact = async (name, company) => {
 - **Rotate premium providers** quarterly to negotiate volume discounts and diversify coverage gaps
 - **Pair with QA hooks** (verification APIs, sampling) before CRM sync to prevent bad-data cascades
 - **Keep sequences short for real-time use cases**; reserve long chains for batch mode
-- **A/B test new providers** before full rollout — `provider-scorecard` is the scoreboard
+- **A/B test new providers** before full rollout — the Provider scorecard below is the scoreboard
+
+### Provider scorecard
+
+- **Metric Definition** – success rate, fill %, latency, credit burn, confidence.
+- Normalize metrics per enrichment type to avoid unfair comparisons.
+
+### Validation rules (after the waterfall completes)
+
+- **Rule Catalog** – required fields, regex patterns, allowed values, dependencies.
+- **Freshness Thresholds** – time-based SLAs per signal type.
+- **Exception Handling** – quarantine, reprocess, or escalate.
+
+### Schema and taxonomy for enriched records
+
+- **Topic & Attribute Mapping** – align provider-specific attributes to canonical names.
+- **Versioning** – change logs, effective dates, migration steps.
+- Keep names human-readable for GTM teams but consistent with warehouse standards.
 
 ## Cross-references
 
-- `provider-scorecard` skill — continuous routing optimization based on observed performance
-- `validation-rulebook` skill — QA rules applied after waterfall completes
-- `signal-taxonomy` skill — schema/taxonomy for tagging enriched records
 - `run-waterfall-enrichment` command — the executor for blueprints designed here
