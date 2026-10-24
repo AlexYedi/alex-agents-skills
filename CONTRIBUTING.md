@@ -51,11 +51,14 @@ Only `skills/<name>/SKILL.md` files are auto-discovered by Claude Code. Anything
 
 ## One-time setup
 
-Run once per clone of this repo:
+Run once per dev clone of this repo (from the dev clone, not a worktree):
 
 ```bash
+git clone --branch main ~/Documents/GitHub/alex-agents-skills ~/Documents/GitHub/alex-agents-skills-release
 bash scripts/install-git-hooks.sh
 ```
+
+The marketplace reads `~/Documents/GitHub/alex-agents-skills-release`; it moves only when `main` moves in the dev clone; branch work is tested with `claude --plugin-dir <worktree path>`. The hooks fast-forward the release clone to the dev clone's `main` and skip (logged) when the dev clone is on another branch or the commit is in a worktree. If the release clone is missing, the hook logs `!! release clone missing` and does not reinstall. To pin an older state: `git -C ~/Documents/GitHub/alex-agents-skills-release checkout --detach <sha>`.
 
 Installs `post-commit`, `post-merge`, and `post-rewrite` hooks in `.git/hooks/` (local, not tracked), so the plugin follows this repo whether HEAD moves by a local commit, a `git pull` of a PR merged on GitHub, or a rebase/amend. Each runs in the background, skips if the installed plugin is already at HEAD, and otherwise reinstalls it (uninstall `--keep-data` + install) — a reinstall copies the repo's current state regardless of version. Output goes to `${TMPDIR:-/tmp}/alex-agents-skills-plugin-update.log` — check it if a change doesn't seem to have propagated. Re-run the installer to upgrade existing hooks.
 

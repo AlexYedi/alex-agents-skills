@@ -11,6 +11,11 @@
 #   post-merge    — after `git pull` / `git merge` (e.g. a PR merged on GitHub)
 #   post-rewrite  — after `git pull --rebase` / `git commit --amend`
 #
+# Only `main` ships: the marketplace reads a release clone
+# (~/Documents/GitHub/alex-agents-skills-release) that the hook fast-forwards to
+# the dev clone's main. If the dev clone is on another branch, or the commit is
+# in a worktree, the hook logs a skip and changes nothing.
+#
 # Why reinstall instead of `claude plugin update`: update is a no-op unless the
 # version in .claude-plugin/plugin.json changes, so ordinary skill edits never
 # propagated. The hook uninstalls and reinstalls (keeping plugin data), which
@@ -58,6 +63,13 @@ LOCK_DIR="${TMPDIR:-/tmp}/alex-agents-skills-plugin-update.lock"
 # Our own record of the last commit successfully installed. The gitCommitSha
 # in installed_plugins.json is not reliably updated for directory sources.
 STAMP="$(git rev-parse --absolute-git-dir)/alex-plugin-installed-sha"
+# In a worktree, git exports GIT_DIR/GIT_INDEX_FILE to hooks, and they override
+# `git -C` below. Drop them so DEV and RELEASE resolve to their own repos.
+unset GIT_DIR GIT_WORK_TREE GIT_INDEX_FILE
+# The marketplace reads RELEASE, a clone that only fast-forwards to the dev
+# clone's main. Branch checkouts and worktree commits never reach it.
+DEV="$(git worktree list --porcelain | head -1 | sed 's/^worktree //')"   # the dev clone, not a worktree
+RELEASE="$HOME/Documents/GitHub/alex-agents-skills-release"
 
 (
   {
@@ -69,6 +81,12 @@ STAMP="$(git rev-parse --absolute-git-dir)/alex-plugin-installed-sha"
     echo "$HOOK_NAME $* @ $(date -u +%Y-%m-%dT%H:%M:%SZ) — HEAD ${HEAD_SHA:0:7}"
     [ "$got" = 1 ] || { echo "lock busy for 2 min — skipping"; exit 0; }
     trap 'rmdir "$LOCK_DIR" 2>/dev/null' EXIT
+
+    [ "$(git -C "$DEV" branch --show-current)" = "main" ] || { echo "skip: dev clone not on main"; exit 0; }
+    [ "$HEAD_SHA" = "$(git -C "$DEV" rev-parse HEAD)" ]   || { echo "skip: commit is in a worktree, not main"; exit 0; }
+    [ -d "$RELEASE/.git" ] || { echo "!! release clone missing at $RELEASE"; exit 1; }
+    git -C "$RELEASE" fetch -q "$DEV" main && git -C "$RELEASE" merge --ff-only -q FETCH_HEAD || { echo "!! release ff failed"; exit 1; }
+    echo "release clone at $(git -C "$RELEASE" rev-parse --short HEAD)"
 
     installed="$(cat "$STAMP" 2>/dev/null)"
 
