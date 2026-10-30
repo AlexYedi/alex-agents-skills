@@ -40,8 +40,6 @@ User-scope hooks fire in every Claude Code session, in every project, automatica
 | Hook | Event | Behavior |
 |---|---|---|
 | `linear-priorities.sh` | SessionStart | Pulls up to 5 open Medium+ priority Linear issues, formats as markdown, injects at session start. Graceful-fallback if `LINEAR_API_KEY` not set. |
-| `repo-touch-tally.sh` | PostToolUse (Edit/Write) | Silently counts edits under `.claude/{skills,agents,commands,proposals}/` per session, per project. |
-| `repo-touch-remind.sh` | Stop | If the tally > 0, emits a reminder to reconcile with Linear (open issue / comment / acknowledge doc-only). |
 
 ### Disable / opt out
 
@@ -49,11 +47,11 @@ Add `"hooks": {"disable": ["<hook-name>"]}` to either:
 - `.claude/settings.local.json` in a project — disables for that project only
 - `~/.claude/settings.local.json` — disables for every project
 
-Hook names: `linear-priorities`, `repo-touch-nudge`.
+Hook name: `linear-priorities`. (repo-touch hooks removed 2026-10-30.)
 
 ### Project-scope hooks coexist
 
-Per-project `.claude/settings.json` can register additional hooks that fire alongside the universal ones. Empire State keeps `v2-trigger-detect.sh` + `v2-trigger-log.sh` at project scope because the v2 triggers are pipeline-specific. Stop-event hooks from both layers fire; their top-level `systemMessage` outputs concatenate — Stop hooks use `systemMessage`, **not** `additionalContext` (which the schema rejects on Stop). See `Me/hook-schema-reference.md`.
+Per-project `.claude/settings.json` can register additional hooks that fire alongside the universal ones. Empire State keeps `build-session-emit.sh` (telemetry) at project scope. Stop-event hooks from both layers fire; their top-level `systemMessage` outputs concatenate — Stop hooks use `systemMessage`, **not** `additionalContext` (which the schema rejects on Stop). See `Me/hook-schema-reference.md`.
 
 ### Adding a new universal hook
 
