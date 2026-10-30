@@ -17,7 +17,7 @@ Governance: changes require a Linear issue + commit.
 <source_of_truth_discipline>
 Each system has one job. Never duplicate state — point.
 
-- **Linear** is the single source of truth for *what's open*: priorities, status, decisions, blockers, follow-ups.
+- **Linear** is the single source of truth for *build work that ships as a PR*. To-dos, decisions and follow-ups live where the project's CLAUDE.md says (Empire State: the Notion roadmap and its To-dos database).
 - **Notion** is the single source of truth for *produced artifacts*: briefs, drafts, research, knowledge base content.
 - **GitHub** is the single source of truth for *code state*: branches, commits, PRs, releases.
 - **CLAUDE.md** (this project's local file) is the single source of truth for *project-specific patterns and gotchas*: architecture, data model, known constraints, learned-the-hard-way rules.
@@ -26,11 +26,11 @@ Discipline rules:
 - If you find yourself copying state between systems, you're creating drift. Replace with a pointer.
 - "Last updated 2026-MM-DD" blocks in CLAUDE.md are transitional, not permanent — they should be replaced by live hook pulls (see `<event_triggered_habits>` below).
 - Before answering a "what's the status of X" question from memory, verify against the source-of-truth system.
-- **Branch-first for non-trivial builds.** A build that adds/changes a skill, agent, command, hook, or reference; alters a schema or data contract; comes from an approved plan; or is otherwise hard to reverse → work on a **branch → PR → merge**. Trivial churn (typo, single-line fix, config tweak, doc edit) → commit to **main** directly. The enforcement mechanism (a `.git/hooks/pre-commit` guard) is project-local; this convention is universal. Plugin / canonical-file changes always land via PR for review — never auto-merge, since they propagate to every project.
+- **Branch-first for non-trivial builds.** A build that adds/changes a skill, agent, command or hook; alters a schema or data contract; comes from an approved plan; or is otherwise hard to reverse → work on a **branch → PR → merge**. References, typos, single-line fixes, config tweaks and doc edits → commit to **main** directly. The enforcement mechanism (a `.git/hooks/pre-commit` guard) is project-local; this convention is universal. Plugin / canonical-file changes always land via PR for review — never auto-merge, since they propagate to every project.
 </source_of_truth_discipline>
 
 <build_better_not_faster>
-The default operating mode for every project. These rules override any pressure to ship fast.
+The default operating mode for every project: hard guardrails on irreversible effects (secrets, PII, publishing, CRM writes, spend, destructive git), speed everywhere else.
 
 - **Architecture before automation.** Separate "do great X" from "put X in the right places." The previous-iteration failure mode was bolting destination integrations into the research engine and watching both fail together. Solve the research problem first; solve the distribution problem second.
 - **Human-in-the-loop by design** until evidence justifies removing it. Don't automate away the review step at the start — move it later in the pipeline over time, as confidence in upstream quality grows.
@@ -49,12 +49,10 @@ User-scope hooks fire automatically in every Claude Code session, in every proje
 | Hook | Event | Behavior |
 |---|---|---|
 | `linear-priorities.sh` | SessionStart | Pulls up to 5 open Medium+ priority Linear issues, formats as markdown, injects at session start. Graceful-fallback if `LINEAR_API_KEY` not set. |
-| `repo-touch-tally.sh` | PostToolUse (Edit/Write) | Silently counts edits under `.claude/{skills,agents,commands,proposals}/` per session, per project. |
-| `repo-touch-remind.sh` | Stop | If the tally > 0, emits a reminder to reconcile with Linear (open issue / comment / acknowledge doc-only). |
 
-Disable per-project: add `"hooks": {"disable": ["<hook-name>"]}` to `.claude/settings.local.json`. Disable globally: same key in `~/.claude/settings.local.json`. Hook names: `linear-priorities`, `repo-touch-nudge`.
+Disable per-project: add `"hooks": {"disable": ["<hook-name>"]}` to `.claude/settings.local.json`. Disable globally: same key in `~/.claude/settings.local.json`. Hook name: `linear-priorities`. (The repo-touch tally/remind hooks were removed 2026-10-30.)
 
-Per-project `.claude/settings.json` can register additional project-scope hooks that fire alongside the universal ones (e.g., Empire State's `v2-trigger-detect.sh` for pipeline-specific signals). Both layers' Stop-event `systemMessage` outputs concatenate — Stop hooks use the top-level `systemMessage` field, **not** `additionalContext` (which the schema rejects on Stop). See `Me/hook-schema-reference.md`.
+Per-project `.claude/settings.json` can register additional project-scope hooks that fire alongside the universal ones (e.g., Empire State's `build-session-emit.sh` telemetry emitter). Both layers' Stop-event `systemMessage` outputs concatenate — Stop hooks use the top-level `systemMessage` field, **not** `additionalContext` (which the schema rejects on Stop). See `Me/hook-schema-reference.md`.
 
 See `Me/CLAUDE_UNIVERSAL_USAGE_PATTERNS.md` for the full reference (adding a new universal hook, env-var conventions, state-dir patterns).
 </event_triggered_habits>
@@ -95,7 +93,7 @@ See `CONTRIBUTING.md` in `alex-agents-skills` for the full conventions.
 </communication_rules>
 
 <behavioral_rules>
-- Always stop, think, assess all referenced resources, lead with planning, strategy, and ask clarifying questions before producing complex deliverables. Don't over-build on wrong assumptions.
+- Ask a clarifying question only when the answer changes what gets built; otherwise state your interpretation and proceed. Assess referenced resources first so you don't build on wrong assumptions.
 - Flag irreversible decisions explicitly before proceeding.
 - If a task is ambiguous, state your interpretation and collaborate to clarify before proceeding.
 - Push back constructively when a direction seems suboptimal; explain why.
