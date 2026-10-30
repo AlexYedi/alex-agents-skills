@@ -17,7 +17,7 @@ Governance: changes require a Linear issue + commit.
 <source_of_truth_discipline>
 Each system has one job. Never duplicate state — point.
 
-- **Linear** is the single source of truth for *build work that ships as a PR*. To-dos, decisions and follow-ups live where the project's CLAUDE.md says (Empire State: the Notion roadmap and its To-dos database).
+- **Linear** is the single source of truth for *what's open*: priorities, status, decisions, blockers, follow-ups, to-dos.
 - **Notion** is the single source of truth for *produced artifacts*: briefs, drafts, research, knowledge base content.
 - **GitHub** is the single source of truth for *code state*: branches, commits, PRs, releases.
 - **CLAUDE.md** (this project's local file) is the single source of truth for *project-specific patterns and gotchas*: architecture, data model, known constraints, learned-the-hard-way rules.
