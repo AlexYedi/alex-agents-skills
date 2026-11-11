@@ -96,9 +96,9 @@ Step 3: Run Optimization Rounds
 For each element, run the round structure above.
 Critical API efficiency rule: ALWAYS batch all variants into a single prompt. Never call the API once per variant. A round with 10 variants = 1 API call.
 Model preference (in order):
-claude-sonnet-4-5 (preferred — fast + smart)
-claude-opus-4 (if highest quality needed)
-Any claude-3.5+ model if the above aren't available
+claude-sonnet-5-5 (preferred — fast + smart)
+claude-opus-5-5 (if highest quality needed)
+claude-haiku-5-5 if the above aren't available
 Step 4: Cross-Breed (Multi-Element)
 After all elements have winners:
 Assemble the top winner from each element into a complete unit
