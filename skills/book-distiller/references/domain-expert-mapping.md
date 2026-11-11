@@ -10,14 +10,14 @@ multi-perspective coverage at this stage.
 
 | Book domain | Primary expert | Secondary (rare, only for synthesis pass) |
 |---|---|---|
-| AI / ML engineering | `anthropic-skills:cto-architect` | `systems-thinking` |
+| AI / ML engineering | `alex:cto-architect` | `systems-thinking` |
 | AI product strategy | `ai-product-strategy` | `head-of-product-engineering` |
-| Software architecture / system design | `engineering:system-design` or `anthropic-skills:cto-architect` | — |
-| Modern software engineering practices | `anthropic-skills:cto-architect` | `engineering:tech-debt` |
-| LLMs / agents / prompting | `ai-product-strategy` | `anthropic-skills:cto-architect` |
+| Software architecture / system design | `engineering:system-design` or `alex:cto-architect` | — |
+| Modern software engineering practices | `alex:cto-architect` | `engineering:tech-debt` |
+| LLMs / agents / prompting | `ai-product-strategy` | `alex:cto-architect` |
 | Product management | `head-of-product-engineering` | `defining-product-vision` |
-| Sales methodology | `anthropic-skills:winning-by-design-sales-excellence-framework` | `anthropic-skills:the-meddpicc-enterprise-deal-desk` |
-| Enterprise sales | `anthropic-skills:the-meddpicc-enterprise-deal-desk` | — |
+| Sales methodology | `alex:winning-by-design-sales-excellence-framework` | `alex:the-meddpicc-enterprise-deal-desk` |
+| Enterprise sales | `alex:the-meddpicc-enterprise-deal-desk` | — |
 | Marketing / GTM strategy | `marketing:campaign-plan` (closest available) | — |
 | Research methods | `conducting-user-interviews` | — |
 | Org leadership / management | `head-of-product-engineering` | `systems-thinking` |
@@ -41,7 +41,7 @@ multi-perspective coverage at this stage.
 | Book | Domain | Primary Expert |
 |---|---|---|
 | Building AI-Powered Products | AI product strategy | `ai-product-strategy` |
-| AI Engineering | AI / ML engineering | `anthropic-skills:cto-architect` |
+| AI Engineering | AI / ML engineering | `alex:cto-architect` |
 | Hands On LLMs | LLMs / agents | `ai-product-strategy` |
-| Modern Software Engineering | Software practices | `anthropic-skills:cto-architect` |
+| Modern Software Engineering | Software practices | `alex:cto-architect` |
 | Software Architecture Fundamentals | System design | `engineering:system-design` |

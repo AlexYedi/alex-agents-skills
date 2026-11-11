@@ -315,6 +315,6 @@ If the question is about Git AND another topic (e.g., "what testing strategy wit
 
 The skipped chapters aren't bad — they're either niche or descriptive. Their content is summarized in section 10 above so it's not lost.
 
-**Distillation persona:** anthropic-skills:cto-architect (treating Git as engineering infrastructure to be designed, taught, and operated, not just used)
+**Distillation persona:** alex:cto-architect (treating Git as engineering infrastructure to be designed, taught, and operated, not just used)
 
 Source: *Pro Git* (Chacon & Straub, 2nd Edition + ongoing updates), distilled 2026-04-29.
