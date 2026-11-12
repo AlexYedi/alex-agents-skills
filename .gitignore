@@ -30,3 +30,6 @@ claude-skills-repo/
 output/hard-parts-ocr/*.pdf
 output/hard-parts-ocr/*.txt
 output/hard-parts-ocr/*.log
+
+# Plugin eval run output (claude plugin eval)
+evals/results/
